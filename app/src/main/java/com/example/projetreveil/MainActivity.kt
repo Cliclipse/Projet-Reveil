@@ -8,7 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -36,7 +38,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProjetReveilTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
                     RegisterPage(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
@@ -84,9 +86,10 @@ fun Logo(size : Float){
 fun RegisterPage(name: String, modifier: Modifier = Modifier){
     var mdp : String = "";
     var pseudo : String = "";
-    var alignment : Modifier;
+    var alignment : Modifier = Modifier.fillMaxWidth()
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally ){
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = alignment ){
+        //Spacer()
         Logo(45f)
         RegisterTextField("Pseudo")
 
