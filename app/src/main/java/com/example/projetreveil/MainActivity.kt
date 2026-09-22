@@ -94,33 +94,6 @@ fun GreetingPreview() {
 }
 
 
-/*
-OnStart(){}
-OnCreate()
-OnResume(){}
 
-OnDestroy(){}
-
-Y'a différent log i : info  log w : warning log d: debug log e : erreur
-
-Content provider (partage données structurées entre appli, content provider formé de base
-Intent Intention d'action ? action mais pas sûr qu'elle va arriver
-Jetpack Compose : truc dédié aux interfaces
-    à l'intérieur d'activity avec setContent{}
-    O décrit état de l'interface et compose affiche et màj
-    @composable c'est un élément(fct) réutilisable (genre un préfab)
-    divers elem de base test button, image déjà fournis  Text() Button() Image()
-
-    ensuite on doit positionner avec Column Row et Box (imbricables ofc) et ca s'orga ainsi (box ca s'empile mais on controle comment
-    On leur fout des modif pour décider des esapces des paddings, d'être responsive etc etc bla bla dev web
-    on a plein de méthodes pr ça (lien de la list sur le diap)
-
-    R : raccourci pour dire qu'on dall une ressource
-
-
-    Les lambdas :
-       quand un seul param on utilise it pr le désigner
-
-*/
 
 
