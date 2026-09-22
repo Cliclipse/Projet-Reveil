@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -64,10 +65,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    Column(){
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+        Text(
+            text = "Big Fucking Penguinnnnn",
+            modifier = modifier
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -89,6 +96,17 @@ Y'a différent log i : info  log w : warning log d: debug log e : erreur
 
 Content provider (partage données structurées entre appli, content provider formé de base
 Intent Intention d'action ? action mais pas sûr qu'elle va arriver
+Jetpack Compose : truc dédié aux interfaces
+    à l'intérieur d'activity avec setContent{}
+    O décrit état de l'interface et compose affiche et màj
+    @composable c'est un élément(fct) réutilisable (genre un préfab)
+    divers elem de base test button, image déjà fournis  Text() Button() Image()
+
+    ensuite on doit positionner avec Column Row et Box (imbricables ofc) et ca s'orga ainsi (box ca s'empile mais on controle comment
+    On leur fout des modif pour décider des esapces des paddings, d'être responsive etc etc bla bla dev web
+    on a plein de méthodes pr ça (lien de la list sur le diap)
+
+
 */
 
 
