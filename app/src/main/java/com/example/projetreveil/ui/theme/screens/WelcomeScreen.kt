@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
+import com.example.projetreveil.ui.theme.utilities.TopFlag
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
@@ -68,17 +69,19 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Bandeau social top
 
-        Spacer(modifier = Modifier.height(200.dp))
+        TopFlag("PERSO")
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         // Horloge
         Box(modifier = Modifier.fillMaxWidth().height(380.dp), contentAlignment = Alignment.Center){
             ClockTimeLive()
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         // Liste Reveil
-        AlarmList(exempleAlarms, modifier = Modifier.height(280.dp))
+        AlarmList(exempleAlarms, modifier = Modifier.height(340.dp))
 
         // Bouton + bas droite
     }
