@@ -82,7 +82,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
 
             val end = Offset(
                 x = center.x + cos(angle).toFloat() * radius,
-                y = center.x + sin(angle).toFloat() * radius
+                y = center.y + sin(angle).toFloat() * radius
             )
 
             drawLine(
@@ -100,7 +100,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
 
             val endHour = Offset(
                 x = center.x + cos(hourAngle).toFloat() * hourHandLength,
-                y = center.x + sin(hourAngle).toFloat() * hourHandLength
+                y = center.y + sin(hourAngle).toFloat() * hourHandLength
             )
 
             drawLine(
@@ -119,7 +119,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
 
             val endMinute = Offset(
                 x = center.x + cos(minuteAngle).toFloat() * minuteHandLength,
-                y = center.x + sin(minuteAngle).toFloat() * minuteHandLength
+                y = center.y + sin(minuteAngle).toFloat() * minuteHandLength
             )
 
             drawLine(
