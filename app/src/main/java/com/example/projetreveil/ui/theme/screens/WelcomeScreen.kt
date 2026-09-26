@@ -58,7 +58,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
         drawCircle(
             color = Color.Black,
             radius = radius,
-            style = Stroke(width = 4.dp.toPx())
+            style = Stroke(width = 2.dp.toPx())
         )
 
         for (i in 0 until 60){
