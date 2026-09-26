@@ -17,10 +17,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,15 +52,18 @@ data class AlarmData(  // WIP ONLY FOR TESTS in ALARM LIST
 @Composable
 fun WelcomePage(name: String, modifier: Modifier = Modifier) {
 
-    val exempleAlarms = listOf(
-        AlarmData(7, 25, false),
-        AlarmData(10, 40, true),
-        AlarmData(5, 10, true),
-        AlarmData(15, 59, false),
-        AlarmData(12, 32, true),
-        AlarmData(15, 59, false),
-        AlarmData(15, 59, false),
-        AlarmData(15, 59, false))
+    val exempleAlarms = remember {
+        mutableStateListOf(
+            AlarmData(7, 25, false),
+            AlarmData(10, 40, true),
+            AlarmData(5, 10, true),
+            AlarmData(15, 59, false),
+            AlarmData(12, 32, true),
+            AlarmData(15, 59, false),
+            AlarmData(15, 59, false),
+            AlarmData(15, 59, false)
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Bandeau social top
@@ -189,7 +195,7 @@ fun ClockTimeLive(){
 }
 
 @Composable
-fun AlarmItem(alarm: AlarmData){
+fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
@@ -199,19 +205,19 @@ fun AlarmItem(alarm: AlarmData){
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically) {
 
-                if (alarm.enabled){
-                    Text(
-                        text = "YES",
-                        fontSize = 28.sp,
-                        color = Color.Green
+                Switch(
+                    checked = alarm.enabled,
+                    onCheckedChange = {
+                        // Lambda pour pouvoir réagir au fait que cet alarm doit etre considérée comme activée
+                        onEnabledChange(it)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = Color.Green,
+                        uncheckedThumbColor = Color.LightGray,
+                        uncheckedTrackColor = Color.DarkGray
                     )
-                }else{
-                    Text(
-                        text = "NO",
-                        fontSize = 28.sp,
-                        color = Color.Gray
-                    )
-                }
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -228,7 +234,7 @@ fun AlarmItem(alarm: AlarmData){
 }
 
 @Composable
-fun AlarmList(alarms: List<AlarmData>, modifier: Modifier = Modifier){
+fun AlarmList(alarms: MutableList<AlarmData>, modifier: Modifier = Modifier){
 
     Column() {
         Text(
@@ -241,8 +247,15 @@ fun AlarmList(alarms: List<AlarmData>, modifier: Modifier = Modifier){
         Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn(modifier = modifier.fillMaxWidth()) {
-            items(alarms) {
-                AlarmItem(it)
+            items(alarms) { alarm ->
+                AlarmItem(alarm = alarm,
+                    onEnabledChange = { newEnabledValue ->
+                        val index = alarms.indexOf(alarm)
+
+                        alarms[index] = alarm.copy(
+                            enabled = newEnabledValue
+                        )
+                    })
                 Spacer(modifier = Modifier.height(6.dp))
             }
         }
