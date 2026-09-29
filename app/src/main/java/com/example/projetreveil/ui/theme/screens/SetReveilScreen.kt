@@ -1,5 +1,7 @@
 package com.example.projetreveil.ui.theme.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
@@ -19,8 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerLayoutType
+import androidx.compose.material3.TimePickerState
 import androidx.compose.ui.Alignment
 import com.example.projetreveil.ui.theme.utilities.Logo
+import java.time.LocalTime
 
 
 data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que boolean par la suite
@@ -30,16 +39,23 @@ data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que b
 )
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class) //evite l'affichage d'une erreur inutile sur l'ide
 fun SetReveilPage(name: String, modifier: Modifier = Modifier){
     var optionAlarme : OptionAlarme = OptionAlarme(false, false , false);
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,) {
+    val now = LocalTime.now();
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
+
+        Spacer(Modifier.height(150.dp)); //Temporaire, pour occuper la place que prendra le truc qui roule
 
         //Truc qui se déroule
 
-        Spacer(Modifier.height(200.dp)); //Temporaire, pour occuper la place que prendra le truc qui roule
+        var state : TimePickerState = TimePickerState(now.hour, now.minute , true );
+        TimeInput(state)
 
-        Logo(100f)
+
+        Spacer(Modifier.height(60.dp)); //Temporaire, pour occuper la place que prendra le truc qui roule
 
 
         Spacer(modifier = Modifier.height(50.dp))
@@ -54,16 +70,15 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier){
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Option("Autre" , optionAlarme)
+            Option("Répéter" , optionAlarme)
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Option("Autre" , optionAlarme)
+            Option("Quotidien" , optionAlarme)
 
 
         }
 
-        Option("Vibration" , optionAlarme)
 
     }
 }
@@ -72,8 +87,8 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier){
 
 @Composable
 fun Option(name : String , option : OptionAlarme){
-    Row( modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
-        Spacer(Modifier.size(50.dp))
+    Row( modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
+        //Spacer(Modifier.height(50.dp))
         Text(
             text = name,
             color = Color.White,
@@ -84,7 +99,5 @@ fun Option(name : String , option : OptionAlarme){
             checked = option.option1,
             onCheckedChange = {}
             )
-
-
     }
 }
