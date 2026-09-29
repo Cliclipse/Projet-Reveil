@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
 import com.example.projetreveil.ui.theme.screens.RegisterPage
+import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 
 class MainActivity : ComponentActivity() {
@@ -34,9 +35,16 @@ class MainActivity : ComponentActivity() {
 
                      */
 
+                    /*
                     WelcomePage(
                         name = "WelcomePage",
                         modifier = Modifier.padding(innerPadding)
+                     */
+
+                    SetReveilPage(
+                        name = "SetReveilPage",
+                        modifier = Modifier.padding(innerPadding)
+
                     )
 
                 }
