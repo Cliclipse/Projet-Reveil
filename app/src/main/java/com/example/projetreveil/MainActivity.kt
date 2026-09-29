@@ -30,13 +30,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProjetReveilTheme {
                 Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
-                    /*
+
                     RegisterPage(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-
-                     */
 
 
                     /*
@@ -46,11 +44,12 @@ class MainActivity : ComponentActivity() {
                     )
                     */
 
+                    /*
                     SetReveilPage(
                         name = "SetReveilPage",
                         modifier = Modifier.padding(innerPadding)
                     )
-
+                    */
 
 
                 }
