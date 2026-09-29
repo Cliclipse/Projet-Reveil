@@ -41,11 +41,9 @@ fun Logo(size : Float){
 }
 
 @Composable
-fun HeadedTextField(text : String) : String {
-    var textWritten by remember { mutableStateOf("") }
+fun HeadedTextField(text : String , textField : String ,  onTextChange : (String) -> Unit) {
     Text(text = text)
-    TextField(value = textWritten, onValueChange = {newText -> textWritten = newText})
-    return textWritten
+    TextField(value = textField, onValueChange = onTextChange)
 }
 
 @Composable
