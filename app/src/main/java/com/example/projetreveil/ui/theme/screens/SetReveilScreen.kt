@@ -1,5 +1,6 @@
 package com.example.projetreveil.ui.theme.screens
 
+import android.icu.util.Calendar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 
 data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que boolean par la suite
@@ -41,12 +49,22 @@ data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que b
 )
 
 
-@RequiresApi(Build.VERSION_CODES.O) //LocalTime me demande de le mettre
 @Composable
 @OptIn(ExperimentalMaterial3Api::class) //evite l'affichage d'une erreur inutile sur l'ide
-fun SetReveilPage(name: String, modifier: Modifier = Modifier){
+fun SetReveilPage(name: String, modifier: Modifier = Modifier,
+                  onConfirmClicked: () -> Unit,
+                  onCancelClicked: () -> Unit){
     var optionAlarme : OptionAlarme = OptionAlarme(false, false , false);
-    val now = LocalTime.now();
+    var time by remember {
+        mutableStateOf(Calendar.getInstance())
+    }
+
+    LaunchedEffect(Unit) {
+        while (true){
+            time = Calendar.getInstance()
+            delay(1000.milliseconds)
+        }
+    }
 
     Box(modifier = Modifier.fillMaxWidth()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
@@ -56,7 +74,7 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier){
 
             //Truc qui se déroule
 
-            var state : TimePickerState = TimePickerState(now.hour, now.minute , true );
+            var state : TimePickerState = TimePickerState(time.get(java.util.Calendar.HOUR), time.get(java.util.Calendar.MINUTE) , true );
             TimeInput(state)
 
 
@@ -83,11 +101,11 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier){
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
-            FloatingActionButton(onClick = { /* retour Welcome screen je crois */ }, containerColor = Color.Red, modifier = Modifier.size(80.dp)) {
+            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = Color.Red, modifier = Modifier.size(80.dp)) {
                 Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = Color.White,)
             }
 
-            FloatingActionButton(onClick = { /* truc d'ajout*/ }, containerColor = Color.Green, modifier = Modifier.size(80.dp)) {
+            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = Color.Green, modifier = Modifier.size(80.dp)) {
                 Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = Color.White)
             }
         }

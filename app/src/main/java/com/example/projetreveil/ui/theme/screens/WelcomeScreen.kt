@@ -52,7 +52,10 @@ data class AlarmData(  // WIP ONLY FOR TESTS in ALARM LIST
 )
 
 @Composable
-fun WelcomePage(name: String, modifier: Modifier = Modifier) {
+fun WelcomePage(name: String, modifier: Modifier = Modifier,
+                onGoToConfigureAlarmClicked: () -> Unit,
+                onGoToMenuClicked: () -> Unit,
+                onGoToGroupClicked: () -> Unit) {
 
     val exempleAlarms = remember {
         mutableStateListOf(
@@ -90,9 +93,9 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier) {
         // Bouton + menu radial bas droite
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
-            onGoToMenuClicked = { },
-            onGoToGroupClicked = { },
-            onGoToSettingsClicked = { }
+            onGoToMenuClicked = { onGoToMenuClicked() },
+            onGoToGroupClicked = { onGoToGroupClicked() },
+            onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() }
         )
     }
 }

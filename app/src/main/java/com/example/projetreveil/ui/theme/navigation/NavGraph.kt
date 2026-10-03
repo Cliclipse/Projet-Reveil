@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.screens.RegisterPage
+import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 
 @Composable
@@ -18,11 +19,21 @@ fun MonApp(modifier: Modifier){
         "register"
     ){
         composable("register"){
-            RegisterPage(name = "Register Page", modifier = modifier, onConfirmClicked = { navController.navigate("welcome") })
+            RegisterPage(name = "Register Page", modifier = modifier,
+                onConfirmClicked = { navController.navigate("welcome") })
         }
 
         composable("welcome"){
-            WelcomePage(name = "Welcome Page", modifier = modifier)
+            WelcomePage(name = "Welcome Page", modifier = modifier,
+                onGoToGroupClicked = { navController.navigate("group") },
+                onGoToMenuClicked = { navController.navigate("welcome") },
+                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") })
+        }
+
+        composable("set-alarm"){
+            SetReveilPage(name = "Set Alarm Page", modifier = modifier,
+                onConfirmClicked = { navController.navigate("welcome") },
+                onCancelClicked = { navController.navigate("welcome") })
         }
 
     }

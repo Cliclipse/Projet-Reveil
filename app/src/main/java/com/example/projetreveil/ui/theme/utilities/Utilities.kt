@@ -96,7 +96,7 @@ fun RadialMenu(
     modifier: Modifier,
     onGoToGroupClicked: () -> Unit,
     onGoToMenuClicked: () -> Unit,
-    onGoToSettingsClicked: () -> Unit){
+    onGoToConfigureAlarmClicked: () -> Unit){
 
     var isExpended by remember { mutableStateOf(false) }
 
@@ -137,10 +137,10 @@ fun RadialMenu(
 
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
-            text = "Settings",
+            text = "New Alarm",
             angle = 80f,
             progressDist = animationDistProgressBt3,
-            onClick = { onGoToSettingsClicked() }
+            onClick = { onGoToConfigureAlarmClicked() }
         )
 
         Box(modifier = Modifier
