@@ -1,7 +1,12 @@
 package com.example.projetreveil.ui.theme.utilities
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -22,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -30,7 +36,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.projetreveil.R
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 @Composable
@@ -79,4 +88,95 @@ fun TopFlag(text: String){
             fontWeight = FontWeight.Bold
         )
     }
+}
+
+
+@Composable
+fun RadialMenu(
+    modifier: Modifier,
+    onGoToGroupClicked: () -> Unit,
+    onGoToMenuClicked: () -> Unit,
+    onGoToSettingsClicked: () -> Unit){
+
+    var isExpended by remember { mutableStateOf(false) }
+
+    val animationDistProgressBtn1 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        label = "radialMenuDistBtn1InAnimation"
+    )
+
+    val animationDistProgressBtn2 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+        label = "radialMenuDistBtn2InAnimation"
+    )
+
+    val animationDistProgressBt3 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(durationMillis = 700, easing = FastOutSlowInEasing),
+        label = "radialMenuDistBtn3InAnimation"
+    )
+
+    Box(modifier = modifier.fillMaxSize()){
+        RadialButton(
+            Modifier.align(Alignment.BottomEnd),
+            text = "Menu",
+            angle = 10f,
+            progressDist = animationDistProgressBtn1,
+            onClick = { onGoToMenuClicked() }
+        )
+
+        RadialButton(
+            Modifier.align(Alignment.BottomEnd),
+            text = "Group",
+            angle = 45f,
+            progressDist = animationDistProgressBtn2,
+            onClick = { onGoToGroupClicked() }
+        )
+
+        RadialButton(
+            Modifier.align(Alignment.BottomEnd),
+            text = "Settings",
+            angle = 80f,
+            progressDist = animationDistProgressBt3,
+            onClick = { onGoToSettingsClicked() }
+        )
+
+        Box(modifier = Modifier
+            .size(70f.dp)
+            .align(Alignment.BottomEnd)
+            .zIndex(2f)
+            .background(color = Color.Black, shape = CircleShape)
+            .clip(shape = CircleShape)
+            .clickable { isExpended = !isExpended },
+            contentAlignment = Alignment.Center){
+            Text(text = if (isExpended) "x" else "+", color = Color.White, fontSize = 30.sp)
+        }
+    }
+}
+
+
+@Composable
+fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: Float, onClick: () -> Unit){
+
+    val radius = 130f;
+
+    val radians = Math.toRadians(angle.toDouble())
+
+    val x = -cos(radians).toFloat() * progressDist * radius
+    val y = -sin(radians).toFloat() * progressDist * radius
+
+    Box(modifier = modifier.size(70f.dp)
+        .zIndex(1f)
+        .alpha(alpha = if (progressDist < 0.05f) 0f else 1f)
+        .offset(x.dp, y.dp)
+        .background(color = Color.DarkGray, shape = CircleShape)
+        .clip(shape = CircleShape)
+        .clickable(enabled = progressDist > 0.9f) { onClick() },
+        contentAlignment = Alignment.Center,
+        ){
+            Text(text = text, color = Color.White)
+    }
+
 }
