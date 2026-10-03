@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.screens.RegisterPage
+import com.example.projetreveil.ui.theme.screens.SetGroupePage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 
@@ -16,7 +17,9 @@ fun MonApp(modifier: Modifier){
 
     NavHost(
         navController,
-        "register"
+        //"register"
+        "groupePage" //temporaire pdt, que je fais la page groupe
+
     ){
         composable("register"){
             RegisterPage(name = "Register Page", modifier = modifier,
@@ -34,6 +37,10 @@ fun MonApp(modifier: Modifier){
             SetReveilPage(name = "Set Alarm Page", modifier = modifier,
                 onConfirmClicked = { navController.navigate("welcome") },
                 onCancelClicked = { navController.navigate("welcome") })
+        }
+
+        composable("groupePage"){
+            SetGroupePage(name = "Groupe Page")
         }
 
     }

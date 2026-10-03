@@ -109,13 +109,7 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier,
                 Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = Color.White)
             }
         }
-
-
     }
-
-
-
-
 }
 
 
