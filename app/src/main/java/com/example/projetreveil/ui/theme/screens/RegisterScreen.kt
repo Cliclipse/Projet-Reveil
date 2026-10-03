@@ -21,7 +21,7 @@ import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 
 
 @Composable
-fun RegisterPage(name: String, modifier: Modifier = Modifier){
+fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: (Unit) -> Unit){
     var alignment : Modifier = Modifier.fillMaxWidth()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = alignment ){
@@ -46,8 +46,12 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier){
 
         Spacer(midSpacerModifier)
 
-        Button({} ) {
-            Text(text = "Valider")
+        Button(onClick = {
+            if (viewModel.pseudo != "" && viewModel.mdp != ""){
+                onConfirmClicked(Unit)
+            }
+        }) {
+            Text(text = "Confirmer")
         }
     }
 }

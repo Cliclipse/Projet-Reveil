@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
+import com.example.projetreveil.ui.theme.navigation.MonApp
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
@@ -31,10 +32,17 @@ class MainActivity : ComponentActivity() {
             ProjetReveilTheme {
                 Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
 
+
+                    MonApp(modifier = Modifier.padding(innerPadding))
+
+
+                    /*
                     RegisterPage(
                         name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onConfirmClicked = {}
                     )
+                    */
 
 
                     /*
