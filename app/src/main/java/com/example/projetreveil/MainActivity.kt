@@ -32,34 +32,7 @@ class MainActivity : ComponentActivity() {
             ProjetReveilTheme {
                 Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
 
-
                     MonApp(modifier = Modifier.padding(innerPadding))
-
-
-                    /*
-                    RegisterPage(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding),
-                        onConfirmClicked = {}
-                    )
-                    */
-
-
-                    /*
-                    WelcomePage(
-                        name = "WelcomePage",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    */
-
-                    /*
-                    SetReveilPage(
-                        name = "SetReveilPage",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    */
-
-
                 }
             }
         }
