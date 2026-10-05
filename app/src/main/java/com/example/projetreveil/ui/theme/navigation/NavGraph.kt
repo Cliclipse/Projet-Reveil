@@ -18,7 +18,7 @@ fun MonApp(modifier: Modifier){
     NavHost(
         navController,
         //"register"
-        "groupePage" //temporaire pdt, que je fais la page groupe
+        "register" //temporaire pdt, que je fais la page groupe
 
     ){
         composable("register"){

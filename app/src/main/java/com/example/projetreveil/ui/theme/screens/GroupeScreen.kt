@@ -108,15 +108,6 @@ fun GroupChat(){//Ajo uter ensuite une rélle lazy list avec les photos prises
     }
 }
 
-
-
-
-
-
-
-
-
-
 @Composable
 fun GroupButton(){
     //Temporaire
