@@ -39,7 +39,7 @@ fun MonApp(modifier: Modifier){
                 onCancelClicked = { navController.navigate("welcome") })
         }
 
-        composable("groupePage"){
+        composable("group"){
             SetGroupePage(name = "Groupe Page")
         }
 
