@@ -54,8 +54,27 @@ fun Logo(size : Float){
 
 @Composable
 fun HeadedTextField(text : String , textField : String ,  onTextChange : (String) -> Unit) {
-    Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
-    TextField(value = textField, onValueChange = onTextChange, colors = TextFieldDefaults.colors(focusedContainerColor = MaterialTheme.colorScheme.primaryContainer, unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer))
+    Text(text = text, color = MaterialTheme.colorScheme.onBackground)
+    TextField(
+        value = textField,
+        onValueChange = onTextChange,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor =
+                MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor =
+                MaterialTheme.colorScheme.surface,
+            focusedTextColor =
+                MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor =
+                MaterialTheme.colorScheme.onSurface,
+            focusedIndicatorColor =
+                MaterialTheme.colorScheme.tertiary,
+            unfocusedIndicatorColor =
+                MaterialTheme.colorScheme.outline,
+            cursorColor =
+                MaterialTheme.colorScheme.tertiary
+        )
+    )
 }
 
 @Composable
@@ -63,12 +82,12 @@ fun DigitalClock(hour: Int, minute: Int){
 
     Card(modifier = Modifier.width(200.dp).height(60.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
         )
     {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
             Text(text = String.format("%02d:%02d", hour, minute),
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onTertiary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -82,11 +101,11 @@ fun TopFlag(text: String){
         .height(60.dp)
         .rotate(-45f)
         .offset(x = (-100).dp, y = (-40).dp)
-        .background(MaterialTheme.colorScheme.onBackground),
+        .background(MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.Center){
         Text(
             text = text,
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )

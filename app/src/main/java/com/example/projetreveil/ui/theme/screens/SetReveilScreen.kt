@@ -102,12 +102,12 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier,
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
-            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.size(80.dp)) {
+            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(80.dp)) {
                 Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = MaterialTheme.colorScheme.onSecondary)
             }
 
-            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onPrimary)
+            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = MaterialTheme.colorScheme.tertiary, modifier = Modifier.size(80.dp)) {
+                Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onTertiary)
             }
         }
     }
@@ -121,13 +121,20 @@ fun Option(name : String , option : OptionAlarme){ //pas fonctionnel du tout sur
         //Spacer(Modifier.height(50.dp))
         Text(
             text = name,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
         Switch(
             checked = option.option1,
-            onCheckedChange = {}
-            )
+            onCheckedChange = {},
+            colors = androidx.compose.material3.SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
+                checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+                checkedBorderColor = MaterialTheme.colorScheme.tertiary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                uncheckedBorderColor = MaterialTheme.colorScheme.outline)
+        )
     }
 }

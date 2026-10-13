@@ -125,7 +125,8 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier,
 @Composable
 fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
 
-    val clockColor : Color = MaterialTheme.colorScheme.onBackground
+    val clockColor : Color = MaterialTheme.colorScheme.primary
+    val needlesColor : Color = MaterialTheme.colorScheme.tertiary
 
     Canvas(modifier = modifier.size(280.dp)){
         val center = Offset(size.width / 2, size.height / 2)
@@ -167,45 +168,44 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
                 end,
                 strokeWidth = tickWidth
             )
-
-
-            // Hour indicator
-            val hourAngle = Math.toRadians(((hour % 12) * 30 + (minute % 60) * 0.5) - 90)
-
-            val hourHandLength = radius * 0.6f
-
-            val endHour = Offset(
-                x = center.x + cos(hourAngle).toFloat() * hourHandLength,
-                y = center.y + sin(hourAngle).toFloat() * hourHandLength
-            )
-
-            drawLine(
-                color = clockColor,
-                start = center,
-                end = endHour,
-                strokeWidth = 8.dp.toPx(),
-                cap = StrokeCap.Round
-            )
-
-
-            // Min indicator
-            val minuteAngle = Math.toRadians((minute % 60) * 6.0 - 90)
-
-            val minuteHandLength = radius * 0.8f
-
-            val endMinute = Offset(
-                x = center.x + cos(minuteAngle).toFloat() * minuteHandLength,
-                y = center.y + sin(minuteAngle).toFloat() * minuteHandLength
-            )
-
-            drawLine(
-                color = clockColor,
-                start = center,
-                end = endMinute,
-                strokeWidth = 3.dp.toPx(),
-                cap = StrokeCap.Round
-            )
         }
+
+        // Hour indicator
+        val hourAngle = Math.toRadians(((hour % 12) * 30 + (minute % 60) * 0.5) - 90)
+
+        val hourHandLength = radius * 0.6f
+
+        val endHour = Offset(
+            x = center.x + cos(hourAngle).toFloat() * hourHandLength,
+            y = center.y + sin(hourAngle).toFloat() * hourHandLength
+        )
+
+        drawLine(
+            color = needlesColor,
+            start = center,
+            end = endHour,
+            strokeWidth = 8.dp.toPx(),
+            cap = StrokeCap.Round
+        )
+
+
+        // Min indicator
+        val minuteAngle = Math.toRadians((minute % 60) * 6.0 - 90)
+
+        val minuteHandLength = radius * 0.8f
+
+        val endMinute = Offset(
+            x = center.x + cos(minuteAngle).toFloat() * minuteHandLength,
+            y = center.y + sin(minuteAngle).toFloat() * minuteHandLength
+        )
+
+        drawLine(
+            color = needlesColor,
+            start = center,
+            end = endMinute,
+            strokeWidth = 3.dp.toPx(),
+            cap = StrokeCap.Round
+        )
     }
 }
 
@@ -241,7 +241,8 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ){
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically) {
@@ -253,10 +254,12 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
                         onEnabledChange(it)
                     },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        checkedTrackColor = Color.Green,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onPrimaryFixed,
-                        uncheckedTrackColor = Color.DarkGray
+                        checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
+                        checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+                        checkedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.outline,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.outline
                     )
                 )
 
@@ -282,7 +285,9 @@ fun AlarmList(alarms: MutableList<AlarmData>, modifier: Modifier = Modifier){
             text = "Reveil Perso",
             modifier = Modifier.fillMaxWidth().height(30.dp).padding(horizontal = 50.dp, vertical = 0.dp),
             fontSize = 28.sp,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(10.dp))

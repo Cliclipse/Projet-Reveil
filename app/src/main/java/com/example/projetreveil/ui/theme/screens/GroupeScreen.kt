@@ -35,20 +35,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.Logo
 
 @Composable
 fun SetGroupePage(name : String){
-    var backGroundColorLeft = MaterialTheme.colorScheme.primary
-    var backGroundColorRight = MaterialTheme.colorScheme.primaryContainer
 
-
-
-    Row(){
-        PickGroupSpace(modifier = Modifier.background(backGroundColorLeft).weight(0.25f).fillMaxSize())
-        GroupeSpace(modifier = Modifier.background(backGroundColorRight).weight(0.75f).fillMaxSize())
+    Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
+        PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
+        GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
     }
 }
 
@@ -86,17 +84,21 @@ fun PickGroupSpace(modifier: Modifier){
 
 @Composable
 fun HeadOfGroupChat(){
-    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background).fillMaxWidth(),
+    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.surface).fillMaxWidth(),
         contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally){
             Spacer(modifier = Modifier.height(40.dp))
             Logo(75f)
             Spacer(modifier = Modifier.height(6.dp))
-            Text("Nom du Groupe")
+            Text("Nom du Groupe",
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
         }
         IconButton(onClick = {}, modifier = Modifier.align(Alignment.TopEnd).padding(start = 6.dp , top = 6.dp) ,
-            content = { Icon(Icons.Filled.MoreVert , contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onBackground) })
+            content = { Icon(Icons.Filled.MoreVert , contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onSurfaceVariant) })
     }
 }
 
@@ -114,12 +116,31 @@ fun GroupChat(){//Ajo uter ensuite une rélle lazy list avec les photos prises
 @Composable
 fun GroupButton(){
     //Temporaire
-    val imageModifier = Modifier.size(65.dp).clip(shape = RoundedCornerShape(15.dp))
-    Image(painter = painterResource(R.drawable.penguin) ,"LogoPenguin" , contentScale = ContentScale.Crop,  modifier = imageModifier)
+    Box(contentAlignment = Alignment.Center, modifier = Modifier
+        .background(color = MaterialTheme.colorScheme.secondaryContainer)
+        .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(15.dp))
+        .size(65.dp)
+        .clip(shape = RoundedCornerShape(15.dp))){
+            Image(painter = painterResource(R.drawable.penguin) ,
+                "LogoPenguin" ,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(15.dp))
+        )
+    }
 }
 
+@Preview
 @Composable
 fun AddGroupButton(){
-    IconButton(onClick = {}, modifier = Modifier.padding(start = 6.dp , top = 6.dp).size(65.dp).clip(shape = RoundedCornerShape(15.dp)),
-        content = { Icon(Icons.Filled.AddCircle , contentDescription = "Ajouter Groupe" , tint = MaterialTheme.colorScheme.onBackground)})
+    IconButton(onClick = {},
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiary)
+            .padding(start = 6.dp , top = 6.dp)
+            .size(65.dp)
+            .clip(shape = RoundedCornerShape(15.dp)),
+        content = {
+            Icon(Icons.Filled.AddCircle ,
+                contentDescription = "Ajouter Groupe" ,
+                tint = MaterialTheme.colorScheme.onTertiary)
+        }
+    )
 }
