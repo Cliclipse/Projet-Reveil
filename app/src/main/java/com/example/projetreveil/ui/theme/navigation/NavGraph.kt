@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetGroupePage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
@@ -20,8 +21,7 @@ fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
 
     NavHost(
         navController,
-        //"register"
-        "register"
+        startDestination = "register"
 
     ){
         composable("register"){
@@ -58,6 +58,15 @@ fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
                 onGoToSettingsClicked = { navController.navigate("settings") },
                 settingsDataStore = dataStore
                 )
+        }
+
+        composable(route = "alarm-ringing"){
+            AlarmRingingPage(name = "Alarm Ringing",
+                modifier = modifier,
+                alarmTime = "08:30",
+                onSnoozeClicked = { navController.navigate("welcome") },
+                onStopClicked = { navController.navigate("welcome") }
+            )
         }
 
     }
