@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,8 +41,10 @@ import com.example.projetreveil.ui.theme.utilities.Logo
 
 @Composable
 fun SetGroupePage(name : String){
-    var backGroundColorLeft = Color(0xFF109C74)
-    var backGroundColorRight = Color(0xFFF7ECAD)
+    var backGroundColorLeft = MaterialTheme.colorScheme.primary
+    var backGroundColorRight = MaterialTheme.colorScheme.primaryContainer
+
+
 
     Row(){
         PickGroupSpace(modifier = Modifier.background(backGroundColorLeft).weight(0.25f).fillMaxSize())
@@ -83,8 +86,8 @@ fun PickGroupSpace(modifier: Modifier){
 
 @Composable
 fun HeadOfGroupChat(){
-    var backGroundColor = Color(0xFFE8C689)
-    Box(modifier = Modifier.background(color = backGroundColor).fillMaxWidth() ,    contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background).fillMaxWidth(),
+        contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally){
             Spacer(modifier = Modifier.height(40.dp))
             Logo(75f)
@@ -93,7 +96,7 @@ fun HeadOfGroupChat(){
             Spacer(modifier = Modifier.height(20.dp))
         }
         IconButton(onClick = {}, modifier = Modifier.align(Alignment.TopEnd).padding(start = 6.dp , top = 6.dp) ,
-            content = { Icon(Icons.Filled.MoreVert , contentDescription = "Ajouter" , tint = Color.White) })
+            content = { Icon(Icons.Filled.MoreVert , contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onBackground) })
     }
 }
 
@@ -118,5 +121,5 @@ fun GroupButton(){
 @Composable
 fun AddGroupButton(){
     IconButton(onClick = {}, modifier = Modifier.padding(start = 6.dp , top = 6.dp).size(65.dp).clip(shape = RoundedCornerShape(15.dp)),
-        content = { Icon(Icons.Filled.AddCircle , contentDescription = "Ajouter Groupe" , tint = Color.White)})
+        content = { Icon(Icons.Filled.AddCircle , contentDescription = "Ajouter Groupe" , tint = MaterialTheme.colorScheme.onBackground)})
 }

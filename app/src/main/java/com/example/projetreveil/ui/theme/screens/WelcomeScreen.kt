@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -60,6 +61,7 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToMenuClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
+                onGoToSettingsClicked: () -> Unit,
                 settingsDataStore: DataStoreSettingsApp) {
 
     /*
@@ -114,19 +116,23 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier,
             modifier = Modifier.fillMaxSize().padding(34f.dp),
             onGoToMenuClicked = { onGoToMenuClicked() },
             onGoToGroupClicked = { onGoToGroupClicked() },
-            onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() }
+            onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
+            onGoToSettingsClicked = { onGoToSettingsClicked() }
         )
     }
 }
 
 @Composable
 fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
+
+    val clockColor : Color = MaterialTheme.colorScheme.onBackground
+
     Canvas(modifier = modifier.size(280.dp)){
         val center = Offset(size.width / 2, size.height / 2)
         val radius = size.minDimension / 2
 
         drawCircle(
-            color = Color.Black,
+            color = clockColor,
             radius = radius,
             style = Stroke(width = 2.dp.toPx())
         )
@@ -156,7 +162,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
             )
 
             drawLine(
-                color = Color.Black,
+                color = clockColor,
                 start,
                 end,
                 strokeWidth = tickWidth
@@ -174,7 +180,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
             )
 
             drawLine(
-                color = Color.Blue,
+                color = clockColor,
                 start = center,
                 end = endHour,
                 strokeWidth = 8.dp.toPx(),
@@ -193,7 +199,7 @@ fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
             )
 
             drawLine(
-                color = Color.Blue,
+                color = clockColor,
                 start = center,
                 end = endMinute,
                 strokeWidth = 3.dp.toPx(),
@@ -235,7 +241,7 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ){
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically) {
@@ -247,9 +253,9 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
                         onEnabledChange(it)
                     },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
                         checkedTrackColor = Color.Green,
-                        uncheckedThumbColor = Color.LightGray,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onPrimaryFixed,
                         uncheckedTrackColor = Color.DarkGray
                     )
                 )
@@ -258,7 +264,7 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
 
                 Text(
                     text = String.format("%02d:%02d", alarm.hour, alarm.minute),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -276,7 +282,7 @@ fun AlarmList(alarms: MutableList<AlarmData>, modifier: Modifier = Modifier){
             text = "Reveil Perso",
             modifier = Modifier.fillMaxWidth().height(30.dp).padding(horizontal = 50.dp, vertical = 0.dp),
             fontSize = 28.sp,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(10.dp))

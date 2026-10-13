@@ -11,18 +11,17 @@ import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetGroupePage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
+import com.example.projetreveil.ui.theme.screens.SettingsPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 
 @Composable
-fun MonApp(modifier: Modifier){
+fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
     val navController = rememberNavController()
-
-    var dataStore: DataStoreSettingsApp = DataStoreSettingsApp(LocalContext.current)
 
     NavHost(
         navController,
         //"register"
-        "register" //temporaire pdt, que je fais la page groupe
+        "register"
 
     ){
         composable("register"){
@@ -35,6 +34,7 @@ fun MonApp(modifier: Modifier){
                 onGoToGroupClicked = { navController.navigate("group") },
                 onGoToMenuClicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
+                onGoToSettingsClicked = { navController.navigate("settings") },
                 settingsDataStore = dataStore
             )
         }
@@ -42,11 +42,22 @@ fun MonApp(modifier: Modifier){
         composable("set-alarm"){
             SetReveilPage(name = "Set Alarm Page", modifier = modifier,
                 onConfirmClicked = { navController.navigate("welcome") },
-                onCancelClicked = { navController.navigate("welcome") })
+                onCancelClicked = { navController.navigate("welcome") }
+            )
         }
 
         composable("group"){
             SetGroupePage(name = "Groupe Page")
+        }
+
+        composable(route = "settings"){
+            SettingsPage(name = "Settings", modifier = modifier,
+                onGoToMenuClicked = { navController.navigate("welcome") },
+                onGoToGroupClicked = { navController.navigate("group") },
+                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm")},
+                onGoToSettingsClicked = { navController.navigate("settings") },
+                settingsDataStore = dataStore
+                )
         }
 
     }

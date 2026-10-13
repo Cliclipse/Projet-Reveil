@@ -17,8 +17,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -51,8 +54,8 @@ fun Logo(size : Float){
 
 @Composable
 fun HeadedTextField(text : String , textField : String ,  onTextChange : (String) -> Unit) {
-    Text(text = text)
-    TextField(value = textField, onValueChange = onTextChange)
+    Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
+    TextField(value = textField, onValueChange = onTextChange, colors = TextFieldDefaults.colors(focusedContainerColor = MaterialTheme.colorScheme.primaryContainer, unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer))
 }
 
 @Composable
@@ -60,12 +63,12 @@ fun DigitalClock(hour: Int, minute: Int){
 
     Card(modifier = Modifier.width(200.dp).height(60.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Black)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         )
     {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
             Text(text = String.format("%02d:%02d", hour, minute),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -79,11 +82,11 @@ fun TopFlag(text: String){
         .height(60.dp)
         .rotate(-45f)
         .offset(x = (-100).dp, y = (-40).dp)
-        .background(Color.Black),
+        .background(MaterialTheme.colorScheme.onBackground),
         contentAlignment = Alignment.Center){
         Text(
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
@@ -96,25 +99,32 @@ fun RadialMenu(
     modifier: Modifier,
     onGoToGroupClicked: () -> Unit,
     onGoToMenuClicked: () -> Unit,
-    onGoToConfigureAlarmClicked: () -> Unit){
+    onGoToConfigureAlarmClicked: () -> Unit,
+    onGoToSettingsClicked: () -> Unit){
 
     var isExpended by remember { mutableStateOf(false) }
 
     val animationDistProgressBtn1 by animateFloatAsState(
         targetValue = if (isExpended) 1f else 0f,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing),
         label = "radialMenuDistBtn1InAnimation"
     )
 
     val animationDistProgressBtn2 by animateFloatAsState(
         targetValue = if (isExpended) 1f else 0f,
-        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing),
         label = "radialMenuDistBtn2InAnimation"
     )
 
     val animationDistProgressBt3 by animateFloatAsState(
         targetValue = if (isExpended) 1f else 0f,
-        animationSpec = tween(durationMillis = 700, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "radialMenuDistBtn3InAnimation"
+    )
+
+    val animationDistProgressBt4 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
         label = "radialMenuDistBtn3InAnimation"
     )
 
@@ -122,7 +132,7 @@ fun RadialMenu(
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             text = "Menu",
-            angle = 10f,
+            angle = 0f,
             progressDist = animationDistProgressBtn1,
             onClick = { onGoToMenuClicked() }
         )
@@ -130,7 +140,7 @@ fun RadialMenu(
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             text = "Group",
-            angle = 45f,
+            angle = 30f,
             progressDist = animationDistProgressBtn2,
             onClick = { onGoToGroupClicked() }
         )
@@ -138,20 +148,28 @@ fun RadialMenu(
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             text = "New Alarm",
-            angle = 80f,
+            angle = 60f,
             progressDist = animationDistProgressBt3,
             onClick = { onGoToConfigureAlarmClicked() }
+        )
+
+        RadialButton(
+            Modifier.align(Alignment.BottomEnd),
+            text = "Settings",
+            angle = 90f,
+            progressDist = animationDistProgressBt4,
+            onClick = { onGoToSettingsClicked() }
         )
 
         Box(modifier = Modifier
             .size(70f.dp)
             .align(Alignment.BottomEnd)
             .zIndex(2f)
-            .background(color = Color.Black, shape = CircleShape)
+            .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
             .clip(shape = CircleShape)
             .clickable { isExpended = !isExpended },
             contentAlignment = Alignment.Center){
-            Text(text = if (isExpended) "x" else "+", color = Color.White, fontSize = 30.sp)
+            Text(text = if (isExpended) "x" else "+", color = MaterialTheme.colorScheme.onPrimary, fontSize = 30.sp)
         }
     }
 }
@@ -160,7 +178,7 @@ fun RadialMenu(
 @Composable
 fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: Float, onClick: () -> Unit){
 
-    val radius = 130f;
+    val radius = 150f;
 
     val radians = Math.toRadians(angle.toDouble())
 
@@ -171,12 +189,12 @@ fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: F
         .zIndex(1f)
         .alpha(alpha = if (progressDist < 0.05f) 0f else 1f)
         .offset(x.dp, y.dp)
-        .background(color = Color.DarkGray, shape = CircleShape)
+        .background(color = MaterialTheme.colorScheme.secondary, shape = CircleShape)
         .clip(shape = CircleShape)
         .clickable(enabled = progressDist > 0.9f) { onClick() },
         contentAlignment = Alignment.Center,
         ){
-            Text(text = text, color = Color.White)
+            Text(text = text, color = MaterialTheme.colorScheme.onSecondary, textAlign = TextAlign.Center)
     }
 
 }

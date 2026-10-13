@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -101,12 +102,12 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier,
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
-            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = Color.Red, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = Color.White,)
+            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.size(80.dp)) {
+                Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = MaterialTheme.colorScheme.onSecondary)
             }
 
-            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = Color.Green, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = Color.White)
+            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.size(80.dp)) {
+                Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onPrimary)
             }
         }
     }
