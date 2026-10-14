@@ -16,13 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
+import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabase
 import com.example.projetreveil.ui.theme.navigation.MonApp
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.SettingsPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModelFactory
+import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
+import kotlin.collections.emptyList
 
 class MainActivity : ComponentActivity() {
 
@@ -31,20 +38,34 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         Log.d("Main Activity" , "OnCreate")
+
+        val alarmsDataBase = Room.databaseBuilder(
+            applicationContext,
+            AlarmDatabase::class.java,
+            "database-alarms"
+        ).build()
+
+        val alarmDao = alarmsDataBase.AlarmDao()
+
         enableEdgeToEdge()
         setContent {
 
-            var dataStore: DataStoreSettingsApp = DataStoreSettingsApp(LocalContext.current)
+            val dataStore: DataStoreSettingsApp = DataStoreSettingsApp(LocalContext.current)
 
             val nightMode by dataStore.nightMode.collectAsStateWithLifecycle(initialValue = false)
 
             ProjetReveilTheme(darkTheme = nightMode) {
                 Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
 
+                    val alarmsViewModel : AlarmsViewModel = viewModel(factory = AlarmsViewModelFactory(alarmDao))
+
                     MonApp(
                         modifier = Modifier.padding(innerPadding),
-                        dataStore = dataStore
+                        dataStore = dataStore,
+                        alarmsViewModel
                     )
                 }
             }

@@ -14,9 +14,14 @@ import com.example.projetreveil.ui.theme.screens.SetGroupePage
 import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.SettingsPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 
 @Composable
-fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
+fun MonApp(
+    modifier: Modifier,
+           dataStore: DataStoreSettingsApp,
+           alarmsViewModel: AlarmsViewModel
+){
     val navController = rememberNavController()
 
     NavHost(
@@ -31,6 +36,7 @@ fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
 
         composable("welcome"){
             WelcomePage(name = "Welcome Page", modifier = modifier,
+                alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
                 onGoToMenuClicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
@@ -40,7 +46,10 @@ fun MonApp(modifier: Modifier, dataStore: DataStoreSettingsApp){
         }
 
         composable("set-alarm"){
-            SetReveilPage(name = "Set Alarm Page", modifier = modifier,
+            SetReveilPage(
+                name = "Set Alarm Page",
+                modifier = modifier,
+                alarmsViewModel,
                 onConfirmClicked = { navController.navigate("welcome") },
                 onCancelClicked = { navController.navigate("welcome") }
             )

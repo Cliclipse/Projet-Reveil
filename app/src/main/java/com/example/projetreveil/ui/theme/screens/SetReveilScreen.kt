@@ -34,11 +34,13 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -53,19 +55,18 @@ data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que b
 @Composable
 @OptIn(ExperimentalMaterial3Api::class) //evite l'affichage d'une erreur inutile sur l'ide
 fun SetReveilPage(name: String, modifier: Modifier = Modifier,
+                  alarmsViewModel: AlarmsViewModel,
                   onConfirmClicked: () -> Unit,
                   onCancelClicked: () -> Unit){
     var optionAlarme : OptionAlarme = OptionAlarme(false, false , false);
-    var time by remember {
-        mutableStateOf(Calendar.getInstance())
-    }
 
-    LaunchedEffect(Unit) {
-        while (true){
-            time = Calendar.getInstance()
-            delay(1000.milliseconds)
-        }
-    }
+    val currentTime = remember { Calendar.getInstance() }
+
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = true
+    )
 
     Box(modifier = Modifier.fillMaxWidth()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
@@ -75,9 +76,7 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier,
 
             //Truc qui se déroule
 
-            var state : TimePickerState = TimePickerState(time.get(java.util.Calendar.HOUR), time.get(java.util.Calendar.MINUTE) , true );
-            TimeInput(state)
-
+            TimeInput(timePickerState)
 
             Spacer(Modifier.height(60.dp)); //Temporaire, pour occuper la place que prendra le truc qui roule
 
@@ -106,8 +105,23 @@ fun SetReveilPage(name: String, modifier: Modifier = Modifier,
                 Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = MaterialTheme.colorScheme.onSecondary)
             }
 
-            FloatingActionButton(onClick = { onConfirmClicked() }, containerColor = MaterialTheme.colorScheme.tertiary, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Add, contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onTertiary)
+            FloatingActionButton(
+                onClick = {
+                    alarmsViewModel.AddAlarm(hour = timePickerState.hour,
+                        minutes = timePickerState.minute,
+                        enabled = true
+                    )
+
+                    onConfirmClicked()
+                },
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.size(80.dp))
+            {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Ajouter" ,
+                    tint = MaterialTheme.colorScheme.onTertiary
+                )
             }
         }
     }

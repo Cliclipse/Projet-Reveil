@@ -40,9 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.utilities.TopFlag
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.cos
@@ -50,46 +52,14 @@ import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
 
 
-data class AlarmData(  // WIP ONLY FOR TESTS in ALARM LIST
-    val hour: Int,
-    val minute: Int,
-    val enabled: Boolean
-)
-
 @Composable
 fun WelcomePage(name: String, modifier: Modifier = Modifier,
+                alarmsViewModel: AlarmsViewModel,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToMenuClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
                 onGoToSettingsClicked: () -> Unit,
                 settingsDataStore: DataStoreSettingsApp) {
-
-    /*
-    val nightMode by settingsDataStore.nightMode.collectAsStateWithLifecycle(initialValue = false)
-
-    val scope = rememberCoroutineScope()
-
-    println(nightMode)
-
-    Switch(
-        modifier = Modifier.padding(100.dp),
-        checked = nightMode,
-        onCheckedChange = {scope.launch { settingsDataStore.defineNightMode(!nightMode) }}
-    )
-    */
-
-    val exempleAlarms = remember {
-        mutableStateListOf(
-            AlarmData(7, 25, false),
-            AlarmData(10, 40, true),
-            AlarmData(5, 10, true),
-            AlarmData(15, 59, false),
-            AlarmData(12, 32, true),
-            AlarmData(15, 59, false),
-            AlarmData(15, 59, false),
-            AlarmData(15, 59, false)
-        )
-    }
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
@@ -107,7 +77,7 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier,
             Spacer(modifier = Modifier.height(40.dp))
 
             // Liste Reveil
-            AlarmList(exempleAlarms, modifier = Modifier.height(340.dp))
+            AlarmList(alarmsViewModel, modifier = Modifier.height(340.dp))
 
         }
 
@@ -236,7 +206,7 @@ fun ClockTimeLive(){
 }
 
 @Composable
-fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
+fun AlarmItem(alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
@@ -266,7 +236,7 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = String.format("%02d:%02d", alarm.hour, alarm.minute),
+                    text = String.format("%02d:%02d", alarm.hour, alarm.minutes),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
@@ -278,7 +248,9 @@ fun AlarmItem(alarm: AlarmData, onEnabledChange: (Boolean) -> Unit){
 }
 
 @Composable
-fun AlarmList(alarms: MutableList<AlarmData>, modifier: Modifier = Modifier){
+fun AlarmList(alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
+
+    val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
 
     Column() {
         Text(
@@ -293,14 +265,10 @@ fun AlarmList(alarms: MutableList<AlarmData>, modifier: Modifier = Modifier){
         Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn(modifier = modifier.fillMaxWidth()) {
-            items(alarms) { alarm ->
+            items(items = alarms, key = {alarm -> alarm.id }) { alarm ->
                 AlarmItem(alarm = alarm,
                     onEnabledChange = { newEnabledValue ->
-                        val index = alarms.indexOf(alarm)
-
-                        alarms[index] = alarm.copy(
-                            enabled = newEnabledValue
-                        )
+                        alarmsViewModel.UpdateAlarmEnabled(alarm = alarm, enabled = newEnabledValue)
                     })
                 Spacer(modifier = Modifier.height(6.dp))
             }
