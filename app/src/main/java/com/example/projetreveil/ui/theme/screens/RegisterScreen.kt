@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.HeadedTextField
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
@@ -38,15 +40,15 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "S'enregistrer", color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
+        Text(text = stringResource(R.string.login), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
 
         Spacer(Modifier.size(40.dp))
 
-        HeadedTextField("Pseudo" , viewModel.pseudo,  {textInField : String -> viewModel.pseudo = textInField})
+        HeadedTextField(stringResource(R.string.pseudo) , viewModel.pseudo,  {textInField : String -> viewModel.pseudo = textInField})
 
         Spacer(midSpacerModifier)
 
-        HeadedTextField("Mot de Passe" , viewModel.mdp,  {textInField : String -> viewModel.mdp = textInField})
+        HeadedTextField(stringResource(R.string.password) , viewModel.mdp,  {textInField : String -> viewModel.mdp = textInField})
 
         Spacer(midSpacerModifier)
 
@@ -58,7 +60,7 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
                 onConfirmClicked(Unit)
             }
         }) {
-            Text(text = "Confirmer")
+            Text(text = stringResource(R.string.confirm))
         }
     }
 }

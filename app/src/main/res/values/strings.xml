@@ -14,7 +14,7 @@
     <string name="stop"> Arrêter </string>
 
     <!-- GroupeScreen-->
-    <string name="groupe_name"> Nom du Groupe </string>
+    <string name="group_name"> Nom du Groupe </string>
     <string name="add_group"> Ajouter Groupe </string>
 
     <!-- RegisterScreen-->

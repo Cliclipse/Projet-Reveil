@@ -36,10 +36,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
@@ -263,7 +265,7 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
 
     Column() {
         Text(
-            text = "Reveil Perso",
+            text = stringResource(R.string.personal_alarm),
             modifier = Modifier.fillMaxWidth().height(30.dp).padding(horizontal = 50.dp, vertical = 0.dp),
             fontSize = 28.sp,
             color = MaterialTheme.colorScheme.onBackground,

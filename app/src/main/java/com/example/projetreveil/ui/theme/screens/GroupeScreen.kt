@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -90,7 +91,7 @@ fun HeadOfGroupChat(){
             Spacer(modifier = Modifier.height(40.dp))
             Logo(75f)
             Spacer(modifier = Modifier.height(6.dp))
-            Text("Nom du Groupe",
+            Text(stringResource(R.string.group_name),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -139,7 +140,7 @@ fun AddGroupButton(){
             .clip(shape = RoundedCornerShape(15.dp)),
         content = {
             Icon(Icons.Filled.AddCircle ,
-                contentDescription = "Ajouter Groupe" ,
+                contentDescription = stringResource(R.string.add_group) ,
                 tint = MaterialTheme.colorScheme.onTertiary)
         }
     )

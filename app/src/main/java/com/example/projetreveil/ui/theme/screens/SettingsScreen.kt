@@ -22,11 +22,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import kotlinx.coroutines.launch
@@ -50,7 +52,7 @@ fun SettingsPage(
 
             // Titre Page
             Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Settings",
+                Text(stringResource(R.string.settings),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 44.sp,
                     style = MaterialTheme.typography.titleLarge,
@@ -67,7 +69,7 @@ fun SettingsPage(
 
                 // Night Mode
                 SwitchSetting(
-                    name = "NightMode",
+                    name = stringResource(R.string.night_mode),
                     checked = nightMode,
                     onCheckedChange = { scope.launch { settingsDataStore.defineNightMode(!nightMode) } }
                 )

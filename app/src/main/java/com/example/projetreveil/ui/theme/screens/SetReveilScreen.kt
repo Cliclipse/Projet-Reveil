@@ -32,6 +32,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
+import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 
@@ -63,7 +65,7 @@ fun SetReveilPage(name: String,
 
     Box(modifier = Modifier.fillMaxWidth()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
-                        TopFlag("PERSO")
+                        TopFlag(stringResource(R.string.perso))
 
             Spacer(Modifier.height(95.dp));
 
@@ -78,20 +80,20 @@ fun SetReveilPage(name: String,
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                Option("Vibration" , optionAlarme)
+                Option(stringResource(R.string.vibration) , optionAlarme)
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                Option("Répéter" , optionAlarme)
+                Option(stringResource(R.string.repeat) , optionAlarme)
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                Option("Quotidien" , optionAlarme)
+                Option(stringResource(R.string.daily) , optionAlarme)
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
             FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Close, contentDescription = "Annuler", tint = MaterialTheme.colorScheme.onSecondary)
+                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.abandon), tint = MaterialTheme.colorScheme.onSecondary)
             }
 
             FloatingActionButton(
@@ -117,7 +119,7 @@ fun SetReveilPage(name: String,
             {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "Ajouter" ,
+                    contentDescription = stringResource(R.string.add) ,
                     tint = MaterialTheme.colorScheme.onTertiary
                 )
             }
