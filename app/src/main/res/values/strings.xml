@@ -1,3 +1,41 @@
+
+<!-- values-fr/strings.xml -->
 <resources>
     <string name="app_name">ProjetReveil</string>
+
+    <!-- POur moi du futur, pensez à modif le code du screen-->
+
+    <!-- AlarmRingingPage-->
+    <string name="alarm_in_progress"> Reveil en cours</string>
+    <string name="reveil_message">  Reveille toi ! Il est l\'heure ! </string>
+    <string name="ringtone"> SONNERIE </string>
+    <string name="snooze"> Snooze </string>
+    <string name="five_minuts"> 5 minutes </string>
+    <string name="stop"> Arrêter </string>
+
+    <!-- GroupeScreen-->
+    <string name="groupe_name"> Nom du Groupe </string>
+    <string name="add_group"> Ajouter Groupe </string>
+
+    <!-- RegisterScreen-->
+    <string name="login"> S\'enregistrer </string>
+    <string name="pseudo"> Pseudo </string>
+    <string name="password"> Mot de Passe </string>
+    <string name="confirm"> Confirmer </string>
+
+    <!-- SetReveilScreen-->
+    <string name="perso"> PERSO </string>
+    <string name="vibration"> Vibration </string>
+    <string name="repeat"> Répéter </string>
+    <string name="daily"> Quotidien </string>
+    <string name="abandon"> Annuler </string>
+    <string name="add"> Ajouter </string>
+
+    <!-- SettingsScreen-->
+    <string name="settings"> Paramètres </string>
+    <string name="night_mode"> Mode Nuit </string>
+
+    <!-- WelcomeScreen-->
+    <string name="personal_alarm"> Réveil Perso </string>
+
 </resources>
