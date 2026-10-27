@@ -1,5 +1,7 @@
 package com.example.projetreveil
 
+import android.app.AlarmManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,14 +24,8 @@ import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
 import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabase
 import com.example.projetreveil.ui.theme.navigation.MonApp
-import com.example.projetreveil.ui.theme.screens.RegisterPage
-import com.example.projetreveil.ui.theme.screens.SetReveilPage
-import com.example.projetreveil.ui.theme.screens.SettingsPage
-import com.example.projetreveil.ui.theme.screens.WelcomePage
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModelFactory
-import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
-import kotlin.collections.emptyList
 
 class MainActivity : ComponentActivity() {
 
@@ -64,6 +60,7 @@ class MainActivity : ComponentActivity() {
 
                     MonApp(
                         modifier = Modifier.padding(innerPadding),
+                        context = applicationContext,
                         dataStore = dataStore,
                         alarmsViewModel
                     )

@@ -1,5 +1,6 @@
 package com.example.projetreveil.ui.theme.screens
 
+import android.content.Context
 import android.icu.util.Calendar
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
@@ -53,7 +55,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 @Composable
-fun WelcomePage(name: String, modifier: Modifier = Modifier,
+fun WelcomePage(name: String,
+                context: Context,
+                modifier: Modifier = Modifier,
                 alarmsViewModel: AlarmsViewModel,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToMenuClicked: () -> Unit,
@@ -77,7 +81,7 @@ fun WelcomePage(name: String, modifier: Modifier = Modifier,
             Spacer(modifier = Modifier.height(40.dp))
 
             // Liste Reveil
-            AlarmList(alarmsViewModel, modifier = Modifier.height(340.dp))
+            AlarmList(context = context, alarmsViewModel, modifier = Modifier.height(340.dp))
 
         }
 
@@ -206,7 +210,7 @@ fun ClockTimeLive(){
 }
 
 @Composable
-fun AlarmItem(alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
+fun AlarmItem(context: Context, alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
@@ -221,6 +225,11 @@ fun AlarmItem(alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
                     checked = alarm.enabled,
                     onCheckedChange = {
                         // Lambda pour pouvoir réagir au fait que cet alarm doit etre considérée comme activée
+
+                        val alarmsUtilities: AlarmsUtilities = AlarmsUtilities()
+
+                        alarmsUtilities.SetAlarm(context = context, alarm.hour, alarm.minutes, !alarm.enabled)
+
                         onEnabledChange(it)
                     },
                     colors = SwitchDefaults.colors(
@@ -248,7 +257,7 @@ fun AlarmItem(alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
 }
 
 @Composable
-fun AlarmList(alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
+fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
 
@@ -266,7 +275,8 @@ fun AlarmList(alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
 
         LazyColumn(modifier = modifier.fillMaxWidth()) {
             items(items = alarms, key = {alarm -> alarm.id }) { alarm ->
-                AlarmItem(alarm = alarm,
+                AlarmItem(context = context,
+                    alarm = alarm,
                     onEnabledChange = { newEnabledValue ->
                         alarmsViewModel.UpdateAlarmEnabled(alarm = alarm, enabled = newEnabledValue)
                     })

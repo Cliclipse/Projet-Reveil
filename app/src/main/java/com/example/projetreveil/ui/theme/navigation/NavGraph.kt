@@ -1,9 +1,11 @@
 package com.example.projetreveil.ui.theme.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.activity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,8 +21,9 @@ import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 @Composable
 fun MonApp(
     modifier: Modifier,
-           dataStore: DataStoreSettingsApp,
-           alarmsViewModel: AlarmsViewModel
+    context: Context,
+   dataStore: DataStoreSettingsApp,
+   alarmsViewModel: AlarmsViewModel
 ){
     val navController = rememberNavController()
 
@@ -35,7 +38,9 @@ fun MonApp(
         }
 
         composable("welcome"){
-            WelcomePage(name = "Welcome Page", modifier = modifier,
+            WelcomePage(name = "Welcome Page",
+                context = context,
+                modifier = modifier,
                 alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
                 onGoToMenuClicked = { navController.navigate("welcome") },
@@ -48,6 +53,7 @@ fun MonApp(
         composable("set-alarm"){
             SetReveilPage(
                 name = "Set Alarm Page",
+                context = context,
                 modifier = modifier,
                 alarmsViewModel,
                 onConfirmClicked = { navController.navigate("welcome") },
