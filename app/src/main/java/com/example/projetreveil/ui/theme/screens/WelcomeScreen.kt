@@ -7,17 +7,26 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -32,12 +41,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -211,7 +222,11 @@ fun ClockTimeLive(){
 }
 
 @Composable
-fun AlarmItem(context: Context, alarm: Alarm, onEnabledChange: (Boolean) -> Unit){
+fun AlarmItem(context: Context,
+              alarm: Alarm,
+              onEnabledChange: (Boolean) -> Unit,
+              onDeleteClicked: () -> Unit
+){
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
@@ -252,10 +267,56 @@ fun AlarmItem(context: Context, alarm: Alarm, onEnabledChange: (Boolean) -> Unit
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(onClick = { onDeleteClicked() },
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Alarm"
+                    )
+                }
             }
         }
     }
+}
 
+@Composable
+fun GhostAlarmItem(){
+
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+        Card(modifier = Modifier.width(300.dp).height(60.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
+            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        ){
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                Text(modifier = Modifier.weight(2f),
+                    text = "No Alarm",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    modifier = Modifier.weight(2f),
+                    imageVector = Icons.Default.Notifications,
+                    contentDescription = "Delete Alarm"
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -275,16 +336,29 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LazyColumn(modifier = modifier.fillMaxWidth()) {
+        LazyColumn(modifier = Modifier.fillMaxWidth().height(300.dp).clipToBounds()) {
             items(items = alarms, key = {alarm -> alarm.id }) { alarm ->
                 AlarmItem(context = context,
                     alarm = alarm,
-                    onEnabledChange = { newEnabledValue ->
+                    onEnabledChange = {
+                            newEnabledValue ->
                         alarmsViewModel.UpdateAlarmEnabled(alarm = alarm, enabled = newEnabledValue)
-                    })
+                    },
+                    onDeleteClicked = {
+                        AlarmsUtilities().StopAlarm(context, alarm.id)
+                        alarmsViewModel.DeleteAlarm(alarm);
+                    }
+                )
                 Spacer(modifier = Modifier.height(6.dp))
             }
+
+            if (alarms.isEmpty()){
+                item {
+                    GhostAlarmItem()
+                }
+            }
         }
+
     }
 }
 

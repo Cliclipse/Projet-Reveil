@@ -169,8 +169,8 @@ fun AlarmRingingActionButton(
             )
         ) {
             Icon(
-                imageVector = icon,
-                contentDescription = primaryText
+                    imageVector = icon,
+            contentDescription = primaryText
             )
         }
 
