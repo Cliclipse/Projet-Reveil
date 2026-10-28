@@ -1,6 +1,5 @@
-package com.example.projetreveil.ui.theme.data
+package com.example.projetreveil.ui.theme.data.Objet
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

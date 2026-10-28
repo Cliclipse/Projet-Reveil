@@ -1,10 +1,10 @@
-package com.example.projetreveil.ui.theme.data
+package com.example.projetreveil.ui.theme.data.Objet
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Personne(
+data class Users(
     val id: Long? = null,
     val name : String,
     @SerialName("created_at") val heure: String,
