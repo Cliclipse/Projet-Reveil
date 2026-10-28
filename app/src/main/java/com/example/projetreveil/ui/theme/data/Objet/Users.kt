@@ -7,6 +7,5 @@ import kotlinx.serialization.Serializable
 data class Users(
     val id: Long? = null,
     val name : String,
-    @SerialName("created_at") val heure: String,
     @SerialName("profil_picture") val profilPicture: Long?
 )

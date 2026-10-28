@@ -57,6 +57,7 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
             containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
             onClick = {
             if (viewModel.pseudo != "" && viewModel.mdp != ""){
+                viewModel.registerUser(viewModel.pseudo)
                 onConfirmClicked(Unit)
             }
         }) {

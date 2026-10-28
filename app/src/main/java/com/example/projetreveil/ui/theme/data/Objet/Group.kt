@@ -7,5 +7,4 @@ import kotlinx.serialization.Serializable
 data class Group(
     val id: Long? = null,
     val GroupName : String,
-    @SerialName("created_at") val heure: String,
 )
