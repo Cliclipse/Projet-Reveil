@@ -15,8 +15,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +42,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -147,34 +157,39 @@ fun RadialMenu(
         label = "radialMenuDistBtn3InAnimation"
     )
 
+    // Home
     Box(modifier = modifier.fillMaxSize()){
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
-            text = "Menu",
+            icon = Icons.Default.Home,
             angle = 0f,
             progressDist = animationDistProgressBtn1,
             onClick = { onGoToMenuClicked() }
         )
 
+        // Group
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
-            text = "Group",
+            icon = Icons.Default.Person,
             angle = 30f,
             progressDist = animationDistProgressBtn2,
             onClick = { onGoToGroupClicked() }
         )
 
+
+        // New Alarm
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
-            text = "New Alarm",
+            icon = Icons.Default.AddCircle,
             angle = 60f,
             progressDist = animationDistProgressBt3,
             onClick = { onGoToConfigureAlarmClicked() }
         )
 
+        // Settings
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
-            text = "Settings",
+            icon = Icons.Default.Settings,
             angle = 90f,
             progressDist = animationDistProgressBt4,
             onClick = { onGoToSettingsClicked() }
@@ -188,14 +203,18 @@ fun RadialMenu(
             .clip(shape = CircleShape)
             .clickable { isExpended = !isExpended },
             contentAlignment = Alignment.Center){
-            Text(text = if (isExpended) "x" else "+", color = MaterialTheme.colorScheme.onPrimary, fontSize = 30.sp)
+            Icon(
+                imageVector = if (isExpended) Icons.Default.Menu else Icons.Default.MoreVert,
+                contentDescription = "Delete Alarm",
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }
 
 
 @Composable
-fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: Float, onClick: () -> Unit){
+fun RadialButton(modifier: Modifier, icon: ImageVector, angle: Float, progressDist: Float, onClick: () -> Unit){
 
     val radius = 150f;
 
@@ -204,7 +223,7 @@ fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: F
     val x = -cos(radians).toFloat() * progressDist * radius
     val y = -sin(radians).toFloat() * progressDist * radius
 
-    Box(modifier = modifier.size(70f.dp)
+    Box(modifier = modifier.size(60f.dp)
         .zIndex(1f)
         .alpha(alpha = if (progressDist < 0.05f) 0f else 1f)
         .offset(x.dp, y.dp)
@@ -213,7 +232,11 @@ fun RadialButton(modifier: Modifier, text: String, angle: Float, progressDist: F
         .clickable(enabled = progressDist > 0.9f) { onClick() },
         contentAlignment = Alignment.Center,
         ){
-            Text(text = text, color = MaterialTheme.colorScheme.onSecondary, textAlign = TextAlign.Center)
+            Icon(
+                imageVector = icon,
+                contentDescription = "Delete Alarm",
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
     }
 
 }

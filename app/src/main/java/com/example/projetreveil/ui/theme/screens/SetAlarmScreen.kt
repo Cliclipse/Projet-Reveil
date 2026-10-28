@@ -30,6 +30,8 @@ import com.example.projetreveil.ui.theme.utilities.TopFlag
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -124,7 +126,12 @@ fun SetAlarmPage(name: String,
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
             FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(80.dp)) {
-                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.abandon), tint = MaterialTheme.colorScheme.onSecondary)
+                Icon(
+                    modifier = Modifier.fillMaxSize(0.5f),
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.abandon),
+                    tint = MaterialTheme.colorScheme.onSecondary
+                )
             }
 
             FloatingActionButton(
@@ -138,7 +145,8 @@ fun SetAlarmPage(name: String,
                 modifier = Modifier.size(80.dp))
             {
                 Icon(
-                    imageVector = Icons.Filled.Add,
+                    modifier = Modifier.fillMaxSize(0.5f),
+                    imageVector = Icons.Filled.Check,
                     contentDescription = stringResource(R.string.add) ,
                     tint = MaterialTheme.colorScheme.onTertiary
                 )
