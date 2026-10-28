@@ -1,95 +1,78 @@
 package com.example.projetreveil.ui.theme.AlarmsManagement
 
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.example.projetreveil.MainActivity
 import java.util.Calendar
 
 class AlarmsUtilities {
-    val alarmToIDMap: MutableMap<Pair<Int, Int>, Int> = mutableMapOf()
-
-    var currentIdCount: Int = 0
-
-    fun SetAlarm(context : Context, hour: Int, minutes: Int, enabled: Boolean){
+    fun SetAlarm(context : Context, alarmID: Int, hour: Int, minutes: Int, enabled: Boolean){
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        if (enabled){
-            // Enable
-            EnableAlarm(context = context,
-                alarmManager = alarmManager,
-                hour = hour,
-                minutes = minutes
-            )
-        }
-        else{
-            // Disable
-            DisableAlarm(
-                context = context,
-                alarmManager = alarmManager,
-                hour = hour,
-                minutes = minutes
-            )
-        }
-    }
-
-    fun EnableAlarm(context: Context, alarmManager: AlarmManager, hour: Int, minutes: Int){
-
-        val showIntent = PendingIntent.getBroadcast(
-            context, currentIdCount, Intent(context, AlarmReceiver::class.java),
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmID,
+            Intent(context, AlarmReceiver::class.java).apply {
+                putExtra("alarm-id", alarmID)
+            },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val operationIntent = PendingIntent.getBroadcast(
-            context, currentIdCount, Intent(context, AlarmReceiver::class.java),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        try {
-
-            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(
-                NextOccurrence(hour = hour, minutes = minutes),
-                showIntent),
-                operationIntent)
-
-            ++currentIdCount
-        }
-        catch (e: SecurityException){
-            // TODO: mettre une popup d'echec car l'autorisation n'est pas là
-        }
-    }
-
-    fun DisableAlarm(context: Context, alarmManager: AlarmManager, hour: Int, minutes: Int){
-
-        var alarmID: Int = -1
-
-        val hourMinutesPair: Pair<Int, Int> = Pair(hour, minutes)
-
-        if (alarmToIDMap.containsKey(hourMinutesPair))
+        if (!enabled){
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
             return;
+        }
 
-        alarmID = alarmToIDMap.getValue(hourMinutesPair)
+        val triggerTime = NextOccurrence(hour, minutes)
 
-        alarmManager.cancel(
-            PendingIntent.getBroadcast(
-                context,
-                alarmID,
-                Intent(context, AlarmReceiver::class.java),
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
+        val showIntent = PendingIntent.getActivity(
+            context,
+            alarmID,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        alarmManager.setAlarmClock(
+            AlarmManager.AlarmClockInfo(triggerTime, showIntent),
+            pendingIntent
+        )
     }
 
     private fun NextOccurrence(hour: Int, minutes: Int): Long {
-        val cal = Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minutes)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
-            if (timeInMillis <= System.currentTimeMillis()) add(Calendar.DAY_OF_YEAR, 1)
+            if (timeInMillis <= System.currentTimeMillis())
+                add(Calendar.DAY_OF_YEAR, 1)
         }
-        return cal.timeInMillis
+        return calendar.timeInMillis
+    }
+
+    fun StopAlarm(context: Context, alarmID: Int) {
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmID,
+            Intent(context, AlarmReceiver::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.cancel(1)
     }
 }

@@ -30,7 +30,14 @@ class AlarmReceiver : BroadcastReceiver() {
         notificationManager.createNotificationChannel(channel)
 
         val openApp = PendingIntent.getActivity(
-            context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE
+            context,
+            0,
+            Intent(context,
+                MainActivity::class.java).apply {
+                putExtra("open-alarm-ringing-page", true)
+                putExtra("alarm-id", intent.getIntExtra("alarm-id", -1))
+            },
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)

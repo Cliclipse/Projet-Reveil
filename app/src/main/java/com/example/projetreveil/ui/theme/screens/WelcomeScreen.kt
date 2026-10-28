@@ -50,7 +50,6 @@ import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.utilities.TopFlag
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
@@ -226,11 +225,12 @@ fun AlarmItem(context: Context, alarm: Alarm, onEnabledChange: (Boolean) -> Unit
                 Switch(
                     checked = alarm.enabled,
                     onCheckedChange = {
-                        // Lambda pour pouvoir réagir au fait que cet alarm doit etre considérée comme activée
-
-                        val alarmsUtilities: AlarmsUtilities = AlarmsUtilities()
-
-                        alarmsUtilities.SetAlarm(context = context, alarm.hour, alarm.minutes, !alarm.enabled)
+                        AlarmsUtilities().SetAlarm(
+                            context = context,
+                            alarmID = alarm.id,
+                            alarm.hour,
+                            alarm.minutes,
+                            !alarm.enabled)
 
                         onEnabledChange(it)
                     },

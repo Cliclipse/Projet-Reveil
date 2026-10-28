@@ -3,12 +3,11 @@ package com.example.projetreveil.ui.theme.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
-import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.RoomDatas.AlarmDao
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -23,9 +22,11 @@ class AlarmsViewModel(
             initialValue = emptyList()
         )
 
-    fun AddAlarm(hour: Int, minutes: Int, enabled: Boolean) {
+    fun AddAlarm(hour: Int, minutes: Int, enabled: Boolean, onAlarmCreated: (Int) -> Unit) {
         viewModelScope.launch {
-            alarmDao.AddAlarm(Alarm(hour = hour, minutes = minutes, enabled = enabled))
+            val idNewAlarm = alarmDao.AddAlarm(Alarm(hour = hour, minutes = minutes, enabled = enabled))
+
+            onAlarmCreated(idNewAlarm.toInt())
         }
     }
     fun DeleteAlarm(alarm: Alarm) {

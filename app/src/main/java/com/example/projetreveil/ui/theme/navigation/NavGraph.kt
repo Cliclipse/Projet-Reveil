@@ -1,19 +1,16 @@
 package com.example.projetreveil.ui.theme.navigation
 
 import android.content.Context
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.activity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
 import com.example.projetreveil.ui.theme.screens.RegisterPage
+import com.example.projetreveil.ui.theme.screens.SetAlarmPage
 import com.example.projetreveil.ui.theme.screens.SetGroupePage
-import com.example.projetreveil.ui.theme.screens.SetReveilPage
 import com.example.projetreveil.ui.theme.screens.SettingsPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
@@ -22,14 +19,16 @@ import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 fun MonApp(
     modifier: Modifier,
     context: Context,
-   dataStore: DataStoreSettingsApp,
-   alarmsViewModel: AlarmsViewModel
+    dataStore: DataStoreSettingsApp,
+    alarmsViewModel: AlarmsViewModel,
+    startingPage: String,
+    currentAlarmRingingID: Int
 ){
     val navController = rememberNavController()
 
     NavHost(
         navController,
-        startDestination = "register"
+        startDestination = startingPage
 
     ){
         composable("register"){
@@ -51,7 +50,7 @@ fun MonApp(
         }
 
         composable("set-alarm"){
-            SetReveilPage(
+            SetAlarmPage(
                 name = "Set Alarm Page",
                 context = context,
                 modifier = modifier,
@@ -78,9 +77,12 @@ fun MonApp(
         composable(route = "alarm-ringing"){
             AlarmRingingPage(name = "Alarm Ringing",
                 modifier = modifier,
+                context = context,
+                alarmsViewModel = alarmsViewModel,
                 alarmTime = "08:30",
                 onSnoozeClicked = { navController.navigate("welcome") },
-                onStopClicked = { navController.navigate("welcome") }
+                onStopClicked = { navController.navigate("welcome") },
+                alarmID = currentAlarmRingingID
             )
         }
 

@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -31,8 +32,8 @@
 
         </activity>
 
-        <receiver android:name=".AlarmReceiver" android:exported="false" />
-        <receiver android:name=".BootReceiver" android:exported="true">
+        <receiver android:name=".ui.theme.AlarmsManagement.AlarmReceiver" android:exported="false" />
+        <receiver android:name=".ui.theme.AlarmsManagement.BootReceiver" android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
         </intent-filter>

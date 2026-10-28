@@ -46,6 +46,22 @@ class MainActivity : ComponentActivity() {
 
         val alarmDao = alarmsDataBase.AlarmDao()
 
+        var startingPage: String = "register"
+
+        val directlyOpenAlarmRingingPage: Boolean =
+            intent.getBooleanExtra(
+                "open-alarm-ringing-page",
+                false
+            )
+
+        var currentAlarmRingingID: Int = -1;
+        if (directlyOpenAlarmRingingPage){
+            startingPage = "alarm-ringing"
+
+            currentAlarmRingingID =
+                intent.getIntExtra("alarm-id", -1)
+        }
+
         enableEdgeToEdge()
         setContent {
 
@@ -62,7 +78,9 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         context = applicationContext,
                         dataStore = dataStore,
-                        alarmsViewModel
+                        alarmsViewModel = alarmsViewModel,
+                        startingPage = startingPage,
+                        currentAlarmRingingID = currentAlarmRingingID
                     )
                 }
             }

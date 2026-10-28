@@ -1,7 +1,11 @@
 package com.example.projetreveil.ui.theme.screens
 
+import android.Manifest
 import android.content.Context
 import android.icu.util.Calendar
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,8 +50,8 @@ data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que b
 
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class) //evite l'affichage d'une erreur inutile sur l'ide
-fun SetReveilPage(name: String,
+@OptIn(ExperimentalMaterial3Api::class)
+fun SetAlarmPage(name: String,
                   context: Context,
                   modifier: Modifier = Modifier,
                   alarmsViewModel: AlarmsViewModel,
@@ -62,6 +66,33 @@ fun SetReveilPage(name: String,
         initialMinute = currentTime.get(Calendar.MINUTE),
         is24Hour = true
     )
+
+    val createAlarm = {
+        alarmsViewModel.AddAlarm(hour = timePickerState.hour,
+            minutes = timePickerState.minute,
+            enabled = true,
+            onAlarmCreated = {
+                    idAlarm ->
+                AlarmsUtilities().SetAlarm(
+                    context = context,
+                    alarmID = idAlarm,
+                    hour = timePickerState.hour,
+                    minutes = timePickerState.minute,
+                    enabled = true
+                )
+            }
+        )
+
+        onConfirmClicked()
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()){
+            isGranted ->
+        if (isGranted){
+            createAlarm()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxWidth()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
@@ -98,21 +129,10 @@ fun SetReveilPage(name: String,
 
             FloatingActionButton(
                 onClick = {
-                    alarmsViewModel.AddAlarm(hour = timePickerState.hour,
-                        minutes = timePickerState.minute,
-                        enabled = true
-                    )
 
-                    val alarmsUtilities: AlarmsUtilities = AlarmsUtilities()
-
-                    alarmsUtilities.SetAlarm(
-                        context = context,
-                        hour = timePickerState.hour,
-                        minutes = timePickerState.minute,
-                        enabled = true
-                        )
-
-                    onConfirmClicked()
+                    if (Build.VERSION.SDK_INT >= 33) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(80.dp))

@@ -1,5 +1,6 @@
 package com.example.projetreveil.ui.theme.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,11 +30,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
+import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 
 @Composable
 fun AlarmRingingPage(
     name: String,
     modifier: Modifier = Modifier,
+    context: Context,
+    alarmsViewModel: AlarmsViewModel,
+    alarmID: Int,
     alarmTime: String = "07:30",
     onSnoozeClicked: () -> Unit,
     onStopClicked: () -> Unit
@@ -104,6 +110,8 @@ fun AlarmRingingPage(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically){
 
+            /*
+            Disabled for now, see if we have time
             // Snooze Btn
             AlarmRingingActionButton(
                 icon = Icons.Default.DateRange,
@@ -115,6 +123,7 @@ fun AlarmRingingPage(
                 btnContentColor = MaterialTheme.colorScheme.onSecondary,
                 onBtnClicked = { onSnoozeClicked() }
             )
+            */
 
             // Confirm Btn
             AlarmRingingActionButton(
@@ -125,7 +134,12 @@ fun AlarmRingingPage(
                 secondaryTextColor = MaterialTheme.colorScheme.tertiary,
                 btnColor = MaterialTheme.colorScheme.tertiary,
                 btnContentColor = MaterialTheme.colorScheme.onTertiary,
-                onBtnClicked = { onStopClicked() }
+                onBtnClicked = {
+
+                    AlarmsUtilities().StopAlarm(context = context, alarmID)
+
+                    onStopClicked()
+                }
             )
         }
 
