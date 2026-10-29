@@ -42,7 +42,6 @@ fun MonApp(
                 modifier = modifier,
                 alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
-                onGoToMenuClicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings") },
                 settingsDataStore = dataStore
@@ -67,7 +66,6 @@ fun MonApp(
         composable(route = "settings"){
             SettingsPage(name = "Settings", modifier = modifier,
                 onGoToMenuClicked = { navController.navigate("welcome") },
-                onGoToGroupClicked = { navController.navigate("group") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm")},
                 onGoToSettingsClicked = { navController.navigate("settings") },
                 settingsDataStore = dataStore

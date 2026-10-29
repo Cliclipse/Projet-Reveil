@@ -126,8 +126,8 @@ fun TopFlag(text: String){
 @Composable
 fun RadialMenu(
     modifier: Modifier,
-    onGoToGroupClicked: () -> Unit,
-    onGoToMenuClicked: () -> Unit,
+    isInMenu: Boolean,
+    onGoToMenuOrGroupClicked: () -> Unit,
     onGoToConfigureAlarmClicked: () -> Unit,
     onGoToSettingsClicked: () -> Unit){
 
@@ -151,38 +151,37 @@ fun RadialMenu(
         label = "radialMenuDistBtn3InAnimation"
     )
 
-    val animationDistProgressBt4 by animateFloatAsState(
-        targetValue = if (isExpended) 1f else 0f,
-        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
-        label = "radialMenuDistBtn3InAnimation"
-    )
-
     // Home
     Box(modifier = modifier.fillMaxSize()){
-        RadialButton(
-            Modifier.align(Alignment.BottomEnd),
-            icon = Icons.Default.Home,
-            angle = 0f,
-            progressDist = animationDistProgressBtn1,
-            onClick = { onGoToMenuClicked() }
-        )
 
-        // Group
-        RadialButton(
-            Modifier.align(Alignment.BottomEnd),
-            icon = Icons.Default.Person,
-            angle = 30f,
-            progressDist = animationDistProgressBtn2,
-            onClick = { onGoToGroupClicked() }
-        )
+        if (!isInMenu){
+            // Home
+            RadialButton(
+                Modifier.align(Alignment.BottomEnd),
+                icon = Icons.Default.Home,
+                angle = 0f,
+                progressDist = animationDistProgressBtn1,
+                onClick = { onGoToMenuOrGroupClicked() }
+            )
+        }
+        else{
+            // Group
+            RadialButton(
+                Modifier.align(Alignment.BottomEnd),
+                icon = Icons.Default.Person,
+                angle = 0f,
+                progressDist = animationDistProgressBtn1,
+                onClick = { onGoToMenuOrGroupClicked() }
+            )
+        }
 
 
         // New Alarm
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             icon = Icons.Default.AddCircle,
-            angle = 60f,
-            progressDist = animationDistProgressBt3,
+            angle = 45f,
+            progressDist = animationDistProgressBtn2,
             onClick = { onGoToConfigureAlarmClicked() }
         )
 
@@ -191,7 +190,7 @@ fun RadialMenu(
             Modifier.align(Alignment.BottomEnd),
             icon = Icons.Default.Settings,
             angle = 90f,
-            progressDist = animationDistProgressBt4,
+            progressDist = animationDistProgressBt3,
             onClick = { onGoToSettingsClicked() }
         )
 
@@ -216,7 +215,7 @@ fun RadialMenu(
 @Composable
 fun RadialButton(modifier: Modifier, icon: ImageVector, angle: Float, progressDist: Float, onClick: () -> Unit){
 
-    val radius = 150f;
+    val radius = 100f;
 
     val radians = Math.toRadians(angle.toDouble())
 

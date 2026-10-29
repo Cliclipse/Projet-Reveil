@@ -39,7 +39,6 @@ fun SettingsPage(
     modifier: Modifier = Modifier,
     onGoToConfigureAlarmClicked: () -> Unit,
     onGoToMenuClicked: () -> Unit,
-    onGoToGroupClicked: () -> Unit,
     onGoToSettingsClicked: () -> Unit,
     settingsDataStore: DataStoreSettingsApp)
 {
@@ -76,11 +75,11 @@ fun SettingsPage(
             }
         }
 
-        // Bouton + menu radial bas droite
+        // Radial Menu bottom right
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
-            onGoToMenuClicked = { onGoToMenuClicked() },
-            onGoToGroupClicked = { onGoToGroupClicked() },
+            isInMenu = false,
+            onGoToMenuOrGroupClicked = { onGoToMenuClicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }
         )

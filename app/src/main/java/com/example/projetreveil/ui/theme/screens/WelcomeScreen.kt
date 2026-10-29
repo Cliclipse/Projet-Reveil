@@ -72,7 +72,6 @@ fun WelcomePage(name: String,
                 modifier: Modifier = Modifier,
                 alarmsViewModel: AlarmsViewModel,
                 onGoToConfigureAlarmClicked: () -> Unit,
-                onGoToMenuClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
                 onGoToSettingsClicked: () -> Unit,
                 settingsDataStore: DataStoreSettingsApp) {
@@ -100,8 +99,8 @@ fun WelcomePage(name: String,
         // Bouton + menu radial bas droite
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
-            onGoToMenuClicked = { onGoToMenuClicked() },
-            onGoToGroupClicked = { onGoToGroupClicked() },
+            isInMenu = true,
+            onGoToMenuOrGroupClicked = { onGoToGroupClicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }
         )

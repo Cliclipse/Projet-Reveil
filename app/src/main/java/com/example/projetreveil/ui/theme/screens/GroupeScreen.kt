@@ -41,13 +41,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.Logo
+import com.example.projetreveil.ui.theme.utilities.RadialMenu
 
 @Composable
 fun SetGroupePage(name : String){
 
-    Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
-        PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
-        GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
+    Box(modifier = Modifier.fillMaxSize()){
+
+        Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
+            PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
+            GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
+        }
+
+        /*
+        // Radial Menu bottom right
+        RadialMenu(
+            modifier = Modifier.fillMaxSize().padding(34f.dp),
+            isInMenu = false,
+            onGoToMenuOrGroupClicked = { onGoToMenuClicked() },
+            onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
+            onGoToSettingsClicked = { onGoToSettingsClicked() }
+        )
+        */
     }
 }
 
