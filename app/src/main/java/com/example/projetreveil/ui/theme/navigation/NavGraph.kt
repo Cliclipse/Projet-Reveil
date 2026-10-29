@@ -73,9 +73,7 @@ fun MonApp(
 
         composable(route = "settings"){
             SettingsPage(name = "Settings", modifier = modifier,
-                onGoToMenuClicked = { navController.navigate("welcome") },
-                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm")},
-                onGoToSettingsClicked = { navController.navigate("settings") },
+                onGoBackClicked = { navController.popBackStack() },
                 settingsDataStore = dataStore
                 )
         }
