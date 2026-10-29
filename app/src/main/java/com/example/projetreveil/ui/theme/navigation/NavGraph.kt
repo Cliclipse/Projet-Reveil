@@ -33,7 +33,11 @@ fun MonApp(
     ){
         composable("register"){
             RegisterPage(name = "Register Page", modifier = modifier,
-                onConfirmClicked = { navController.navigate("welcome") })
+                onConfirmClicked = { navController.navigate("welcome"){
+                    popUpTo("register"){
+                        inclusive = true
+                    }
+                } })
         }
 
         composable("welcome"){
@@ -60,7 +64,11 @@ fun MonApp(
         }
 
         composable("group"){
-            SetGroupePage(name = "Groupe Page")
+            SetGroupePage(name = "Groupe Page",
+                onGoToMenuclicked = { navController.navigate("welcome") },
+                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
+                onGoToSettingsClicked = { navController.navigate("settings") }
+                )
         }
 
         composable(route = "settings"){
@@ -78,8 +86,16 @@ fun MonApp(
                 context = context,
                 alarmsViewModel = alarmsViewModel,
                 alarmTime = "08:30",
-                onSnoozeClicked = { navController.navigate("welcome") },
-                onStopClicked = { navController.navigate("welcome") },
+                onSnoozeClicked = { navController.navigate("welcome"){
+                    popUpTo("alarm-ringing"){
+                        inclusive = true
+                    }
+                } },
+                onStopClicked = { navController.navigate("welcome"){
+                    popUpTo("alarm-ringing"){
+                        inclusive = true
+                    }
+                } },
                 alarmID = currentAlarmRingingID
             )
         }

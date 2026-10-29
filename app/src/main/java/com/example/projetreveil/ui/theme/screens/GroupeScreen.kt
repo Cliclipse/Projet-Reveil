@@ -44,7 +44,11 @@ import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 
 @Composable
-fun SetGroupePage(name : String){
+fun SetGroupePage(name : String,
+                  onGoToMenuclicked: () -> Unit,
+                  onGoToConfigureAlarmClicked: () -> Unit,
+                  onGoToSettingsClicked: () -> Unit
+                  ){
 
     Box(modifier = Modifier.fillMaxSize()){
 
@@ -53,16 +57,14 @@ fun SetGroupePage(name : String){
             GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
         }
 
-        /*
         // Radial Menu bottom right
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
             isInMenu = false,
-            onGoToMenuOrGroupClicked = { onGoToMenuClicked() },
+            onGoToMenuOrGroupClicked = { onGoToMenuclicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }
         )
-        */
     }
 }
 
