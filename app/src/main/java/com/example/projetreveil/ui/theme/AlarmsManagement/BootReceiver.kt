@@ -41,7 +41,9 @@ class BootReceiver : BroadcastReceiver() {
                         alarm.id,
                         alarm.hour,
                         alarm.minutes,
-                        alarm.enabled
+                        alarm.enabled,
+                        alarm.vibration,
+                        alarm.daily
                     )
                 }
             }

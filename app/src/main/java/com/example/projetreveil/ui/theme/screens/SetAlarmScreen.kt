@@ -37,19 +37,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
-
-
-data class OptionAlarme( //Je fais pas un tableau car pas tout ne sera pas que boolean par la suite
-    val option1: Boolean,
-    val option2: Boolean,
-    val option3: Boolean
-)
-
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +53,11 @@ fun SetAlarmPage(name: String,
                   alarmsViewModel: AlarmsViewModel,
                   onConfirmClicked: () -> Unit,
                   onCancelClicked: () -> Unit){
-    var optionAlarme : OptionAlarme = OptionAlarme(false, false , false);
+
+    val vibrationOption: MutableState<Boolean> = remember { mutableStateOf(true) }
+
+    val dailyOption: MutableState<Boolean> = remember { mutableStateOf(false) }
+
 
     val currentTime = remember { Calendar.getInstance() }
 
@@ -80,9 +78,13 @@ fun SetAlarmPage(name: String,
                     alarmID = idAlarm,
                     hour = timePickerState.hour,
                     minutes = timePickerState.minute,
-                    enabled = true
+                    enabled = true,
+                    vibration = vibrationOption.value,
+                    daily = dailyOption.value
                 )
-            }
+            },
+            vibration = vibrationOption.value,
+            daily = dailyOption.value
         )
 
         onConfirmClicked()
@@ -113,15 +115,11 @@ fun SetAlarmPage(name: String,
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                Option(stringResource(R.string.vibration) , optionAlarme)
+                OptionToggle(stringResource(R.string.vibration) , vibrationOption)
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                Option(stringResource(R.string.repeat) , optionAlarme)
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Option(stringResource(R.string.daily) , optionAlarme)
+                OptionToggle(stringResource(R.string.daily) , dailyOption)
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
@@ -158,7 +156,7 @@ fun SetAlarmPage(name: String,
 
 
 @Composable
-fun Option(name : String , option : OptionAlarme){ //pas fonctionnel du tout sur la logique
+fun OptionToggle(name : String , option: MutableState<Boolean>){
     Row( modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
         //Spacer(Modifier.height(50.dp))
         Text(
@@ -168,8 +166,8 @@ fun Option(name : String , option : OptionAlarme){ //pas fonctionnel du tout sur
             fontWeight = FontWeight.Bold
         )
         Switch(
-            checked = option.option1,
-            onCheckedChange = {},
+            checked = option.value,
+            onCheckedChange = { option.value = !option.value },
             colors = androidx.compose.material3.SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
                 checkedTrackColor = MaterialTheme.colorScheme.tertiary,

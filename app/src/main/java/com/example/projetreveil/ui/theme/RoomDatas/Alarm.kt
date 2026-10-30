@@ -9,7 +9,9 @@ data class Alarm(
     val id: Int = 0,
     val hour: Int,
     val minutes: Int,
-    val enabled: Boolean
+    val enabled: Boolean,
+    val vibration: Boolean,
+    val daily: Boolean
 ) {
 
 }

@@ -10,7 +10,15 @@ import com.example.projetreveil.MainActivity
 import java.util.Calendar
 
 class AlarmsUtilities {
-    fun SetAlarm(context : Context, alarmID: Int, hour: Int, minutes: Int, enabled: Boolean){
+    fun SetAlarm(context : Context,
+                 alarmID: Int,
+                 hour: Int,
+                 minutes: Int,
+                 enabled: Boolean,
+                 vibration: Boolean,
+                 daily: Boolean
+    )
+    {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -19,6 +27,10 @@ class AlarmsUtilities {
             alarmID,
             Intent(context, AlarmReceiver::class.java).apply {
                 putExtra("alarm-id", alarmID)
+                putExtra("alarm-vibration", vibration)
+                putExtra("alarm-daily", daily)
+                putExtra("alarm-hour", hour)
+                putExtra("alarm-minutes", minutes)
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )

@@ -20,13 +20,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -233,19 +237,12 @@ fun AlarmItem(context: Context,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
             elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
         ){
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
+            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(horizontal = 24.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically) {
 
                 Switch(
                     checked = alarm.enabled,
                     onCheckedChange = {
-                        AlarmsUtilities().SetAlarm(
-                            context = context,
-                            alarmID = alarm.id,
-                            alarm.hour,
-                            alarm.minutes,
-                            !alarm.enabled)
-
                         onEnabledChange(it)
                     },
                     colors = SwitchDefaults.colors(
@@ -269,14 +266,24 @@ fun AlarmItem(context: Context,
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Button(onClick = { onDeleteClicked() },
+                AlarmItemOptionsPreview(
+                    modifier = Modifier.width(28.dp),
+                    alarm = alarm
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(
+                    modifier = Modifier.width(48.dp).fillMaxHeight(),
+                    onClick = { onDeleteClicked() },
                     shape = RoundedCornerShape(5.dp),
-                    colors = ButtonDefaults.buttonColors(
+                    colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary
                     )
                 ) {
                     Icon(
+                        modifier = Modifier.fillMaxSize(0.7f),
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete Alarm"
                     )
@@ -319,6 +326,27 @@ fun GhostAlarmItem(){
 }
 
 @Composable
+fun AlarmItemOptionsPreview(modifier: Modifier = Modifier, alarm: Alarm){
+
+    Column(modifier = modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Icon(modifier = Modifier.weight(6f),
+            imageVector = Icons.Default.Notifications,
+            contentDescription = if (alarm.vibration) "Alarm vibration enabled" else "Alarm vibration disabled",
+            tint = if (alarm.vibration) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Icon(modifier = Modifier.weight(6f),
+            imageVector = Icons.Default.DateRange,
+            contentDescription = if (alarm.daily) "Alarm daily enabled" else "Alarm daily disabled",
+            tint = if (alarm.daily) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onTertiary
+        )
+    }
+}
+
+@Composable
 fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
@@ -341,7 +369,12 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
                     alarm = alarm,
                     onEnabledChange = {
                             newEnabledValue ->
-                        alarmsViewModel.UpdateAlarmEnabled(alarm = alarm, enabled = newEnabledValue)
+                        updateAlarmEnableState(
+                            context = context,
+                            alarmsViewModel = alarmsViewModel,
+                            alarm = alarm,
+                            enabled = newEnabledValue
+                        )
                     },
                     onDeleteClicked = {
                         AlarmsUtilities().StopAlarm(context, alarm.id)
@@ -359,5 +392,20 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
         }
 
     }
+}
+
+fun updateAlarmEnableState(context: Context, alarmsViewModel: AlarmsViewModel, alarm: Alarm, enabled: Boolean){
+
+    alarmsViewModel.UpdateAlarmEnabled(alarm = alarm, enabled = enabled)
+
+    AlarmsUtilities().SetAlarm(
+        context = context,
+        alarmID = alarm.id,
+        hour = alarm.hour,
+        minutes = alarm.minutes,
+        enabled = enabled,
+        vibration = alarm.vibration,
+        daily = alarm.daily
+    )
 }
 
