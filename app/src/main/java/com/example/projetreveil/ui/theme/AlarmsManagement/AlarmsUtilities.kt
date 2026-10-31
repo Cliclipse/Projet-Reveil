@@ -19,7 +19,6 @@ class AlarmsUtilities {
                  daily: Boolean
     )
     {
-
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(

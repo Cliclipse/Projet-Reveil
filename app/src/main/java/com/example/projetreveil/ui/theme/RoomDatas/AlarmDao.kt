@@ -20,10 +20,16 @@ interface AlarmDao
     @Update
     suspend fun UpdateAlarm(alarm: Alarm)
 
+    @Query("UPDATE alarms SET enabled = :enabled WHERE id = :alarmID")
+    suspend fun UpdateAlarmEnabledWithID(alarmID: Int, enabled: Boolean): Int
+
     @Query("SELECT * from alarms ORDER BY hour, minutes")
     fun GetAllAlarms(): Flow<List<Alarm>>
 
     @Query("SELECT * from alarms WHERE enabled = 1 ORDER BY hour, minutes")
     fun GetAllEnabledAlarms(): Flow<List<Alarm>>
+
+    @Query("SELECT * FROM alarms")
+    suspend fun GetAllAlarmsDebug(): List<Alarm>
 
 }

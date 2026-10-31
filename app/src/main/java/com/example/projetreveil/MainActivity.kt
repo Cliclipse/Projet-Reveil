@@ -23,6 +23,7 @@ import androidx.room.Room
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
 import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabase
+import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabaseProvider
 import com.example.projetreveil.ui.theme.navigation.MonApp
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModelFactory
@@ -38,11 +39,7 @@ class MainActivity : ComponentActivity() {
 
         Log.d("Main Activity" , "OnCreate")
 
-        val alarmsDataBase = Room.databaseBuilder(
-            applicationContext,
-            AlarmDatabase::class.java,
-            "database-alarms"
-        ).build()
+        val alarmsDataBase = AlarmDatabaseProvider().GetDatabase(context = applicationContext)
 
         val alarmDao = alarmsDataBase.AlarmDao()
 

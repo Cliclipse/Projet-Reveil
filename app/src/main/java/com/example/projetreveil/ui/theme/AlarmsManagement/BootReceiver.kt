@@ -23,7 +23,6 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED)
             return;
 
-        val pendingResult = goAsync()
         val appContext = context.applicationContext
 
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

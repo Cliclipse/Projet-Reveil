@@ -10,9 +10,17 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.projetreveil.MainActivity
+import com.example.projetreveil.ui.theme.RoomDatas.Alarm
+import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabaseProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -64,17 +72,48 @@ class AlarmReceiver : BroadcastReceiver() {
 
         notificationManager.notify(1, notification)
 
-        if (daily && alarmID != -1 && hour != -1 && minutes != -1){
+        if (alarmID != -1 && hour != -1 && minutes != -1) {
 
-            AlarmsUtilities().SetAlarm(
-                context = context,
-                alarmID = alarmID,
-                hour = hour,
-                minutes = minutes,
-                enabled = true,
-                vibration = vibration,
-                daily = daily
-            )
+            if (daily) {
+                AlarmsUtilities().SetAlarm(
+                    context = context,
+                    alarmID = alarmID,
+                    hour = hour,
+                    minutes = minutes,
+                    enabled = true,
+                    vibration = vibration,
+                    daily = daily
+                )
+            } else {
+
+                val pendingResult = goAsync()
+
+                val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+                scope.launch {
+                    try
+                    {
+                        val alarmDatabase = AlarmDatabaseProvider().GetDatabase(context);
+
+                        val alarmsUpdatedCount = alarmDatabase.AlarmDao().UpdateAlarmEnabledWithID(
+                            alarmID = alarmID,
+                            enabled = false
+                        )
+
+                        Log.d("Alarm Receiver", "ID = $alarmID , modifiée : $alarmsUpdatedCount")
+                    }
+                    catch (e: Exception) {
+                        Log.e(
+                            "Alarm Receiver",
+                            "Error when trying to update alarm state enabled after non-daily ringing",
+                            e
+                        )
+                    }
+                    finally {
+                        pendingResult.finish()
+                    }
+                }
+            }
         }
 
     }
