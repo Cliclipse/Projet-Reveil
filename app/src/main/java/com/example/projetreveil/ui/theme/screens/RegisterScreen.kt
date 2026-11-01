@@ -57,11 +57,27 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
             containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
             onClick = {
             if (viewModel.pseudo != "" && viewModel.mdp != ""){
-                viewModel.registerUser(viewModel.pseudo)
-                onConfirmClicked(Unit)
+                viewModel.registerUser()
+                //onConfirmClicked(Unit)
             }
         }) {
-            Text(text = stringResource(R.string.confirm))
+            Text(text = stringResource(R.string.login))
         }
+
+        Spacer(midSpacerModifier)
+
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
+            onClick = {
+                if (viewModel.pseudo != "" && viewModel.mdp != ""){
+                    viewModel.connectUser()
+                    //onConfirmClicked(Unit)
+                }
+            }) {
+            Text(text = stringResource(R.string.connect))
+        }
+
+
     }
 }

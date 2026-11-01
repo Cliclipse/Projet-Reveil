@@ -6,9 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.projetreveil.BuildConfig.SUPABASE_ANON_KEY
+import com.example.projetreveil.BuildConfig.SUPABASE_URL
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Users
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.createSupabaseClient
 import kotlinx.coroutines.launch
+import io.github.jan.supabase.auth.providers.builtin.Email
 
 class RegisterScreenViewModel : ViewModel() {
 
@@ -16,20 +22,42 @@ class RegisterScreenViewModel : ViewModel() {
     var pseudo by mutableStateOf("");
     var mdp by mutableStateOf("");
 
-    fun Init(){
+    var connexionSuccess = false;
+
+    fun Init() {
         pseudo = ""
         mdp = ""
-   }
+    }
+
+    val supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY) { install(Auth) }
+
+
+    private fun pseudoToEmail(pseudo: String) =
+        "${pseudo.trim().lowercase()}@monapp.app"
 
     //En attendant de vraiment mettre le module de register
-    fun registerUser(name: String) {
+    fun registerUser() {
         viewModelScope.launch {
             try {
-                val newUser = Users(name = name, profilPicture = 8)
-                repository.add(newUser)
-            } catch (e: Exception) {
-                Log.d("test", "pas marche")
-            }
+                supabase.auth.signUpWith(Email) {
+                    this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
+                    this.password = mdp
+                }
+                connexionSuccess = true
+            } catch (e: Exception) { }
+        }
+    }
+
+
+    fun connectUser() {
+        viewModelScope.launch {
+            try {
+                supabase.auth.signInWith(Email) {
+                    this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
+                    this.password = mdp
+                }
+                connexionSuccess = true
+            } catch (e: Exception) { }
         }
     }
 }

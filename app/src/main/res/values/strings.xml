@@ -21,7 +21,7 @@
     <string name="login"> S\'enregistrer </string>
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Mot de Passe </string>
-    <string name="confirm"> Confirmer </string>
+    <string name="connect"> Connexion </string>
 
     <!-- SetReveilScreen-->
     <string name="perso"> PERSO </string>
