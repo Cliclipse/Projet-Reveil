@@ -10,19 +10,25 @@ import com.example.projetreveil.BuildConfig.SUPABASE_ANON_KEY
 import com.example.projetreveil.BuildConfig.SUPABASE_URL
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Users
+import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.createSupabaseClient
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
+import kotlinx.coroutines.flow.StateFlow
 
 class RegisterScreenViewModel : ViewModel() {
+
+    enum class AuthStateEnum { IDLE, LOADING, SUCCESS, ERROR }
 
     val repository = UsersRepository();
     var pseudo by mutableStateOf("");
     var mdp by mutableStateOf("");
 
-    var connexionSuccess = false;
+    var state by mutableStateOf(AuthStateEnum.IDLE)
+
+
 
     fun Init() {
         pseudo = ""
@@ -37,27 +43,40 @@ class RegisterScreenViewModel : ViewModel() {
 
     //En attendant de vraiment mettre le module de register
     fun registerUser() {
+
+        if (this.state == AuthStateEnum.LOADING) return
+
         viewModelScope.launch {
             try {
+                state = AuthStateEnum.LOADING
                 supabase.auth.signUpWith(Email) {
                     this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
                     this.password = mdp
                 }
-                connexionSuccess = true
-            } catch (e: Exception) { }
+                state = AuthStateEnum.SUCCESS
+            } catch (e: Exception) {
+                AuthStateEnum.IDLE
+                Log.e("Auth", "Inscription échouée", e)
+            }
         }
     }
 
 
     fun connectUser() {
+        if (this.state == AuthStateEnum.LOADING) return
+
         viewModelScope.launch {
             try {
+                state = AuthStateEnum.LOADING
                 supabase.auth.signInWith(Email) {
                     this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
                     this.password = mdp
                 }
-                connexionSuccess = true
-            } catch (e: Exception) { }
+                state = AuthStateEnum.SUCCESS
+            } catch (e: Exception) {
+                state = AuthStateEnum.IDLE
+                Log.e("Auth", "Inscription échouée", e)
+            }
         }
     }
 }
