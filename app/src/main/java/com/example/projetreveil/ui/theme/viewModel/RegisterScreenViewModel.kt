@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.projetreveil.BuildConfig.SUPABASE_ANON_KEY
-import com.example.projetreveil.BuildConfig.SUPABASE_URL
+import com.example.projetreveil.data.SupabaseClient
+
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Users
 import io.github.jan.supabase.auth.Auth
@@ -33,9 +33,8 @@ class RegisterScreenViewModel : ViewModel() {
         mdp = ""
     }
 
-    val supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY) { install(Auth) }
-
-
+    val supabase = SupabaseClient.client
+    
     private fun pseudoToEmail(pseudo: String) =
         "${pseudo.trim().lowercase()}@monapp.app"
 

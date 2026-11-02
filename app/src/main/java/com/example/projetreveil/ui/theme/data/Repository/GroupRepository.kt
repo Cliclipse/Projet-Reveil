@@ -7,15 +7,17 @@ class GroupRepository {
 
     private val supabase = SupabaseClient.client
 
-    suspend fun get(): List<Group> {
-        return supabase.from("group").select().decodeList<Group>()
+    suspend fun get(id: String): List<Group> {
+        return supabase.from("group").select{
+            filter { eq("id", id)}
+        }.decodeList<Group>()
     }
 
     suspend fun add(group: Group) {
         supabase.from("group").insert(group)
     }
 
-    suspend fun delete(id: Long) {
+    suspend fun delete(id: String) {
         supabase.from("group").delete {
             filter { eq("id", id) }
         }
