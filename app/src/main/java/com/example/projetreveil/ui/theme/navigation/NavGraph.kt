@@ -65,8 +65,8 @@ fun MonApp(
         }
 
         composable("group"){
-            SetGroupePage(name = "Groupe Page",
-                onAddGroup = { navController.navigate("createGroup") }         
+            SetGroupePage(
+                onAddGroup = { navController.navigate("createGroup") },
                 onGoToMenuclicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings") }

@@ -50,27 +50,40 @@ import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 fun SetGroupePage(onAddGroup : () ->Unit,
                  onGoToMenuclicked: () -> Unit,
                  onGoToConfigureAlarmClicked: () -> Unit,
-                 onGoToSettingsClicked: () -> Unit)
-{
-    val viewModel : GroupeScreenViewModel = viewModel()
+                 onGoToSettingsClicked: () -> Unit) {
+    val viewModel: GroupeScreenViewModel = viewModel()
 
-    Box(modifier = Modifier.fillMaxSize()){
-        Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
-            PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
-            GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
-        }      
-    } 
-        
-     // Radial Menu bottom right
+    Box(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
+        ) {
+            PickGroupSpace(
+                modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f)
+                    .fillMaxSize(),
+                viewModel(),
+                onAddGroup
+            )
+            GroupeSpace(
+                modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f)
+                    .fillMaxSize(),
+                viewModel()
+            )
+        }
+        // Radial Menu bottom right
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
             isInMenu = false,
             onGoToMenuOrGroupClicked = { onGoToMenuclicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }
-        )    
+        )
+    }
+}
 
-@Composable
+
+
+    @Composable
 fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
