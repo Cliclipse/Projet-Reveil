@@ -26,7 +26,7 @@ import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.NewGroupScreenViewModel
 
 @Composable
-fun NewGroupScreen(name : String){
+fun NewGroupScreen(){
     val viewModel : NewGroupScreenViewModel = viewModel()
 
     Column(modifier = Modifier.fillMaxSize() , horizontalAlignment = Alignment.CenterHorizontally) {
@@ -36,10 +36,10 @@ fun NewGroupScreen(name : String){
         Spacer(spacerModifier)
 
         Logo(70f)
-        Spacer(modifier = Modifier.height(20.dp))
         Spacer(midSpacerModifier)
 
         Text(text = stringResource(R.string.new_group), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
+        Spacer(modifier = Modifier.height(80.dp))
 
         HeadedTextField(stringResource(R.string.group_name) , viewModel.groupName,  {textInField : String -> viewModel.groupName = textInField})
         Spacer(midSpacerModifier)

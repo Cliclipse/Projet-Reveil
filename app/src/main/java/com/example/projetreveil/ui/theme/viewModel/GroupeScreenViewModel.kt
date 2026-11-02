@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class GroupeScreenViewModel(name: String)  : ViewModel() {
+class GroupeScreenViewModel()  : ViewModel() {
 
     val repository = GroupRepository();
 

@@ -8,23 +8,23 @@ class GroupRepository {
     private val supabase = SupabaseClient.client
 
     suspend fun get(id: String): List<Group> {
-        return supabase.from("group").select{
+        return supabase.from("Group").select{
             filter { eq("id", id)}
         }.decodeList<Group>()
     }
 
     suspend fun add(group: Group) {
-        supabase.from("group").insert(group)
+        supabase.from("Group").insert(group)
     }
 
     suspend fun addAndGetID(group: Group) : Long {
-        var groupeCreated : Group = supabase.from("group").insert(group) { select() }
+        var groupeCreated : Group = supabase.from("Group").insert(group) { select() }
             .decodeSingle<Group>()
         return groupeCreated.id ?: error("pas d'id au groupe inséré... force")
     }
 
     suspend fun delete(id: String) {
-        supabase.from("group").delete {
+        supabase.from("Group").delete {
             filter { eq("id", id) }
         }
     }
@@ -32,7 +32,7 @@ class GroupRepository {
     // Fct d'updates pr modif un champ d'un élément
 
     suspend fun updateGroupName(id: Long, newGroupName: String) {
-        supabase.from("group").update(
+        supabase.from("Group").update(
             { set("GroupName", newGroupName) }
         ) {
             filter { eq("id", id) }

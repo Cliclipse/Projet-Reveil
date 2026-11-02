@@ -8,15 +8,15 @@ class GroupUsersJunctionRepository {
     private val supabase = SupabaseClient.client
 
     suspend fun get(): List<GroupUsersJunction> {
-        return supabase.from("groupUsersJunctionTable").select().decodeList<GroupUsersJunction>()
+        return supabase.from("GroupUsersJunctionTable").select().decodeList<GroupUsersJunction>()
     }
 
     suspend fun add( GUJ: GroupUsersJunction) {
-        supabase.from("groupUsersJunctionTable").insert(GUJ)
+        supabase.from("GroupUsersJunctionTable").insert(GUJ)
     }
 
     suspend fun delete(id: Long) {
-        supabase.from("groupUsersJunctionTable").delete {
+        supabase.from("GroupUsersJunctionTable").delete {
             filter { eq("id", id) }
         }
     }

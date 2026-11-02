@@ -46,16 +46,14 @@ class RegisterScreenViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 Log.i("Auth", "Inscription tentée")
-
+                //supabase.auth.signOut()
                 state = AuthStateEnum.LOADING
                 supabase.auth.signUpWith(Email) {
                     this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
                     this.password = mdp
-
-                    var user : Users = Users(id = supabase.auth.currentUserOrNull()?.id , name = pseudo, profilPicture = 0)
-                    viewModelScope.launch {
-                        usersRepository.add(user)
-                    }                }
+                    }
+                var user : Users = Users(id = supabase.auth.currentUserOrNull()?.id , name = pseudo, profilPicture = 0)
+                viewModelScope.launch { usersRepository.add(user) }
                 state = AuthStateEnum.SUCCESS
             } catch (e: Exception) {
                 state = AuthStateEnum.IDLE

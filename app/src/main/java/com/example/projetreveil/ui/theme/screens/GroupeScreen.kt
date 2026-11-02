@@ -46,11 +46,12 @@ import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 
 @Composable
-fun SetGroupePage(name : String){
+fun SetGroupePage(onAddGroup : () ->Unit)
+{
     val viewModel : GroupeScreenViewModel = viewModel()
 
     Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
-        PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize() , viewModel)
+        PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize() , viewModel , onAddGroup )
         GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize() , viewModel)
     }
 }
@@ -68,7 +69,7 @@ fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
 }
 
 @Composable
-fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
+fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup : () ->Unit ){
     Column(modifier = modifier){
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = Modifier.padding(horizontal = 6.dp).fillMaxWidth()) {
@@ -77,7 +78,7 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
                 Spacer(modifier = Modifier.height(10.dp))
             }
             item{
-                AddGroupButton()
+                AddGroupButton(onAddGroup)
             }
         }
     }
@@ -132,10 +133,10 @@ fun GroupButton(vm : GroupeScreenViewModel ){
     }
 }
 
-@Preview
 @Composable
-fun AddGroupButton( ){
-    IconButton(onClick = {},
+fun AddGroupButton( onAddGroup : () ->Unit){
+    IconButton(
+        onClick = { onAddGroup() },
         modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiary)
             .padding(start = 6.dp , top = 6.dp)
             .size(65.dp)
