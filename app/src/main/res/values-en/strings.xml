@@ -36,4 +36,10 @@
     <!-- WelcomeScreen-->
     <string name="personal_alarm"> Personal Alarm </string>
 
+    <!-- NewGroupScreen-->
+    <string name="new_group"> New Group </string>
+    <string name="confirm"> Confirm </string>
+
+
+
 </resources>

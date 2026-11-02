@@ -46,7 +46,7 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
 
         Logo(70f)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(midSpacerModifier)
 
         Text(text = stringResource(R.string.login), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
 

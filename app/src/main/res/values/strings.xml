@@ -38,4 +38,9 @@
     <!-- WelcomeScreen-->
     <string name="personal_alarm"> Réveil Perso </string>
 
+    <!-- NewGroupScreen-->
+    <string name="new_group"> Nouveau Groupe </string>
+    <string name="confirm"> Confirmer </string>
+
+
 </resources>
