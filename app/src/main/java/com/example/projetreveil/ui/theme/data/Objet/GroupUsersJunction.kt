@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GroupUsersJunction(
-    val idPerson: Long? = null,
+    val idUser: String? = null,
     val idGroup: Long? = null
     )

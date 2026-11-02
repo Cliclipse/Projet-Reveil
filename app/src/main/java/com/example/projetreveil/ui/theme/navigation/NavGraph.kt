@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
+import com.example.projetreveil.ui.theme.screens.NewGroupScreen
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetAlarmPage
 import com.example.projetreveil.ui.theme.screens.SetGroupePage
@@ -65,11 +66,17 @@ fun MonApp(
 
         composable("group"){
             SetGroupePage(name = "Groupe Page",
+                onAddGroup = { navController.navigate("createGroup") }         
                 onGoToMenuclicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings") }
                 )
         }
+
+        composable("createGroup"){
+            NewGroupScreen()
+        }
+
 
         composable(route = "settings"){
             SettingsPage(name = "Settings", modifier = modifier,

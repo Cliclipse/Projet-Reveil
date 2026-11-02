@@ -10,6 +10,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,15 +21,22 @@ import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.HeadedTextField
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
+import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.auth.AuthState
 
 
 @Composable
 fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: (Unit) -> Unit){
     var alignment : Modifier = Modifier.fillMaxWidth()
+    val viewModel : RegisterScreenViewModel = viewModel()
+
+
+    LaunchedEffect(viewModel.state) {
+        if (viewModel.state == AuthStateEnum.SUCCESS) onConfirmClicked(Unit)
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = alignment ){
 
-       val viewModel : RegisterScreenViewModel = viewModel()
 
         val spacerModifier = Modifier.size(200.dp)
 
@@ -38,7 +46,7 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
 
         Logo(70f)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(midSpacerModifier)
 
         Text(text = stringResource(R.string.login), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
 
@@ -57,11 +65,23 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
             containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
             onClick = {
             if (viewModel.pseudo != "" && viewModel.mdp != ""){
-                viewModel.registerUser(viewModel.pseudo)
-                onConfirmClicked(Unit)
+                viewModel.registerUser()
             }
         }) {
-            Text(text = stringResource(R.string.confirm))
+            Text(text = stringResource(R.string.login))
+        }
+
+        Spacer(midSpacerModifier)
+
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
+            onClick = {
+                if (viewModel.pseudo != "" && viewModel.mdp != ""){
+                    viewModel.connectUser()
+                }
+            }) {
+            Text(text = stringResource(R.string.connect))
         }
     }
 }

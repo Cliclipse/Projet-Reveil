@@ -19,7 +19,7 @@
     <string name="login"> Login </string>
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Password </string>
-    <string name="confirm"> Confirm </string>
+    <string name="connect"> Connexion </string>
 
     <!-- SetReveilScreen-->
     <string name="perso"> PERSO </string>
@@ -35,5 +35,11 @@
 
     <!-- WelcomeScreen-->
     <string name="personal_alarm"> Personal Alarm </string>
+
+    <!-- NewGroupScreen-->
+    <string name="new_group"> New Group </string>
+    <string name="confirm"> Confirm </string>
+
+
 
 </resources>

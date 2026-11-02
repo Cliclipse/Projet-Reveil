@@ -39,60 +39,58 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
+import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
+import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 
 @Composable
-fun SetGroupePage(name : String,
-                  onGoToMenuclicked: () -> Unit,
-                  onGoToConfigureAlarmClicked: () -> Unit,
-                  onGoToSettingsClicked: () -> Unit
-                  ){
+fun SetGroupePage(onAddGroup : () ->Unit,
+                 onGoToMenuclicked: () -> Unit,
+                 onGoToConfigureAlarmClicked: () -> Unit,
+                 onGoToSettingsClicked: () -> Unit)
+{
+    val viewModel : GroupeScreenViewModel = viewModel()
 
     Box(modifier = Modifier.fillMaxSize()){
-
         Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
             PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
             GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
-        }
-
-        // Radial Menu bottom right
+        }      
+    } 
+        
+     // Radial Menu bottom right
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
             isInMenu = false,
             onGoToMenuOrGroupClicked = { onGoToMenuclicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }
-        )
-    }
-}
-
+        )    
 
 @Composable
-fun GroupeSpace(modifier: Modifier){
+fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            HeadOfGroupChat()
-            GroupChat()
+            HeadOfGroupChat(vm)
+            GroupChat(vm)
         }
-
     }
 }
 
 @Composable
-fun PickGroupSpace(modifier: Modifier){
+fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup : () ->Unit ){
     Column(modifier = modifier){
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = Modifier.padding(horizontal = 6.dp).fillMaxWidth()) {
-            val groupes = listOf("Groupe 1", "Groupe 2", "Groupe 3")
-            items(groupes){
-                groupe -> GroupButton()
+            items(vm.groupes ?: emptyList() ){
+                groupe -> GroupButton(vm)
                 Spacer(modifier = Modifier.height(10.dp))
-
             }
             item{
-                AddGroupButton()
+                AddGroupButton(onAddGroup)
             }
         }
     }
@@ -101,7 +99,7 @@ fun PickGroupSpace(modifier: Modifier){
 
 
 @Composable
-fun HeadOfGroupChat(){
+fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
     Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.surface).fillMaxWidth(),
         contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally){
@@ -121,7 +119,7 @@ fun HeadOfGroupChat(){
 }
 
 @Composable
-fun GroupChat(){//Ajo uter ensuite une rélle lazy list avec les photos prises
+fun GroupChat(vm : GroupeScreenViewModel ){//Ajo uter ensuite une rélle lazy list avec les photos prises
     Spacer(modifier = Modifier.height(15.dp))
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally){
         items(4){
@@ -132,7 +130,7 @@ fun GroupChat(){//Ajo uter ensuite une rélle lazy list avec les photos prises
 }
 
 @Composable
-fun GroupButton(){
+fun GroupButton(vm : GroupeScreenViewModel ){
     //Temporaire
     Box(contentAlignment = Alignment.Center, modifier = Modifier
         .background(color = MaterialTheme.colorScheme.secondaryContainer)
@@ -147,10 +145,10 @@ fun GroupButton(){
     }
 }
 
-@Preview
 @Composable
-fun AddGroupButton(){
-    IconButton(onClick = {},
+fun AddGroupButton( onAddGroup : () ->Unit){
+    IconButton(
+        onClick = { onAddGroup() },
         modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiary)
             .padding(start = 6.dp , top = 6.dp)
             .size(65.dp)

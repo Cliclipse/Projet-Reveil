@@ -72,6 +72,7 @@ dependencies {
     implementation("io.ktor:ktor-client-android:3.6.0")
 
     implementation(libs.androidx.room.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
     ksp("androidx.room:room-compiler:2.8.5")
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

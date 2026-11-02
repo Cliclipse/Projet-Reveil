@@ -70,14 +70,13 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
 
                     val alarmsViewModel : AlarmsViewModel = viewModel(factory = AlarmsViewModelFactory(alarmDao))
-
                     MonApp(
                         modifier = Modifier.padding(innerPadding),
                         context = applicationContext,
                         dataStore = dataStore,
                         alarmsViewModel = alarmsViewModel,
                         startingPage = startingPage,
-                        currentAlarmRingingID = currentAlarmRingingID
+                        currentAlarmRingingID = currentAlarmRingingID,
                     )
                 }
             }
