@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Users(
-    val id: Long? = null,
-    val name : String,
+    val id: String? = "",
+    val name: String,
     @SerialName("profil_picture") val profilPicture: Long?
 )

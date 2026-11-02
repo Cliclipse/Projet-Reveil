@@ -83,7 +83,5 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
             }) {
             Text(text = stringResource(R.string.connect))
         }
-
-
     }
 }

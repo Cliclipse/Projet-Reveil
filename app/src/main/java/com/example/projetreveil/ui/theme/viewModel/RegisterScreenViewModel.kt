@@ -10,13 +10,11 @@ import com.example.projetreveil.BuildConfig.SUPABASE_ANON_KEY
 import com.example.projetreveil.BuildConfig.SUPABASE_URL
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Users
-import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.createSupabaseClient
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
-import kotlinx.coroutines.flow.StateFlow
 
 class RegisterScreenViewModel : ViewModel() {
 
@@ -28,7 +26,7 @@ class RegisterScreenViewModel : ViewModel() {
 
     var state by mutableStateOf(AuthStateEnum.IDLE)
 
-
+    var usersRepository = UsersRepository();
 
     fun Init() {
         pseudo = ""
@@ -54,7 +52,11 @@ class RegisterScreenViewModel : ViewModel() {
                 supabase.auth.signUpWith(Email) {
                     this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
                     this.password = mdp
-                }
+
+                    var user : Users = Users(id = supabase.auth.currentUserOrNull()?.id , name = pseudo, profilPicture = 0)
+                    viewModelScope.launch {
+                        usersRepository.add(user)
+                    }                }
                 state = AuthStateEnum.SUCCESS
             } catch (e: Exception) {
                 state = AuthStateEnum.IDLE
