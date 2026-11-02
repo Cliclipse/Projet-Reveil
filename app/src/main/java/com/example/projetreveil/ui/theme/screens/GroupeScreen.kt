@@ -42,20 +42,33 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.Logo
+import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 
 @Composable
-fun SetGroupePage(onAddGroup : () ->Unit)
+fun SetGroupePage(onAddGroup : () ->Unit,
+                 onGoToMenuclicked: () -> Unit,
+                 onGoToConfigureAlarmClicked: () -> Unit,
+                 onGoToSettingsClicked: () -> Unit)
 {
     val viewModel : GroupeScreenViewModel = viewModel()
 
-    Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
-        PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize() , viewModel , onAddGroup )
-        GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize() , viewModel)
-    }
-}
-
+    Box(modifier = Modifier.fillMaxSize()){
+        Row(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colorScheme.background)){
+            PickGroupSpace(modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f).fillMaxSize())
+            GroupeSpace(modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f).fillMaxSize())
+        }      
+    } 
+        
+     // Radial Menu bottom right
+        RadialMenu(
+            modifier = Modifier.fillMaxSize().padding(34f.dp),
+            isInMenu = false,
+            onGoToMenuOrGroupClicked = { onGoToMenuclicked() },
+            onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
+            onGoToSettingsClicked = { onGoToSettingsClicked() }
+        )    
 
 @Composable
 fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
@@ -64,7 +77,6 @@ fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
             HeadOfGroupChat(vm)
             GroupChat(vm)
         }
-
     }
 }
 

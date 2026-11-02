@@ -23,7 +23,6 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED)
             return;
 
-        val pendingResult = goAsync()
         val appContext = context.applicationContext
 
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -41,7 +40,9 @@ class BootReceiver : BroadcastReceiver() {
                         alarm.id,
                         alarm.hour,
                         alarm.minutes,
-                        alarm.enabled
+                        alarm.enabled,
+                        alarm.vibration,
+                        alarm.daily
                     )
                 }
             }

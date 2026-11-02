@@ -22,9 +22,20 @@ class AlarmsViewModel(
             initialValue = emptyList()
         )
 
-    fun AddAlarm(hour: Int, minutes: Int, enabled: Boolean, onAlarmCreated: (Int) -> Unit) {
+    fun AddAlarm(hour: Int, minutes: Int,
+                 enabled: Boolean,
+                 vibration: Boolean,
+                 daily: Boolean,
+                 onAlarmCreated: (Int) -> Unit) {
         viewModelScope.launch {
-            val idNewAlarm = alarmDao.AddAlarm(Alarm(hour = hour, minutes = minutes, enabled = enabled))
+            val idNewAlarm = alarmDao.AddAlarm(
+                Alarm(hour = hour,
+                    minutes = minutes,
+                    enabled = enabled,
+                    vibration = vibration,
+                    daily = daily
+                )
+            )
 
             onAlarmCreated(idNewAlarm.toInt())
         }

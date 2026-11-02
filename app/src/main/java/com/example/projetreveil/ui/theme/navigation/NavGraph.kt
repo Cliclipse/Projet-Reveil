@@ -34,7 +34,11 @@ fun MonApp(
     ){
         composable("register"){
             RegisterPage(name = "Register Page", modifier = modifier,
-                onConfirmClicked = { navController.navigate("welcome") })
+                onConfirmClicked = { navController.navigate("welcome"){
+                    popUpTo("register"){
+                        inclusive = true
+                    }
+                } })
         }
 
         composable("welcome"){
@@ -43,7 +47,6 @@ fun MonApp(
                 modifier = modifier,
                 alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
-                onGoToMenuClicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings") },
                 settingsDataStore = dataStore
@@ -62,7 +65,12 @@ fun MonApp(
         }
 
         composable("group"){
-            SetGroupePage( onAddGroup = { navController.navigate("createGroup") })
+            SetGroupePage(name = "Groupe Page",
+                onAddGroup = { navController.navigate("createGroup") }         
+                onGoToMenuclicked = { navController.navigate("welcome") },
+                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
+                onGoToSettingsClicked = { navController.navigate("settings") }
+                )
         }
 
         composable("createGroup"){
@@ -72,10 +80,7 @@ fun MonApp(
 
         composable(route = "settings"){
             SettingsPage(name = "Settings", modifier = modifier,
-                onGoToMenuClicked = { navController.navigate("welcome") },
-                onGoToGroupClicked = { navController.navigate("group") },
-                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm")},
-                onGoToSettingsClicked = { navController.navigate("settings") },
+                onGoBackClicked = { navController.popBackStack() },
                 settingsDataStore = dataStore
                 )
         }
@@ -86,8 +91,16 @@ fun MonApp(
                 context = context,
                 alarmsViewModel = alarmsViewModel,
                 alarmTime = "08:30",
-                onSnoozeClicked = { navController.navigate("welcome") },
-                onStopClicked = { navController.navigate("welcome") },
+                onSnoozeClicked = { navController.navigate("welcome"){
+                    popUpTo("alarm-ringing"){
+                        inclusive = true
+                    }
+                } },
+                onStopClicked = { navController.navigate("welcome"){
+                    popUpTo("alarm-ringing"){
+                        inclusive = true
+                    }
+                } },
                 alarmID = currentAlarmRingingID
             )
         }
