@@ -41,7 +41,7 @@ fun NewGroupScreen(name : String){
 
         Text(text = stringResource(R.string.new_group), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)
 
-        HeadedTextField(stringResource(R.string.group_name) , viewModel.pseudo,  {textInField : String -> viewModel.pseudo = textInField})
+        HeadedTextField(stringResource(R.string.group_name) , viewModel.groupName,  {textInField : String -> viewModel.groupName = textInField})
         Spacer(midSpacerModifier)
 
         Button(

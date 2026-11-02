@@ -1,16 +1,17 @@
 package com.example.projetreveil.data
 
+import com.example.projetreveil.ui.theme.data.Objet.GroupUsersJunction
 import io.github.jan.supabase.postgrest.from
 
 class GroupUsersJunctionRepository {
 
     private val supabase = SupabaseClient.client
 
-    suspend fun get(): List<GroupUsersJunctionRepository> {
-        return supabase.from("groupUsersJunctionTable").select().decodeList<GroupUsersJunctionRepository>()
+    suspend fun get(): List<GroupUsersJunction> {
+        return supabase.from("groupUsersJunctionTable").select().decodeList<GroupUsersJunction>()
     }
 
-    suspend fun add( GUJ: GroupUsersJunctionRepository) {
+    suspend fun add( GUJ: GroupUsersJunction) {
         supabase.from("groupUsersJunctionTable").insert(GUJ)
     }
 

@@ -19,15 +19,20 @@ class NewGroupScreenViewModel : ViewModel() {
 
     val supabase = SupabaseClient.client
 
-    suspend fun registerGroup(){
+    fun registerGroup(){ // d'abord je crée le groupe, puis je récupère l'id attribuée automatiquement, puis j'ajoute dans la junc function
         var group : Group = Group(0 , groupName)
-        var groupUsersJunction : GroupUsersJunction = GroupUsersJunction(idPerson = supabase.auth.currentUserOrNull()?.id
-        )
-
+        var idAttribuee : Long
 
         viewModelScope.launch {
-            groupRepository.add(group)
+            idAttribuee = groupRepository.addAndGetID(group)
 
+            var groupUsersJunction : GroupUsersJunction = GroupUsersJunction(
+                idPerson = supabase.auth.currentUserOrNull()?.id,
+                idGroup = idAttribuee
+            )
+            groupUsersJunctionRepository.add(groupUsersJunction)
         }
+
+
     }
 }

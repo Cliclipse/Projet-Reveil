@@ -17,6 +17,12 @@ class GroupRepository {
         supabase.from("group").insert(group)
     }
 
+    suspend fun addAndGetID(group: Group) : Long {
+        var groupeCreated : Group = supabase.from("group").insert(group) { select() }
+            .decodeSingle<Group>()
+        return groupeCreated.id ?: error("pas d'id au groupe inséré... force")
+    }
+
     suspend fun delete(id: String) {
         supabase.from("group").delete {
             filter { eq("id", id) }
