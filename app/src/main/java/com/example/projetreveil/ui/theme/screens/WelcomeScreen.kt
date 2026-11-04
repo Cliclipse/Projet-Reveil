@@ -11,21 +11,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,13 +31,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,8 +92,7 @@ fun WelcomePage(name: String,
             Spacer(modifier = Modifier.height(40.dp))
 
             // Liste Reveil
-            AlarmList(context = context, alarmsViewModel, modifier = Modifier.height(340.dp))
-
+            AlarmList(context = context, alarmsViewModel)
         }
 
         // Bouton + menu radial bas droite
@@ -306,7 +301,7 @@ fun GhostAlarmItem(){
                 verticalAlignment = Alignment.CenterVertically) {
 
                 Text(modifier = Modifier.weight(2f),
-                    text = "No Alarm",
+                    text = stringResource(R.string.no_alarm),
                     color = MaterialTheme.colorScheme.onSecondary,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
@@ -347,9 +342,11 @@ fun AlarmItemOptionsPreview(modifier: Modifier = Modifier, alarm: Alarm){
 }
 
 @Composable
-fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modifier = Modifier){
+fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
+
+    var alarmToDelete: Alarm? by rememberSaveable { mutableStateOf<Alarm?>(null) }
 
     Column() {
         Text(
@@ -377,8 +374,8 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
                         )
                     },
                     onDeleteClicked = {
-                        AlarmsUtilities().StopAlarm(context, alarm.id)
-                        alarmsViewModel.DeleteAlarm(alarm);
+
+                        alarmToDelete = alarm
                     }
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -391,6 +388,61 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel, modifier: Modi
             }
         }
 
+        ConfirmDeleteAlarmPopup(alarmToDelete = alarmToDelete,
+            onDismiss = {
+                alarmToDelete = null
+            },
+            onConfirm = {
+                if (alarmToDelete != null){
+                    AlarmsUtilities().StopAlarm(context, alarmToDelete!!.id)
+                    alarmsViewModel.DeleteAlarm(alarmToDelete!!)
+                    alarmToDelete = null
+                }
+            }
+        )
+
+    }
+}
+
+@Composable
+fun ConfirmDeleteAlarmPopup(alarmToDelete: Alarm?,
+                            onDismiss: () -> Unit,
+                            onConfirm: () -> Unit
+){
+    alarmToDelete?.let { alarm ->
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+
+            title =  {
+                Text(stringResource(R.string.delete_alarm_title))
+            },
+
+            text = {
+                Text(stringResource(R.string.delete_alarm_text))
+            },
+
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm()
+                    }
+                ) {
+                    Text(stringResource(R.string.confirm_delete))
+                }
+            },
+
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                    }
+                ) {
+                    Text(stringResource(R.string.dismiss_delete))
+                }
+            }
+        )
     }
 }
 

@@ -35,6 +35,11 @@
 
     <!-- WelcomeScreen-->
     <string name="personal_alarm"> Personal Alarm </string>
+    <string name="delete_alarm_title"> Delete Alarm ? </string>
+    <string name="delete_alarm_text"> The Alarm will be deleted ! </string>
+    <string name="confirm_delete"> Delete </string>
+    <string name="dismiss_delete"> Cancel </string>
+    <string name="no_alarm"> No Alarm </string>
 
     <!-- NewGroupScreen-->
     <string name="new_group"> New Group </string>
