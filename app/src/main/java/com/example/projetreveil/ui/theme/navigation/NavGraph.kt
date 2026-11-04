@@ -74,7 +74,9 @@ fun MonApp(
         }
 
         composable("createGroup"){
-            NewGroupScreen()
+            NewGroupScreen(
+                onConfirmClicked = {navController.navigate("group") },
+            )
         }
 
 

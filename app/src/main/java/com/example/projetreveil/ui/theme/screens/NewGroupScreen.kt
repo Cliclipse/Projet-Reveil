@@ -26,7 +26,9 @@ import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.NewGroupScreenViewModel
 
 @Composable
-fun NewGroupScreen(){
+fun NewGroupScreen(
+    onConfirmClicked: (Unit) -> Unit
+){
     val viewModel : NewGroupScreenViewModel = viewModel()
 
     Column(modifier = Modifier.fillMaxSize() , horizontalAlignment = Alignment.CenterHorizontally) {
@@ -50,6 +52,7 @@ fun NewGroupScreen(){
             onClick = {
                 if (viewModel.groupName != ""){
                     viewModel.registerGroup()
+                    onConfirmClicked(Unit)
                 }
             }) {
             Text(text = stringResource(R.string.confirm))
