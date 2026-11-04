@@ -38,11 +38,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
+import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 
 @Composable
@@ -98,6 +102,23 @@ fun SetAlarmPage(name: String,
         }
     }
 
+    var isDisplayingConfirmCreateAlarmPopup: Boolean by rememberSaveable { mutableStateOf(false) }
+
+    ConfirmActionPopup(display = isDisplayingConfirmCreateAlarmPopup,
+        onDismiss = {
+            isDisplayingConfirmCreateAlarmPopup = false
+        },
+        onConfirm = {
+            if (Build.VERSION.SDK_INT >= 33) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+
+            isDisplayingConfirmCreateAlarmPopup = false
+        },
+        title = stringResource(R.string.add_alarm_title),
+        text = stringResource(R.string.add_alarm_text)
+    )
+
     Box(modifier = Modifier.fillMaxWidth()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
                         TopFlag(stringResource(R.string.perso))
@@ -134,10 +155,7 @@ fun SetAlarmPage(name: String,
 
             FloatingActionButton(
                 onClick = {
-
-                    if (Build.VERSION.SDK_INT >= 33) {
-                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    }
+                    isDisplayingConfirmCreateAlarmPopup = true
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(80.dp))
