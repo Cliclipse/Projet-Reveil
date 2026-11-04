@@ -5,7 +5,7 @@
 
     <!-- AlarmRingingPage-->
     <string name="alarm_in_progress"> Alarm In Progress </string>
-    <string name="reveil_message">  Wake up ! It\'s time to get out of bed ! </string>
+    <string name="alarm_message">  Wake up ! It\'s time to get out of bed ! </string>
     <string name="ringtone"> RINGTONE </string>
     <string name="snooze"> SNOOZE </string>
     <string name="five_minuts"> 5 minutes </string>

@@ -7,7 +7,7 @@
 
     <!-- AlarmRingingPage-->
     <string name="alarm_in_progress"> Reveil en cours</string>
-    <string name="reveil_message">  Reveille toi ! Il est l\'heure ! </string>
+    <string name="alarm_message">  Reveille toi ! Il est l\'heure ! </string>
     <string name="ringtone"> SONNERIE </string>
     <string name="snooze"> Snooze </string>
     <string name="five_minuts"> 5 minutes </string>

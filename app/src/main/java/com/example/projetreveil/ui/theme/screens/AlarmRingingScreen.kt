@@ -28,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
@@ -71,7 +73,7 @@ fun AlarmRingingPage(
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = "Reveil en cours",
+            text = stringResource(R.string.alarm_in_progress),
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -81,7 +83,7 @@ fun AlarmRingingPage(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Reveille toi ! Il est l'heure !",
+            text = stringResource(R.string.alarm_message),
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.secondary
 
@@ -104,7 +106,7 @@ fun AlarmRingingPage(
             )
 
             Text(
-                text = "SONNERIE",
+                text = stringResource(R.string.ringtone),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
@@ -123,7 +125,7 @@ fun AlarmRingingPage(
             // Snooze Btn
             AlarmRingingActionButton(
                 icon = Icons.Default.DateRange,
-                primaryText = "Snooze",
+                primaryText = stringResource(R.string.snooze),
                 secondaryText = "5 minutes",
                 primaryTextColor = MaterialTheme.colorScheme.onBackground,
                 secondaryTextColor = MaterialTheme.colorScheme.secondary,
@@ -136,7 +138,7 @@ fun AlarmRingingPage(
             // Confirm Btn
             AlarmRingingActionButton(
                 icon = Icons.Default.Check,
-                primaryText = "Arreter",
+                primaryText = stringResource(R.string.stop),
                 secondaryText = "",
                 primaryTextColor = MaterialTheme.colorScheme.onBackground,
                 secondaryTextColor = MaterialTheme.colorScheme.tertiary,
