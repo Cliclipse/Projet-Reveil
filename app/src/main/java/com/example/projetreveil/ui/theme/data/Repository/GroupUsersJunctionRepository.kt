@@ -13,7 +13,7 @@ class GroupUsersJunctionRepository {
 
     suspend fun getByUserID(userId : String): List<GroupUsersJunction> {
         return supabase.from("GroupUsersJunctionTable").select{
-            filter { eq("id", userId) }
+            filter { eq("idUser", userId) }
         }.decodeList<GroupUsersJunction>()
     }
 
@@ -24,7 +24,7 @@ class GroupUsersJunctionRepository {
 
     suspend fun delete(id: Long) {
         supabase.from("GroupUsersJunctionTable").delete {
-            filter { eq("id", id) }
+            filter { eq("idGroup", id) }
         }
     }
 }
