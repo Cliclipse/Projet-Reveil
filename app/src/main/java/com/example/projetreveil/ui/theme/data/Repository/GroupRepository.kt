@@ -1,16 +1,38 @@
 package com.example.projetreveil.data
 
 import com.example.projetreveil.ui.theme.data.Objet.Group
+import com.example.projetreveil.ui.theme.data.Objet.GroupUsersJunction
 import io.github.jan.supabase.postgrest.from
 
 class GroupRepository {
 
+
     private val supabase = SupabaseClient.client
 
-    suspend fun get(id: String): List<Group> {
+    private val junctionRepo = GroupUsersJunctionRepository()
+
+
+    suspend fun get(id: Long): List<Group> {
         return supabase.from("Group").select{
             filter { eq("id", id)}
         }.decodeList<Group>()
+    }
+
+
+    suspend fun getFromUserId(userId: String): List<Group> {
+        val junctions: List<GroupUsersJunction> = junctionRepo.getByUserID(userId) //Recup liste de jonctions
+        val groupIds :List<Long> = junctions.map { it.idGroup as Long } //Recup liste d'id des groupes
+        if (groupIds.isEmpty()) return emptyList()
+        return supabase.from("Group").select {
+                filter { isIn("id", groupIds) }
+            }.decodeList<Group>()
+        }
+
+
+    suspend fun getByUserId(userId: String): List<GroupUsersJunction> {
+        return supabase.from("GroupUsersJunctionTable").select {
+            filter { eq("userId", userId) }
+        }.decodeList<GroupUsersJunction>()
     }
 
     suspend fun add(group: Group) {

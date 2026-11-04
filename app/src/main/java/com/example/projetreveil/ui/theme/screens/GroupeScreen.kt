@@ -109,8 +109,6 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup :
     }
 }
 
-
-
 @Composable
 fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
     Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.surface).fillMaxWidth(),

@@ -29,9 +29,11 @@ class GroupeScreenViewModel()  : ViewModel() {
         viewModelScope.launch {
             try {
                 supabase.auth.awaitInitialization()
+
+
                 userId = supabase.auth.currentUserOrNull()?.id
                 val id = userId ?: return@launch
-                groupes = repository.get(id)
+                groupes = repository.getFromUserId(id)
             } catch (e: Exception) {
                 Log.e("Groupes", "Chargement échoué", e)
             }

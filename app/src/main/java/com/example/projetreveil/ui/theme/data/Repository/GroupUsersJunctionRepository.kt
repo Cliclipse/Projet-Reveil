@@ -11,6 +11,13 @@ class GroupUsersJunctionRepository {
         return supabase.from("GroupUsersJunctionTable").select().decodeList<GroupUsersJunction>()
     }
 
+    suspend fun getByUserID(userId : String): List<GroupUsersJunction> {
+        return supabase.from("GroupUsersJunctionTable").select{
+            filter { eq("id", userId) }
+        }.decodeList<GroupUsersJunction>()
+    }
+
+
     suspend fun add( GUJ: GroupUsersJunction) {
         supabase.from("GroupUsersJunctionTable").insert(GUJ)
     }

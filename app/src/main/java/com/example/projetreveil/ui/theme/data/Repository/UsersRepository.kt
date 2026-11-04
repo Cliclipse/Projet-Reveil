@@ -14,7 +14,7 @@ class UsersRepository {
         supabase.from("users").insert(users)
     }
 
-    suspend fun delete(id: Long) {
+    suspend fun delete(id: String) {
         supabase.from("users").delete {
             filter { eq("id", id) }
         }
@@ -22,14 +22,14 @@ class UsersRepository {
 
     // Fct d'updates pr modif un champ d'un élément
 
-    suspend fun updateName(id: Long, nouveauNom: String) {
+    suspend fun updateName(id: String, nouveauNom: String) {
         supabase.from("users").update(
             { set("name", nouveauNom) }
         ) {
             filter { eq("id", id) }
         }
     }
-    suspend fun updatePP(id: Long, newprofilPicture: Long) {
+    suspend fun updatePP(id: String, newprofilPicture: Long) {
         supabase.from("users").update(
             { set("profil_picture", newprofilPicture) }
         ) {
