@@ -44,10 +44,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
+import com.example.projetreveil.ui.theme.viewModel.SetAlarmScreenViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,10 +60,7 @@ fun SetAlarmPage(name: String,
                   onConfirmClicked: () -> Unit,
                   onCancelClicked: () -> Unit){
 
-    val vibrationOption: MutableState<Boolean> = remember { mutableStateOf(true) }
-
-    val dailyOption: MutableState<Boolean> = remember { mutableStateOf(false) }
-
+    val setAlarmScreenViewModel: SetAlarmScreenViewModel = viewModel()
 
     val currentTime = remember { Calendar.getInstance() }
 
@@ -83,15 +82,15 @@ fun SetAlarmPage(name: String,
                     hour = timePickerState.hour,
                     minutes = timePickerState.minute,
                     enabled = true,
-                    vibration = vibrationOption.value,
-                    daily = dailyOption.value
+                    vibration = setAlarmScreenViewModel.vibrationOption.value,
+                    daily = setAlarmScreenViewModel.dailyOption.value
                 )
-            },
-            vibration = vibrationOption.value,
-            daily = dailyOption.value
-        )
 
-        onConfirmClicked()
+                onConfirmClicked() // ALARM CREATED CONFIRMED
+            },
+            vibration = setAlarmScreenViewModel.vibrationOption.value,
+            daily = setAlarmScreenViewModel.dailyOption.value
+        )
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -136,11 +135,17 @@ fun SetAlarmPage(name: String,
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                OptionToggle(stringResource(R.string.vibration) , vibrationOption)
+                OptionToggle(name = stringResource(R.string.vibration) ,
+                    toggled = setAlarmScreenViewModel.vibrationOption.value,
+                    onToggled = { setAlarmScreenViewModel.updateVibrationOption(it) }
+                )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                OptionToggle(stringResource(R.string.daily) , dailyOption)
+                OptionToggle(stringResource(R.string.daily),
+                    toggled = setAlarmScreenViewModel.dailyOption.value,
+                    onToggled = { setAlarmScreenViewModel.updateDailyOption(it) }
+                )
             }
         }
         Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
@@ -174,8 +179,8 @@ fun SetAlarmPage(name: String,
 
 
 @Composable
-fun OptionToggle(name : String , option: MutableState<Boolean>){
-    Row( modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
+fun OptionToggle(name : String , toggled: Boolean, onToggled: (Boolean) -> Unit){
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
         //Spacer(Modifier.height(50.dp))
         Text(
             text = name,
@@ -184,8 +189,8 @@ fun OptionToggle(name : String , option: MutableState<Boolean>){
             fontWeight = FontWeight.Bold
         )
         Switch(
-            checked = option.value,
-            onCheckedChange = { option.value = !option.value },
+            checked = toggled,
+            onCheckedChange = { onToggled(it) },
             colors = androidx.compose.material3.SwitchDefaults.colors(
                 checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
                 checkedTrackColor = MaterialTheme.colorScheme.tertiary,
