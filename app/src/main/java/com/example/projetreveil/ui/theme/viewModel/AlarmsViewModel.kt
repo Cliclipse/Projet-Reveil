@@ -51,6 +51,17 @@ class AlarmsViewModel(
             alarmDao.UpdateAlarm(alarm.copy(enabled = enabled))
         }
     }
+
+    private val alarmsIDToAlarmFlows = mutableMapOf<Int, StateFlow<List<Alarm>>>()
+    fun GetAlarmsWithID(alarmID: Int): StateFlow<List<Alarm>>{
+        return alarmsIDToAlarmFlows.getOrPut(alarmID){
+            alarmDao.GetAlarmsWithID(alarmID = alarmID).stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+        }
+    }
 }
 
 class AlarmsViewModelFactory (

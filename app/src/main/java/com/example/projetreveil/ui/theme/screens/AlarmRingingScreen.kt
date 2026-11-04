@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,6 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
+import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 
 @Composable
@@ -40,10 +43,15 @@ fun AlarmRingingPage(
     context: Context,
     alarmsViewModel: AlarmsViewModel,
     alarmID: Int,
-    alarmTime: String = "07:30",
     onSnoozeClicked: () -> Unit,
     onStopClicked: () -> Unit
     ){
+
+    val associatedAlarms by alarmsViewModel.GetAlarmsWithID(alarmID = alarmID).collectAsStateWithLifecycle()
+
+    val alarmText = associatedAlarms.firstOrNull()?.let {
+        "%02d:%02d".format(it.hour, it.minutes)
+    } ?: "07:30"
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -88,7 +96,7 @@ fun AlarmRingingPage(
                 .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(28.dp))
         ){
             Text(
-                text = alarmTime,
+                text = alarmText,
                 fontSize = 56.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimary

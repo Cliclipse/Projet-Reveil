@@ -90,7 +90,6 @@ fun MonApp(
                 modifier = modifier,
                 context = context,
                 alarmsViewModel = alarmsViewModel,
-                alarmTime = "08:30",
                 onSnoozeClicked = { navController.navigate("welcome"){
                     popUpTo("alarm-ringing"){
                         inclusive = true
