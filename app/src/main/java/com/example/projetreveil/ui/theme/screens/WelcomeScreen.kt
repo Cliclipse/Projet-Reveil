@@ -214,7 +214,7 @@ fun ClockTimeLive(){
         Spacer(modifier = Modifier.height(24.dp))
 
         DigitalClock(
-            hour = time.get(java.util.Calendar.HOUR),
+            hour = time.get(java.util.Calendar.HOUR_OF_DAY),
             minute = time.get(java.util.Calendar.MINUTE)
         )
     }
@@ -395,8 +395,11 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
             },
             onConfirm = {
                 if (alarmToDelete != null){
-                    AlarmsUtilities().StopAlarm(context, alarmToDelete!!.id)
-                    alarmsViewModel.DeleteAlarm(alarmToDelete!!)
+                    deleteAlarm(
+                        context = context,
+                        alarmsViewModel = alarmsViewModel,
+                        alarm = alarmToDelete!!
+                    )
                     alarmToDelete = null
                 }
             },
@@ -421,5 +424,11 @@ fun updateAlarmEnableState(context: Context, alarmsViewModel: AlarmsViewModel, a
         vibration = alarm.vibration,
         daily = alarm.daily
     )
+}
+
+fun deleteAlarm(context: Context, alarmsViewModel: AlarmsViewModel, alarm: Alarm){
+
+    AlarmsUtilities().StopAlarm(context, alarm.id)
+    alarmsViewModel.DeleteAlarm(alarm)
 }
 

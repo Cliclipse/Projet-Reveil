@@ -151,14 +151,29 @@ fun RadialMenu(
         label = "radialMenuDistBtn3InAnimation"
     )
 
+    val animationSizeProgressBackground1 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing),
+        label = "radialMenuSizeBackground1InAnimation"
+    )
+
+    val animationSizeProgressBackground2 by animateFloatAsState(
+        targetValue = if (isExpended) 1f else 0f,
+        animationSpec = tween(delayMillis = 200, durationMillis = 200, easing = FastOutSlowInEasing),
+        label = "radialMenuSizeBackground2InAnimation"
+    )
+
+    val sizeRadialBtns = 60f;
+    val sizeMainRadialBtn = 70f;
+
     // Home
     Box(modifier = modifier.fillMaxSize()){
-
         if (!isInMenu){
             // Home
             RadialButton(
                 Modifier.align(Alignment.BottomEnd),
                 icon = Icons.Default.Home,
+                size = sizeRadialBtns,
                 angle = 0f,
                 progressDist = animationDistProgressBtn1,
                 onClick = { onGoToMenuOrGroupClicked() }
@@ -169,6 +184,7 @@ fun RadialMenu(
             RadialButton(
                 Modifier.align(Alignment.BottomEnd),
                 icon = Icons.Default.Person,
+                size = sizeRadialBtns,
                 angle = 0f,
                 progressDist = animationDistProgressBtn1,
                 onClick = { onGoToMenuOrGroupClicked() }
@@ -180,6 +196,7 @@ fun RadialMenu(
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             icon = Icons.Default.AddCircle,
+            size = sizeRadialBtns,
             angle = 45f,
             progressDist = animationDistProgressBtn2,
             onClick = { onGoToConfigureAlarmClicked() }
@@ -189,15 +206,16 @@ fun RadialMenu(
         RadialButton(
             Modifier.align(Alignment.BottomEnd),
             icon = Icons.Default.Settings,
+            size = sizeRadialBtns,
             angle = 90f,
             progressDist = animationDistProgressBt3,
             onClick = { onGoToSettingsClicked() }
         )
 
         Box(modifier = Modifier
-            .size(70f.dp)
+            .size(sizeMainRadialBtn.dp)
             .align(Alignment.BottomEnd)
-            .zIndex(2f)
+            .zIndex(3f)
             .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
             .clip(shape = CircleShape)
             .clickable { isExpended = !isExpended },
@@ -208,22 +226,34 @@ fun RadialMenu(
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
+
+        RadialBackground(modifier = Modifier.align(Alignment.BottomEnd),
+            backgroundColor = MaterialTheme.colorScheme.onTertiary,
+            progressSize = animationSizeProgressBackground1,
+            offset = sizeMainRadialBtn / 2f
+        )
+
+        RadialBackground(modifier = Modifier.align(Alignment.BottomEnd),
+            backgroundColor = MaterialTheme.colorScheme.tertiary,
+            progressSize = animationSizeProgressBackground2,
+            offset = sizeMainRadialBtn / 2f
+        )
     }
 }
 
 
 @Composable
-fun RadialButton(modifier: Modifier, icon: ImageVector, angle: Float, progressDist: Float, onClick: () -> Unit){
+fun RadialButton(modifier: Modifier, icon: ImageVector, size: Float, angle: Float, progressDist: Float, onClick: () -> Unit){
 
-    val radius = 100f;
+    val radius = 100f
 
     val radians = Math.toRadians(angle.toDouble())
 
     val x = -cos(radians).toFloat() * progressDist * radius
     val y = -sin(radians).toFloat() * progressDist * radius
 
-    Box(modifier = modifier.size(60f.dp)
-        .zIndex(1f)
+    Box(modifier = modifier.size(size.dp)
+        .zIndex(2f)
         .alpha(alpha = if (progressDist < 0.05f) 0f else 1f)
         .offset(x.dp, y.dp)
         .background(color = MaterialTheme.colorScheme.secondary, shape = CircleShape)
@@ -237,4 +267,20 @@ fun RadialButton(modifier: Modifier, icon: ImageVector, angle: Float, progressDi
                 tint = MaterialTheme.colorScheme.onSecondary
             )
     }
+}
+
+@Composable
+fun RadialBackground(modifier: Modifier, backgroundColor: Color, progressSize: Float, offset: Float){
+
+    val radius = 320f * progressSize
+    val offset = radius / 2f - offset
+
+    Box(modifier = modifier
+        .zIndex(1f)
+        .offset(x = offset.dp, y = offset.dp)
+        .size(radius.dp)
+        .alpha(alpha = if (progressSize < 0.05f) 0f else 1f)
+        .background(color = backgroundColor, shape = CircleShape)
+        .clip(shape = CircleShape)
+    )
 }
