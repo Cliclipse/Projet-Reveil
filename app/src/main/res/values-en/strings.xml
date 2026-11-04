@@ -38,13 +38,15 @@
     <string name="delete_alarm_title"> Delete Alarm ? </string>
     <string name="delete_alarm_text"> The Alarm will be deleted ! </string>
     <string name="confirm_delete"> Delete </string>
-    <string name="dismiss_delete"> Cancel </string>
     <string name="no_alarm"> No Alarm </string>
 
     <!-- NewGroupScreen-->
     <string name="new_group"> New Group </string>
     <string name="confirm"> Confirm </string>
 
+    <!-- Confirm Action Popup-->
+    <string name="confirm_action_popup"> Confirm </string>
+    <string name="dismiss_action_popup"> Cancel </string>
 
 
 </resources>

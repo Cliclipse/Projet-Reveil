@@ -56,6 +56,7 @@ import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
+import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.utilities.TopFlag
@@ -388,7 +389,7 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
             }
         }
 
-        ConfirmDeleteAlarmPopup(alarmToDelete = alarmToDelete,
+        ConfirmActionPopup(display = alarmToDelete != null,
             onDismiss = {
                 alarmToDelete = null
             },
@@ -398,51 +399,12 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
                     alarmsViewModel.DeleteAlarm(alarmToDelete!!)
                     alarmToDelete = null
                 }
-            }
+            },
+            title = stringResource(R.string.delete_alarm_title),
+            text = stringResource(R.string.delete_alarm_text),
+            confirmText = stringResource(R.string.confirm_delete)
         )
 
-    }
-}
-
-@Composable
-fun ConfirmDeleteAlarmPopup(alarmToDelete: Alarm?,
-                            onDismiss: () -> Unit,
-                            onConfirm: () -> Unit
-){
-    alarmToDelete?.let { alarm ->
-        AlertDialog(
-            onDismissRequest = {
-                onDismiss()
-            },
-
-            title =  {
-                Text(stringResource(R.string.delete_alarm_title))
-            },
-
-            text = {
-                Text(stringResource(R.string.delete_alarm_text))
-            },
-
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onConfirm()
-                    }
-                ) {
-                    Text(stringResource(R.string.confirm_delete))
-                }
-            },
-
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        onDismiss()
-                    }
-                ) {
-                    Text(stringResource(R.string.dismiss_delete))
-                }
-            }
-        )
     }
 }
 

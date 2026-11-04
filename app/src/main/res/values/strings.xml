@@ -37,15 +37,18 @@
 
     <!-- WelcomeScreen-->
     <string name="personal_alarm"> Réveil Perso </string>
-    <string name="delete_alarm_title"> Supprimer l'Alarme ? </string>
+    <string name="delete_alarm_title"> Supprimer l\'Alarme ? </string>
     <string name="delete_alarm_text"> l\'Alarme sera supprimée définitivement ! </string>
     <string name="confirm_delete"> Supprimer </string>
-    <string name="dismiss_delete"> Annuler </string>
     <string name="no_alarm"> Aucune Alarme </string>
 
     <!-- NewGroupScreen-->
     <string name="new_group"> Nouveau Groupe </string>
     <string name="confirm"> Confirmer </string>
+
+    <!-- Confirm Action Popup-->
+    <string name="confirm_action_popup"> Confirmer </string>
+    <string name="dismiss_action_popup"> Annuler </string>
 
 
 </resources>
