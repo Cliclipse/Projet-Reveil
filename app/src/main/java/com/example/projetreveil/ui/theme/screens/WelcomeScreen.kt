@@ -132,6 +132,7 @@ fun WelcomeContent(
 
             // Liste Reveil
             AlarmList(
+                alarms = alarms,
                 onAlarmEnabledChange = { newEnabled, alarm -> onAlarmEnabledChange(newEnabled, alarm)},
                 onAlarmDelete = { onAlarmDelete(it) }
             )
@@ -282,9 +283,10 @@ fun ClockTimeContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 300, heightDp = 60)
 @Composable
 fun AlarmItem(
+    modifier: Modifier = Modifier,
     alarm: Alarm = Alarm(
         id = -1,
         hour = 7,
@@ -296,96 +298,98 @@ fun AlarmItem(
     onEnabledChange: (Boolean) -> Unit = {},
     onDeleteClicked: () -> Unit = {}
 ){
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-        Card(modifier = Modifier.width(300.dp).height(60.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
-        ){
-            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(horizontal = 24.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically) {
+    Card(modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ){
+        Row(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(horizontal = 24.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically) {
 
-                Switch(
-                    checked = alarm.enabled,
-                    onCheckedChange = {
-                        onEnabledChange(it)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
-                        checkedTrackColor = MaterialTheme.colorScheme.tertiary,
-                        checkedBorderColor = MaterialTheme.colorScheme.tertiary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.outline,
-                        uncheckedBorderColor = MaterialTheme.colorScheme.outline
-                    )
+            Switch(
+                checked = alarm.enabled,
+                onCheckedChange = {
+                    onEnabledChange(it)
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.onTertiary,
+                    checkedTrackColor = MaterialTheme.colorScheme.tertiary,
+                    checkedBorderColor = MaterialTheme.colorScheme.tertiary,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.outline,
+                    uncheckedBorderColor = MaterialTheme.colorScheme.outline
                 )
+            )
 
-                Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-                Text(
-                    text = String.format("%02d:%02d", alarm.hour, alarm.minutes),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
+            Text(
+                text = String.format("%02d:%02d", alarm.hour, alarm.minutes),
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            AlarmItemOptions(
+                modifier = Modifier.width(28.dp),
+                alarm = alarm
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(
+                modifier = Modifier.width(48.dp).fillMaxHeight(),
+                onClick = { onDeleteClicked() },
+                shape = RoundedCornerShape(5.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
                 )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                AlarmItemOptions(
-                    modifier = Modifier.width(28.dp),
-                    alarm = alarm
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(0.7f),
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Alarm"
                 )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                IconButton(
-                    modifier = Modifier.width(48.dp).fillMaxHeight(),
-                    onClick = { onDeleteClicked() },
-                    shape = RoundedCornerShape(5.dp),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier.fillMaxSize(0.7f),
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete Alarm"
-                    )
-                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 300, heightDp = 60)
 @Composable
-fun GhostAlarmItem(){
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-        Card(modifier = Modifier.width(300.dp).height(60.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
-            elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
-        ){
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically) {
+fun GhostAlarmItem(
+    modifier: Modifier = Modifier
+){
+    Card(modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ){
+        Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically) {
 
-                Text(modifier = Modifier.weight(2f),
-                    text = stringResource(R.string.no_alarm),
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
+            Spacer(modifier = Modifier.weight(0.2f))
 
-                Spacer(modifier = Modifier.weight(1f))
+            Text(modifier = Modifier.weight(2f),
+                text = stringResource(R.string.no_alarm),
+                color = MaterialTheme.colorScheme.onSecondary,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start
+            )
 
-                Icon(
-                    modifier = Modifier.weight(2f),
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Delete Alarm"
-                )
-            }
+            Spacer(modifier = Modifier.weight(0.6f))
+
+            Icon(
+                modifier = Modifier.weight(0.6f),
+                imageVector = Icons.Default.Notifications,
+                contentDescription = "Delete Alarm"
+            )
+
+            Spacer(modifier = Modifier.weight(0.2f))
         }
     }
 }
@@ -423,6 +427,7 @@ fun AlarmItemOptions(
 
 @Composable
 fun AlarmList(
+    modifier: Modifier = Modifier,
     alarms: List<Alarm> = listOf(
         Alarm(1, 7, 30, true, true, true),
         Alarm(2, 21, 25, false, false, true)
@@ -435,21 +440,27 @@ fun AlarmList(
         mutableStateOf<Alarm?>(null)
     }
 
-    Column() {
+    Column(modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.personal_alarm),
             modifier = Modifier.fillMaxWidth().height(30.dp).padding(horizontal = 50.dp, vertical = 0.dp),
             fontSize = 28.sp,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxWidth().height(300.dp).clipToBounds()) {
+        LazyColumn(modifier = Modifier.fillMaxWidth(0.8f)
+            .fillMaxHeight()
+            .clipToBounds(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
             items(items = alarms, key = {alarm -> alarm.id }) { alarm ->
                 AlarmItem(
+                    modifier = Modifier.height(70.dp),
                     alarm = alarm,
                     onEnabledChange = {
                             newEnabledValue ->
@@ -465,7 +476,9 @@ fun AlarmList(
 
             if (alarms.isEmpty()){
                 item {
-                    GhostAlarmItem()
+                    GhostAlarmItem(
+                        modifier = Modifier.height(70.dp)
+                    )
                 }
             }
         }
