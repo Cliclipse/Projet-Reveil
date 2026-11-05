@@ -8,14 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projetreveil.data.GroupRepository
 import com.example.projetreveil.data.SupabaseClient
-import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Group
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GroupeScreenViewModel()  : ViewModel() {
@@ -25,8 +21,8 @@ class GroupeScreenViewModel()  : ViewModel() {
     val supabase = SupabaseClient.client
     var userId by mutableStateOf<String?>(null)
 
-
-    var groupShown : Long? = null
+    var groupShownId by mutableStateOf<Long?>(null)
+    var groupShown by mutableStateOf<Group?>(null)
 
     // Alors je crois que je suis forcé de faire un truc bizarre ainsi, pas encore tout compris au flow
     //mais on modifie _groupes et on lit groupes
@@ -48,15 +44,12 @@ class GroupeScreenViewModel()  : ViewModel() {
 
 
     fun ChangeGroupShown(idGroup : Long?){
-        if (idGroup == groupShown) return
-
+        if (idGroup == groupShownId || idGroup == null) return
         Log.e("Groupes", idGroup.toString())
-
-
+        groupShownId = idGroup
+        viewModelScope.launch {
+            val id = groupShownId ?: return@launch //il veut pas si je garanti pas absolument que c'est pas null
+            groupShown = repository.get(id)
+        }
     }
-
-    /*
-    val groupes: StateFlow<List<Group>> = repository.getGroupesFlow()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-    */
 }

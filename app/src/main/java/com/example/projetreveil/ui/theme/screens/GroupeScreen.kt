@@ -125,7 +125,7 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
             Spacer(modifier = Modifier.height(40.dp))
             Logo(75f)
             Spacer(modifier = Modifier.height(6.dp))
-            Text(stringResource(R.string.group_name),
+            Text((vm.groupShown?.GroupName ?: stringResource(R.string.group_name)),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge
             )
