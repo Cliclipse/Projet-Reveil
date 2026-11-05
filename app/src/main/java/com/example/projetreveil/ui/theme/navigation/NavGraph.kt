@@ -48,8 +48,7 @@ fun MonApp(
                 alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
-                onGoToSettingsClicked = { navController.navigate("settings") },
-                settingsDataStore = dataStore
+                onGoToSettingsClicked = { navController.navigate("settings") }
             )
         }
 

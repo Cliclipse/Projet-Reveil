@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -31,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,12 +47,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
-import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
@@ -74,14 +72,54 @@ fun WelcomePage(name: String,
                 alarmsViewModel: AlarmsViewModel,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
-                onGoToSettingsClicked: () -> Unit,
-                settingsDataStore: DataStoreSettingsApp) {
+                onGoToSettingsClicked: () -> Unit) {
 
-    Box(modifier = Modifier.fillMaxSize()){
+    val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
+
+    WelcomeContent(modifier = Modifier,
+        alarms = alarms,
+        onAlarmEnabledChange = {
+            newEnabledValue, alarm ->
+
+            updateAlarmEnableState(
+                context = context,
+                alarmsViewModel = alarmsViewModel,
+                alarm = alarm,
+                enabled = newEnabledValue
+            )
+        },
+        onAlarmDelete = {
+            deleteAlarm(
+                context = context,
+                alarmsViewModel = alarmsViewModel,
+                alarm = it
+            )
+        },
+        onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
+        onGoToGroupClicked = { onGoToGroupClicked() },
+        onGoToSettingsClicked = { onGoToSettingsClicked() }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WelcomeContent(
+    modifier: Modifier = Modifier,
+    alarms: List<Alarm> = listOf(
+        Alarm(1, 7, 30, true, true, true),
+        Alarm(2, 21, 25, false, false, true)
+    ),
+    onAlarmEnabledChange: (Boolean, Alarm) -> Unit = {_, _ -> },
+    onAlarmDelete: (Alarm) -> Unit = {_ -> },
+    onGoToConfigureAlarmClicked: () -> Unit = {},
+    onGoToGroupClicked: () -> Unit = {},
+    onGoToSettingsClicked: () -> Unit = {},
+){
+    Box(modifier = modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
             // Bandeau social top
 
-            TopFlag("PERSO")
+            TopFlag(text = stringResource(R.string.perso))
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -93,7 +131,10 @@ fun WelcomePage(name: String,
             Spacer(modifier = Modifier.height(40.dp))
 
             // Liste Reveil
-            AlarmList(context = context, alarmsViewModel)
+            AlarmList(
+                onAlarmEnabledChange = { newEnabled, alarm -> onAlarmEnabledChange(newEnabled, alarm)},
+                onAlarmDelete = { onAlarmDelete(it) }
+            )
         }
 
         // Bouton + menu radial bas droite
@@ -107,8 +148,12 @@ fun WelcomePage(name: String,
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun ClockView(modifier: Modifier = Modifier, hour: Int = 10, minute: Int = 10){
+fun ClockView(modifier: Modifier = Modifier,
+              hour: Int = 10,
+              minute: Int = 10
+){
 
     val clockColor : Color = MaterialTheme.colorScheme.primary
     val needlesColor : Color = MaterialTheme.colorScheme.tertiary
@@ -207,26 +252,50 @@ fun ClockTimeLive(){
         }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    ClockTimeContent(
+        hour = time.get(java.util.Calendar.HOUR_OF_DAY),
+        minutes = time.get(java.util.Calendar.MINUTE)
+    )
+}
 
-        ClockView(hour = time.get(Calendar.HOUR), minute = time.get(Calendar.MINUTE))
+@Preview(showBackground = true)
+@Composable
+fun ClockTimeContent(
+    modifier: Modifier = Modifier,
+    hour: Int = 7,
+    minutes: Int = 30
+){
+    Column(modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        ClockView(hour = hour % 12,
+            minute = minutes
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         DigitalClock(
-            hour = time.get(java.util.Calendar.HOUR_OF_DAY),
-            minute = time.get(java.util.Calendar.MINUTE)
+            hour = hour,
+            minute = minutes
         )
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun AlarmItem(context: Context,
-              alarm: Alarm,
-              onEnabledChange: (Boolean) -> Unit,
-              onDeleteClicked: () -> Unit
+fun AlarmItem(
+    alarm: Alarm = Alarm(
+        id = -1,
+        hour = 7,
+        minutes = 30,
+        enabled = true,
+        vibration = true,
+        daily = false
+    ),
+    onEnabledChange: (Boolean) -> Unit = {},
+    onDeleteClicked: () -> Unit = {}
 ){
-
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
             shape = RoundedCornerShape(16.dp),
@@ -262,7 +331,7 @@ fun AlarmItem(context: Context,
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                AlarmItemOptionsPreview(
+                AlarmItemOptions(
                     modifier = Modifier.width(28.dp),
                     alarm = alarm
                 )
@@ -289,9 +358,9 @@ fun AlarmItem(context: Context,
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun GhostAlarmItem(){
-
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Card(modifier = Modifier.width(300.dp).height(60.dp),
             shape = RoundedCornerShape(16.dp),
@@ -321,9 +390,19 @@ fun GhostAlarmItem(){
     }
 }
 
+@Preview(showBackground = true, widthDp = 50, heightDp = 100)
 @Composable
-fun AlarmItemOptionsPreview(modifier: Modifier = Modifier, alarm: Alarm){
-
+fun AlarmItemOptions(
+    modifier: Modifier = Modifier,
+    alarm: Alarm = Alarm(
+        id = -1,
+        hour = 7,
+        minutes = 30,
+        enabled = true,
+        vibration = true,
+        daily = true
+    )
+){
     Column(modifier = modifier.fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
 
         Icon(modifier = Modifier.weight(6f),
@@ -343,11 +422,18 @@ fun AlarmItemOptionsPreview(modifier: Modifier = Modifier, alarm: Alarm){
 }
 
 @Composable
-fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
-
-    val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
-
-    var alarmToDelete: Alarm? by rememberSaveable { mutableStateOf<Alarm?>(null) }
+fun AlarmList(
+    alarms: List<Alarm> = listOf(
+        Alarm(1, 7, 30, true, true, true),
+        Alarm(2, 21, 25, false, false, true)
+    ),
+    onAlarmEnabledChange: (Boolean, Alarm) -> Unit = {_, _ -> },
+    onAlarmDelete: (Alarm) -> Unit = {_ -> }
+)
+{
+    var alarmToDelete: Alarm? by rememberSaveable {
+        mutableStateOf<Alarm?>(null)
+    }
 
     Column() {
         Text(
@@ -363,16 +449,11 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
 
         LazyColumn(modifier = Modifier.fillMaxWidth().height(300.dp).clipToBounds()) {
             items(items = alarms, key = {alarm -> alarm.id }) { alarm ->
-                AlarmItem(context = context,
+                AlarmItem(
                     alarm = alarm,
                     onEnabledChange = {
                             newEnabledValue ->
-                        updateAlarmEnableState(
-                            context = context,
-                            alarmsViewModel = alarmsViewModel,
-                            alarm = alarm,
-                            enabled = newEnabledValue
-                        )
+                        onAlarmEnabledChange(newEnabledValue, alarm)
                     },
                     onDeleteClicked = {
 
@@ -395,11 +476,8 @@ fun AlarmList(context: Context, alarmsViewModel: AlarmsViewModel){
             },
             onConfirm = {
                 if (alarmToDelete != null){
-                    deleteAlarm(
-                        context = context,
-                        alarmsViewModel = alarmsViewModel,
-                        alarm = alarmToDelete!!
-                    )
+                    onAlarmDelete(alarmToDelete!!)
+
                     alarmToDelete = null
                 }
             },
