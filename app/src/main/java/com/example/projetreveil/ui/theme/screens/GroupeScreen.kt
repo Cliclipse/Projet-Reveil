@@ -1,6 +1,7 @@
 package com.example.projetreveil.ui.theme.screens
 
 import android.util.Log
+import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,7 +54,8 @@ import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 fun SetGroupePage(onAddGroup : () ->Unit,
                  onGoToMenuclicked: () -> Unit,
                  onGoToConfigureAlarmClicked: () -> Unit,
-                 onGoToSettingsClicked: () -> Unit) {
+                 onGoToSettingsClicked: () -> Unit)
+{
     val viewModel: GroupeScreenViewModel = viewModel()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -103,7 +105,7 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup :
         Spacer(modifier = Modifier.height(20.dp))
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = Modifier.padding(horizontal = 6.dp).fillMaxWidth()) {
             items(groupesList ){
-                groupe -> GroupButton(vm)
+                groupe -> GroupButton(vm, groupe.id )
                 Spacer(modifier = Modifier.height(10.dp))
             }
             item{
@@ -147,7 +149,7 @@ fun GroupChat(vm : GroupeScreenViewModel ){//Ajo uter ensuite une rélle lazy li
 }
 
 @Composable
-fun GroupButton(vm : GroupeScreenViewModel ){
+fun GroupButton(vm : GroupeScreenViewModel, idGroup : Long?){
     //Temporaire
     Box(contentAlignment = Alignment.Center, modifier = Modifier
         .background(color = MaterialTheme.colorScheme.secondaryContainer)
@@ -157,7 +159,9 @@ fun GroupButton(vm : GroupeScreenViewModel ){
             Image(painter = painterResource(R.drawable.penguin) ,
                 "LogoPenguin" ,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(15.dp))
+                modifier = Modifier.fillMaxSize()
+                    .clip(shape = RoundedCornerShape(15.dp))
+                    .clickable(){vm.ChangeGroupShown(idGroup)}
         )
     }
 }

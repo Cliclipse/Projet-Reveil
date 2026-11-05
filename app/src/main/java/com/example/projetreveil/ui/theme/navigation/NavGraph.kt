@@ -69,7 +69,8 @@ fun MonApp(
                 onAddGroup = { navController.navigate("createGroup") },
                 onGoToMenuclicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
-                onGoToSettingsClicked = { navController.navigate("settings") }
+                onGoToSettingsClicked = { navController.navigate("settings")
+                }
                 )
         }
 

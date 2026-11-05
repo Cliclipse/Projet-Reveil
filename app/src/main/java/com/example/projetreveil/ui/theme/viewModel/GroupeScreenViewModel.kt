@@ -26,6 +26,8 @@ class GroupeScreenViewModel()  : ViewModel() {
     var userId by mutableStateOf<String?>(null)
 
 
+    var groupShown : Long? = null
+
     // Alors je crois que je suis forcé de faire un truc bizarre ainsi, pas encore tout compris au flow
     //mais on modifie _groupes et on lit groupes
     private val _groupes = MutableStateFlow<List<Group>>(emptyList())
@@ -44,6 +46,14 @@ class GroupeScreenViewModel()  : ViewModel() {
         }
 }
 
+
+    fun ChangeGroupShown(idGroup : Long?){
+        if (idGroup == groupShown) return
+
+        Log.e("Groupes", idGroup.toString())
+
+
+    }
 
     /*
     val groupes: StateFlow<List<Group>> = repository.getGroupesFlow()
