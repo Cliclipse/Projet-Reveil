@@ -172,7 +172,7 @@ fun SetAlarmContent(
             Spacer(Modifier.weight(0.15f));
 
             Box(modifier = Modifier.fillMaxWidth()
-                .height(120.dp),
+                .height(200.dp),
                 contentAlignment = Alignment.Center
                 ){
                 Row(modifier.fillMaxHeight()
@@ -182,7 +182,6 @@ fun SetAlarmContent(
                     Spacer(Modifier.weight(0.4f))
 
                     TimeInput(
-                        modifier = Modifier.fillMaxHeight(),
                         state = timePickerState
                     )
 
