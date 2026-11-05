@@ -12,10 +12,10 @@ class GroupRepository {
     private val junctionRepo = GroupUsersJunctionRepository()
 
 
-    suspend fun get(id: Long): List<Group> {
+    suspend fun get(id: Long): Group {
         return supabase.from("Group").select{
             filter { eq("id", id)}
-        }.decodeList<Group>()
+        }.decodeSingle<Group>()
     }
 
 
