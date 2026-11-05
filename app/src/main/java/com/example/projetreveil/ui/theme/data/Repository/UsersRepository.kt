@@ -1,6 +1,8 @@
 package com.example.projetreveil.data
 
+import android.util.Log
 import com.example.projetreveil.ui.theme.data.Objet.Users
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 
 class UsersRepository {
@@ -18,6 +20,21 @@ class UsersRepository {
         supabase.from("users").delete {
             filter { eq("id", id) }
         }
+    }
+
+    suspend fun getCurrentUser() : Users? {
+        val userId = supabase.auth.currentUserOrNull()?.id
+
+        Log.d("UsersRepository", "USER ID = $userId")
+
+        if (userId == null)
+            return null
+
+        return supabase.from("users").select{
+            filter {
+                eq("id", userId)
+            }
+        }.decodeSingleOrNull()
     }
 
     // Fct d'updates pr modif un champ d'un élément

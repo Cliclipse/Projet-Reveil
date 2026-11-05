@@ -51,14 +51,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
+import com.example.projetreveil.ui.theme.data.Objet.Users
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.utilities.TopFlag
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
+import com.example.projetreveil.ui.theme.viewModel.WelcomeScreenViewModel
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
@@ -76,8 +79,17 @@ fun WelcomePage(name: String,
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
 
+    val welcomeScreenViewModel: WelcomeScreenViewModel = viewModel()
+
+    LaunchedEffect(Unit){
+        welcomeScreenViewModel.loadCurrentUser()
+    }
+
+    val currentUser = welcomeScreenViewModel.currentUser
+
     WelcomeContent(modifier = Modifier,
         alarms = alarms,
+        currentUser = currentUser,
         onAlarmEnabledChange = {
             newEnabledValue, alarm ->
 
@@ -109,6 +121,7 @@ fun WelcomeContent(
         Alarm(1, 7, 30, true, true, true),
         Alarm(2, 21, 25, false, false, true)
     ),
+    currentUser: Users? = null,
     onAlarmEnabledChange: (Boolean, Alarm) -> Unit = {_, _ -> },
     onAlarmDelete: (Alarm) -> Unit = {_ -> },
     onGoToConfigureAlarmClicked: () -> Unit = {},
@@ -118,8 +131,23 @@ fun WelcomeContent(
     Box(modifier = modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
             // Bandeau social top
-
             TopFlag(text = stringResource(R.string.perso))
+
+            val userText = if (currentUser == null)
+                stringResource(R.string.offline)
+            else (stringResource(R.string.welcome) + " " + currentUser.name)
+
+            Text(
+                modifier = Modifier.align(Alignment.End)
+                    .fillMaxWidth(0.7f)
+                    .padding(end = 24.dp),
+                fontSize = 24.sp,
+                text = userText,
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
 

@@ -43,6 +43,8 @@
     <string name="delete_alarm_text"> l\'Alarme sera supprimée définitivement ! </string>
     <string name="confirm_delete"> Supprimer </string>
     <string name="no_alarm"> Aucune Alarme </string>
+    <string name="welcome"> Bienvenue </string>
+    <string name="offline"> Hors-ligne </string>
 
     <!-- NewGroupScreen-->
     <string name="new_group"> Nouveau Groupe </string>

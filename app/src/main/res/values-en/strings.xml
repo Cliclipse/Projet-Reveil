@@ -41,6 +41,8 @@
     <string name="delete_alarm_text"> The Alarm will be deleted ! </string>
     <string name="confirm_delete"> Delete </string>
     <string name="no_alarm"> No Alarm </string>
+    <string name="welcome"> Welcome </string>
+    <string name="offline"> Offline </string>
 
     <!-- NewGroupScreen-->
     <string name="new_group"> New Group </string>
