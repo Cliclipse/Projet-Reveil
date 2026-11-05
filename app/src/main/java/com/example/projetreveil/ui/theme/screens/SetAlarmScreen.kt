@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -25,25 +27,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
-import androidx.compose.ui.Alignment
 import com.example.projetreveil.ui.theme.utilities.TopFlag
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
@@ -103,7 +104,27 @@ fun SetAlarmPage(name: String,
 
     var isDisplayingConfirmCreateAlarmPopup: Boolean by rememberSaveable { mutableStateOf(false) }
 
-    ConfirmActionPopup(display = isDisplayingConfirmCreateAlarmPopup,
+    SetAlarmContent(
+        modifier = modifier,
+        timePickerState = timePickerState,
+        vibrationValue = setAlarmScreenViewModel.vibrationOption.value,
+        dailyOptionValue = setAlarmScreenViewModel.dailyOption.value,
+        onVibrationToggled = {
+            setAlarmScreenViewModel.updateVibrationOption(it)
+        },
+        onDailyToggled = {
+            setAlarmScreenViewModel.updateDailyOption(it)
+        },
+        onConfirmClicked = {
+            isDisplayingConfirmCreateAlarmPopup = true
+        },
+        onCancelClicked = {
+            onCancelClicked()
+        }
+    )
+
+    ConfirmActionPopup(
+        display = isDisplayingConfirmCreateAlarmPopup,
         onDismiss = {
             isDisplayingConfirmCreateAlarmPopup = false
         },
@@ -118,69 +139,129 @@ fun SetAlarmPage(name: String,
         text = stringResource(R.string.add_alarm_text)
     )
 
-    Box(modifier = Modifier.fillMaxWidth()){
-        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, ) {
-                        TopFlag(stringResource(R.string.perso))
 
-            Spacer(Modifier.height(95.dp));
+}
 
-            TimeInput(timePickerState)
+@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SetAlarmContent(
+    modifier: Modifier = Modifier,
+    timePickerState: TimePickerState = rememberTimePickerState(
+        initialHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+        initialMinute = Calendar.getInstance().get(Calendar.MINUTE),
+        is24Hour = true
+    ),
+    vibrationValue: Boolean = true,
+    dailyOptionValue: Boolean = false,
+    onVibrationToggled: (Boolean) -> Unit = {},
+    onDailyToggled: (Boolean) -> Unit = {},
+    onCancelClicked: () -> Unit = {},
+    onConfirmClicked: () -> Unit = {}
 
-            Spacer(Modifier.height(60.dp));
+){
+    TopFlag(stringResource(R.string.perso))
 
+    Box(modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center){
 
-            Spacer(modifier = Modifier.height(50.dp))
+        Column(modifier = Modifier.fillMaxWidth(0.9f)
+            .fillMaxHeight(0.9f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(Modifier.weight(0.15f));
 
-            Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start,) {
+            Box(modifier = Modifier.fillMaxWidth()
+                .height(120.dp),
+                contentAlignment = Alignment.Center
+                ){
+                Row(modifier.fillMaxHeight()
+                    .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Spacer(Modifier.weight(0.4f))
 
-                Spacer(modifier = Modifier.height(6.dp))
+                    TimeInput(
+                        modifier = Modifier.fillMaxHeight(),
+                        state = timePickerState
+                    )
 
-                OptionToggle(name = stringResource(R.string.vibration) ,
-                    toggled = setAlarmScreenViewModel.vibrationOption.value,
-                    onToggled = { setAlarmScreenViewModel.updateVibrationOption(it) }
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                OptionToggle(stringResource(R.string.daily),
-                    toggled = setAlarmScreenViewModel.dailyOption.value,
-                    onToggled = { setAlarmScreenViewModel.updateDailyOption(it) }
-                )
+                    Spacer(Modifier.weight(0.4f))
+                }
             }
-        }
-        Row(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp).padding(bottom = 24.dp) ,  horizontalArrangement = Arrangement.SpaceBetween){
-            FloatingActionButton(onClick = { onCancelClicked() }, containerColor = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(80.dp)) {
-                Icon(
-                    modifier = Modifier.fillMaxSize(0.5f),
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.abandon),
-                    tint = MaterialTheme.colorScheme.onSecondary
-                )
-            }
 
-            FloatingActionButton(
-                onClick = {
-                    isDisplayingConfirmCreateAlarmPopup = true
+            Spacer(Modifier.weight(0.1f))
+
+            OptionsList(
+                vibrationValue = vibrationValue,
+                dailyValue = dailyOptionValue,
+                onVibrationToggled = {
+                    onVibrationToggled(it)
                 },
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.size(80.dp))
-            {
-                Icon(
-                    modifier = Modifier.fillMaxSize(0.5f),
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = stringResource(R.string.add) ,
-                    tint = MaterialTheme.colorScheme.onTertiary
-                )
-            }
+                onDailyToggled = {
+                    onDailyToggled(it)
+                }
+            )
+
+            Spacer(Modifier.weight(0.2f))
+
+            BottomButtons(
+                onConfirmClicked = {
+                    onConfirmClicked()
+                },
+                onCancelClicked = {
+                    onCancelClicked()
+                }
+            )
         }
     }
 }
 
-
-
+@Preview(showBackground = true)
 @Composable
-fun OptionToggle(name : String , toggled: Boolean, onToggled: (Boolean) -> Unit){
-    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically, ) {
+fun OptionsList(
+    modifier: Modifier = Modifier,
+    vibrationValue: Boolean = true,
+    dailyValue: Boolean = false,
+    onVibrationToggled: (Boolean) -> Unit = {},
+    onDailyToggled: (Boolean) -> Unit = {}
+    ){
+    Column(modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        OptionToggle(name = stringResource(R.string.vibration) ,
+            toggled = vibrationValue,
+            onToggled = {
+                onVibrationToggled(it)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        OptionToggle(stringResource(R.string.daily),
+            toggled = dailyValue,
+            onToggled = {
+                onDailyToggled(it)
+            }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun OptionToggle(name : String = "Placeholder",
+                 toggled: Boolean = true,
+                 onToggled: (Boolean) -> Unit = {}
+){
+    Row(modifier = Modifier.fillMaxWidth()
+        .padding(horizontal = 50.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         //Spacer(Modifier.height(50.dp))
         Text(
             text = name,
@@ -199,5 +280,49 @@ fun OptionToggle(name : String , toggled: Boolean, onToggled: (Boolean) -> Unit)
                 uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
                 uncheckedBorderColor = MaterialTheme.colorScheme.outline)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomButtons(
+    modifier: Modifier = Modifier,
+    onConfirmClicked: () -> Unit = {},
+    onCancelClicked: () -> Unit = {}
+){
+    Row(modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround){
+        FloatingActionButton(
+            onClick = {
+                onCancelClicked()
+            },
+            containerColor = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(80.dp),
+            shape = CircleShape
+            ) {
+            Icon(
+                modifier = Modifier.fillMaxSize(0.5f),
+                imageVector = Icons.Filled.Close,
+                contentDescription = stringResource(R.string.abandon),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+        }
+
+        FloatingActionButton(
+            onClick = {
+                onConfirmClicked()
+            },
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.size(80.dp),
+            shape = CircleShape
+        )
+        {
+            Icon(
+                modifier = Modifier.fillMaxSize(0.5f),
+                imageVector = Icons.Filled.Check,
+                contentDescription = stringResource(R.string.add) ,
+                tint = MaterialTheme.colorScheme.onTertiary
+            )
+        }
     }
 }
