@@ -6,15 +6,22 @@ import android.icu.util.Calendar
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
+import com.example.projetreveil.ui.theme.utilities.LoadingIndicator
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import com.example.projetreveil.ui.theme.viewModel.SetAlarmScreenViewModel
 
@@ -40,89 +48,90 @@ fun ModifyAlarmPage(name: String,
 
     val associatedAlarms by alarmsViewModel.GetAlarmsWithID(alarmID = associatedAlarmID).collectAsStateWithLifecycle()
 
-    val alarm: Alarm = associatedAlarms.firstOrNull()?.let {
-        it
-    } ?: Alarm(id = -1,
-        hour = 0,
-        minutes = 0,
-        enabled = false,
-        vibration = false,
-        daily = false
-    )
+    val alarm = associatedAlarms.firstOrNull()
 
-    setAlarmScreenViewModel.updateVibrationOption(alarm.vibration)
-    setAlarmScreenViewModel.updateDailyOption(alarm.daily)
+    alarmsViewModel.DebugAlarms()
+
+    if (alarm == null) {
+        LoadingIndicator()
+        return
+    }
+
+    LaunchedEffect(alarm.id) {
+        setAlarmScreenViewModel.updateVibrationOption(alarm.vibration)
+        setAlarmScreenViewModel.updateDailyOption(alarm.daily)
+    }
 
     val vibration = setAlarmScreenViewModel.vibrationOption
     val daily = setAlarmScreenViewModel.dailyOption
 
-    val currentTime = remember { Calendar.getInstance() }
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(alarm.hour),
-        initialMinute = currentTime.get(alarm.minutes),
-        is24Hour = true
-    )
-
-    val modifyAlarm = {
-        alarmsViewModel.UpdateAlarm(
-            alarm = Alarm(
-                id = alarm.id,
-                hour = timePickerState.hour,
-                minutes = timePickerState.minute,
-                enabled = alarm.enabled,
-                vibration = vibration.value,
-                daily = daily.value
-            )
+    key(alarm.id) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = alarm.hour,
+            initialMinute = alarm.minutes,
+            is24Hour = true
         )
 
-        onConfirmClicked()
-    }
+        val modifyAlarm = {
+            alarmsViewModel.UpdateAlarm(
+                alarm = Alarm(
+                    id = alarm.id,
+                    hour = timePickerState.hour,
+                    minutes = timePickerState.minute,
+                    enabled = alarm.enabled,
+                    vibration = vibration.value,
+                    daily = daily.value
+                )
+            )
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()){
-            isGranted ->
-        if (isGranted){
-            modifyAlarm()
+            onConfirmClicked()
         }
-    }
 
-    var isDisplayingConfirmModifyAlarmPopup: Boolean by rememberSaveable { mutableStateOf(false) }
-
-    ModifyAlarmContent(
-        modifier = modifier,
-        timePickerState = timePickerState,
-        vibrationValue = setAlarmScreenViewModel.vibrationOption.value,
-        dailyOptionValue = setAlarmScreenViewModel.dailyOption.value,
-        onVibrationToggled = {
-            setAlarmScreenViewModel.updateVibrationOption(it)
-        },
-        onDailyToggled = {
-            setAlarmScreenViewModel.updateDailyOption(it)
-        },
-        onConfirmClicked = {
-            isDisplayingConfirmModifyAlarmPopup = true
-        },
-        onCancelClicked = {
-            onCancelClicked()
-        }
-    )
-
-    ConfirmActionPopup(
-        display = isDisplayingConfirmModifyAlarmPopup,
-        onDismiss = {
-            isDisplayingConfirmModifyAlarmPopup = false
-        },
-        onConfirm = {
-            if (Build.VERSION.SDK_INT >= 33) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                modifyAlarm()
             }
+        }
 
-            isDisplayingConfirmModifyAlarmPopup = false
-        },
-        title = stringResource(R.string.modify_alarm_title),
-        text = stringResource(R.string.modify_alarm_text)
-    )
+        var isDisplayingConfirmModifyAlarmPopup: Boolean by rememberSaveable { mutableStateOf(false) }
+
+        ModifyAlarmContent(
+            modifier = modifier,
+            timePickerState = timePickerState,
+            vibrationValue = setAlarmScreenViewModel.vibrationOption.value,
+            dailyOptionValue = setAlarmScreenViewModel.dailyOption.value,
+            onVibrationToggled = {
+                setAlarmScreenViewModel.updateVibrationOption(it)
+            },
+            onDailyToggled = {
+                setAlarmScreenViewModel.updateDailyOption(it)
+            },
+            onConfirmClicked = {
+                isDisplayingConfirmModifyAlarmPopup = true
+            },
+            onCancelClicked = {
+                onCancelClicked()
+            }
+        )
+
+        ConfirmActionPopup(
+            display = isDisplayingConfirmModifyAlarmPopup,
+            onDismiss = {
+                isDisplayingConfirmModifyAlarmPopup = false
+            },
+            onConfirm = {
+                if (Build.VERSION.SDK_INT >= 33) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+
+                isDisplayingConfirmModifyAlarmPopup = false
+            },
+            title = stringResource(R.string.modify_alarm_title),
+            text = stringResource(R.string.modify_alarm_text)
+        )
+    }
 }
 
 @Preview(showBackground = true)

@@ -1,5 +1,6 @@
 package com.example.projetreveil.ui.theme.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -66,6 +67,19 @@ class AlarmsViewModel(
                 SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
+        }
+    }
+
+    fun DebugAlarms() {
+        viewModelScope.launch {
+            val allAlarms = alarmDao.GetAllAlarmsDebug()
+
+            allAlarms.forEach {
+                Log.d(
+                    "DEBUG_ALARMS",
+                    "ID=${it.id}, heure=${it.hour}:${it.minutes}"
+                )
+            }
         }
     }
 }
