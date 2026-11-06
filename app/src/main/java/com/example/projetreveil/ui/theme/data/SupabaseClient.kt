@@ -1,5 +1,6 @@
 package com.example.projetreveil.data
 
+import io.github.jan.supabase.storage.Storage
 import com.example.projetreveil.BuildConfig
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
@@ -12,6 +13,7 @@ object SupabaseClient { //object ca fait un singleton. Beosin pour accéder à l
     ) {
         install(Postgrest)
         install(Auth)
+        install(Storage)
     }
 
 }

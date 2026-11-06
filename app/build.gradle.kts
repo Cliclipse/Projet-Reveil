@@ -70,6 +70,7 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.ktor:ktor-client-android:3.6.0")
+    implementation("io.github.jan-tennert.supabase:storage-kt:X.Y.Z")
 
     implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.crashlytics.buildtools)
