@@ -31,6 +31,10 @@
     <string name="add_alarm_title"> Add a new Alarm ? </string>
     <string name="add_alarm_text"> A new Alarm will be created ! </string>
 
+    <!-- ModifyAlarmScreen-->
+    <string name="modify_alarm_title"> Modify alarm ? </string>
+    <string name="modify_alarm_text"> Selected alarm will be updated ? </string>
+
     <!-- SettingsScreen-->
     <string name="settings"> Settings </string>
     <string name="night_mode"> Night Mode </string>

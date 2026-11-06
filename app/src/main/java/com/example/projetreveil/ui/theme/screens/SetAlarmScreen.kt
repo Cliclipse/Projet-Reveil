@@ -158,7 +158,6 @@ fun SetAlarmContent(
     onDailyToggled: (Boolean) -> Unit = {},
     onCancelClicked: () -> Unit = {},
     onConfirmClicked: () -> Unit = {}
-
 ){
     TopFlag(stringResource(R.string.perso))
 

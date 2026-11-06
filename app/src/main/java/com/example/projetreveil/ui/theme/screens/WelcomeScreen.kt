@@ -75,7 +75,9 @@ fun WelcomePage(name: String,
                 alarmsViewModel: AlarmsViewModel,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
-                onGoToSettingsClicked: () -> Unit) {
+                onGoToSettingsClicked: () -> Unit,
+                onModifySelectedAlarmClicked: (Alarm) -> Unit
+) {
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
 
@@ -109,7 +111,8 @@ fun WelcomePage(name: String,
         },
         onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
         onGoToGroupClicked = { onGoToGroupClicked() },
-        onGoToSettingsClicked = { onGoToSettingsClicked() }
+        onGoToSettingsClicked = { onGoToSettingsClicked() },
+        onModifySelectedAlarmClicked = { onModifySelectedAlarmClicked(it) }
     )
 }
 
@@ -127,6 +130,7 @@ fun WelcomeContent(
     onGoToConfigureAlarmClicked: () -> Unit = {},
     onGoToGroupClicked: () -> Unit = {},
     onGoToSettingsClicked: () -> Unit = {},
+    onModifySelectedAlarmClicked: (Alarm) -> Unit = {}
 ){
     Box(modifier = modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize()) {
@@ -162,7 +166,8 @@ fun WelcomeContent(
             AlarmList(
                 alarms = alarms,
                 onAlarmEnabledChange = { newEnabled, alarm -> onAlarmEnabledChange(newEnabled, alarm)},
-                onAlarmDelete = { onAlarmDelete(it) }
+                onAlarmDelete = { onAlarmDelete(it) },
+                onModifySelectedAlarmClicked = { onModifySelectedAlarmClicked(it) }
             )
         }
 
@@ -324,12 +329,16 @@ fun AlarmItem(
         daily = false
     ),
     onEnabledChange: (Boolean) -> Unit = {},
-    onDeleteClicked: () -> Unit = {}
+    onDeleteClicked: () -> Unit = {},
+    onModifyClicked: (Alarm) -> Unit = {}
 ){
     Card(modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        onClick = {
+            onModifyClicked(alarm)
+        }
     ){
         Row(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(horizontal = 24.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically) {
@@ -461,7 +470,8 @@ fun AlarmList(
         Alarm(2, 21, 25, false, false, true)
     ),
     onAlarmEnabledChange: (Boolean, Alarm) -> Unit = {_, _ -> },
-    onAlarmDelete: (Alarm) -> Unit = {_ -> }
+    onAlarmDelete: (Alarm) -> Unit = {},
+    onModifySelectedAlarmClicked: (Alarm) -> Unit = {}
 )
 {
     var alarmToDelete: Alarm? by rememberSaveable {
@@ -497,7 +507,8 @@ fun AlarmList(
                     onDeleteClicked = {
 
                         alarmToDelete = alarm
-                    }
+                    },
+                    onModifyClicked = { onModifySelectedAlarmClicked(it) }
                 )
                 Spacer(modifier = Modifier.height(6.dp))
             }

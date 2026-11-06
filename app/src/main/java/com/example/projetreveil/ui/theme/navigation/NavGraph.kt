@@ -1,13 +1,17 @@
 package com.example.projetreveil.ui.theme.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
+import com.example.projetreveil.ui.theme.screens.ModifyAlarmPage
 import com.example.projetreveil.ui.theme.screens.NewGroupScreen
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetAlarmPage
@@ -48,7 +52,12 @@ fun MonApp(
                 alarmsViewModel = alarmsViewModel,
                 onGoToGroupClicked = { navController.navigate("group") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
-                onGoToSettingsClicked = { navController.navigate("settings") }
+                onGoToSettingsClicked = { navController.navigate("settings") },
+                onModifySelectedAlarmClicked = {
+                    val alarmID = it.id
+                    Log.d("ALARMS", "ID to modify sent : $alarmID")
+                    navController.navigate("modify-alarm/$alarmID")
+                }
             )
         }
 
@@ -57,9 +66,33 @@ fun MonApp(
                 name = "Set Alarm Page",
                 context = context,
                 modifier = modifier,
-                alarmsViewModel,
-                onConfirmClicked = { navController.navigate("welcome") },
-                onCancelClicked = { navController.navigate("welcome") }
+                alarmsViewModel = alarmsViewModel,
+                onConfirmClicked = { navController.popBackStack() },
+                onCancelClicked = { navController.popBackStack() }
+            )
+        }
+
+        composable("modify-alarm/{alarmID}",
+            arguments = listOf(
+                navArgument("alarmID") {
+                    type = NavType.IntType
+                }
+            )
+        ){
+            backStackEntry ->
+
+            val alarmID = backStackEntry.arguments?.getInt("alarmID") ?: -1
+
+            Log.d("ALARMS", "ID to modify received : $alarmID")
+
+            ModifyAlarmPage(
+                name = "Modify Alarm Page",
+                context = context,
+                modifier = modifier,
+                associatedAlarmID = alarmID,
+                alarmsViewModel = alarmsViewModel,
+                onConfirmClicked = { navController.popBackStack() },
+                onCancelClicked = { navController.popBackStack() }
             )
         }
 
@@ -70,7 +103,7 @@ fun MonApp(
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings")
                 }
-                )
+            )
         }
 
         composable("createGroup"){
