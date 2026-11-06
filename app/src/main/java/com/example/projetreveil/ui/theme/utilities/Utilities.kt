@@ -56,16 +56,21 @@ import com.example.projetreveil.R
 import kotlin.math.cos
 import kotlin.math.sin
 
-
+@Preview(showBackground = true)
 @Composable
-fun Logo(size : Float){
-    val imageModifier = Modifier.size(size.dp).clip(CircleShape)
+fun Logo(modifier: Modifier = Modifier,
+    size : Float = 75f
+){
+    val imageModifier = modifier.size(size.dp).clip(CircleShape)
     Image(painter = painterResource(R.drawable.penguin) ,"LogoPenguin" , contentScale = ContentScale.Crop,  modifier = imageModifier)
-
 }
 
+@Preview(showBackground = true)
 @Composable
-fun HeadedTextField(text : String , textField : String ,  onTextChange : (String) -> Unit) {
+fun HeadedTextField(text : String = "Placeholder",
+                    textField : String = "textField",
+                    onTextChange : (String) -> Unit = {}
+) {
     Text(text = text, color = MaterialTheme.colorScheme.onBackground)
     TextField(
         value = textField,
@@ -89,16 +94,24 @@ fun HeadedTextField(text : String , textField : String ,  onTextChange : (String
     )
 }
 
+@Preview(showBackground = true)
 @Composable
-fun DigitalClock(hour: Int, minute: Int){
-
+fun DigitalClock(
+    hour: Int = 7,
+    minute: Int = 30
+){
     Card(modifier = Modifier.width(200.dp).height(60.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiary
         )
+    )
     {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-            Text(text = String.format("%02d:%02d", hour, minute),
+        Box(modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = String.format("%02d:%02d", hour, minute),
                 color = MaterialTheme.colorScheme.onTertiary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
@@ -107,9 +120,12 @@ fun DigitalClock(hour: Int, minute: Int){
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun TopFlag(text: String){
-    Box(modifier = Modifier.width(350.dp)
+fun TopFlag(modifier: Modifier = Modifier,
+    text: String = "Placeholder"
+){
+    Box(modifier = modifier.width(350.dp)
         .height(60.dp)
         .rotate(-45f)
         .offset(x = (-100).dp, y = (-40).dp)
@@ -124,16 +140,26 @@ fun TopFlag(text: String){
     }
 }
 
-
+@Preview(showBackground = true)
+@Composable
+fun RadialMenuPreviewExpended(
+    isExendedInitialValue: Boolean = true
+){
+    RadialMenu(
+        isExendedInitialValue = isExendedInitialValue
+    )
+}
+@Preview(showBackground = true)
 @Composable
 fun RadialMenu(
-    modifier: Modifier,
-    isInMenu: Boolean,
-    onGoToMenuOrGroupClicked: () -> Unit,
-    onGoToConfigureAlarmClicked: () -> Unit,
-    onGoToSettingsClicked: () -> Unit){
-
-    var isExpended by remember { mutableStateOf(false) }
+    modifier: Modifier = Modifier,
+    isInMenu: Boolean = true,
+    onGoToMenuOrGroupClicked: () -> Unit = {},
+    onGoToConfigureAlarmClicked: () -> Unit = {},
+    onGoToSettingsClicked: () -> Unit = {},
+    isExendedInitialValue: Boolean = false
+){
+    var isExpended by remember { mutableStateOf(isExendedInitialValue) }
 
     val animationDistProgressBtn1 by animateFloatAsState(
         targetValue = if (isExpended) 1f else 0f,
@@ -243,10 +269,14 @@ fun RadialMenu(
     }
 }
 
-
 @Composable
-fun RadialButton(modifier: Modifier, icon: ImageVector, size: Float, angle: Float, progressDist: Float, onClick: () -> Unit){
-
+fun RadialButton(modifier: Modifier = Modifier,
+                 icon: ImageVector = Icons.Default.Home,
+                 size: Float = 60f,
+                 angle: Float = 0f,
+                 progressDist: Float = 1f,
+                 onClick: () -> Unit = {}
+){
     val radius = 100f
 
     val radians = Math.toRadians(angle.toDouble())
@@ -272,7 +302,11 @@ fun RadialButton(modifier: Modifier, icon: ImageVector, size: Float, angle: Floa
 }
 
 @Composable
-fun RadialBackground(modifier: Modifier, backgroundColor: Color, progressSize: Float, offset: Float){
+fun RadialBackground(modifier: Modifier,
+                     backgroundColor: Color,
+                     progressSize: Float,
+                     offset: Float
+){
 
     val radius = 320f * progressSize
     val offset = radius / 2f - offset
