@@ -73,6 +73,9 @@ dependencies {
 
     implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.crashlytics.buildtools)
+
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+
     ksp("androidx.room:room-compiler:2.8.5")
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

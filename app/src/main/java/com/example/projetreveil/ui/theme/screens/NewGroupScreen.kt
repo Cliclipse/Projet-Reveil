@@ -1,5 +1,8 @@
 package com.example.projetreveil.ui.theme.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +34,12 @@ fun NewGroupScreen(
 ){
     val viewModel : NewGroupScreenViewModel = viewModel()
 
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri -> viewModel.selectedImageUri = uri}
+    )
+
+
     Column(modifier = Modifier.fillMaxSize() , horizontalAlignment = Alignment.CenterHorizontally) {
         val spacerModifier = Modifier.size(200.dp)
         val midSpacerModifier = Modifier.size(20.dp)
@@ -57,7 +66,17 @@ fun NewGroupScreen(
             }) {
             Text(text = stringResource(R.string.confirm))
         }
-
+        Spacer(midSpacerModifier)
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
+            onClick = {
+                photoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }) {
+            Text(text = "importer photo, btn tmp")
+        }
 
     }
 
