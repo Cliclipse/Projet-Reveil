@@ -2,6 +2,8 @@ package com.example.projetreveil.ui.theme.viewModel
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,6 +24,7 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 class NewGroupScreenViewModel(application: Application) : AndroidViewModel(application) { //AndroidVM permet d'avoir un context
 
@@ -53,18 +56,29 @@ class NewGroupScreenViewModel(application: Application) : AndroidViewModel(appli
             // Gestion photo de profil du groupe
             val imageTmp = selectedImageUri
             if (imageTmp != null) {
-                val bytes = readBytesFromUri(imageTmp)
-                if (bytes != null) {
-                    try {
-                        val path = uploadGroupAvatar(idAttribuee, bytes)
-                        Log.d("AVATAR", "Upload OK : $path")
-                    } catch (e: Exception) {
-                        Log.e("AVATAR", "Upload échoué : ${e.message}", e)
-                    }
-                }
+                val bytes = squareBytesFromUri(appContext, imageTmp)
+                if (bytes != null) uploadGroupAvatar(idAttribuee, bytes)
             }
         }
     }
+    
+    suspend fun squareBytesFromUri(context: Context, uri: Uri): ByteArray? =
+        withContext(Dispatchers.IO) {
+            val bitmap = context.contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it)
+            } ?: return@withContext null
+
+            val side = minOf(bitmap.width, bitmap.height)
+            val x = (bitmap.width - side) / 2
+            val y = (bitmap.height - side) / 2
+            val square = Bitmap.createBitmap(bitmap, x, y, side, side)
+
+            ByteArrayOutputStream().use { out ->
+                square.compress(Bitmap.CompressFormat.JPEG, 85, out)
+                out.toByteArray()
+            }
+        }
+
 
 
     suspend fun readBytesFromUri(uri: Uri): ByteArray? {
