@@ -1,5 +1,8 @@
 package com.example.projetreveil.ui.theme.viewModel
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,6 +24,11 @@ class NewGroupScreenViewModel : ViewModel() {
     val groupUsersJunctionRepository : GroupUsersJunctionRepository  = GroupUsersJunctionRepository()
 
     val supabase = SupabaseClient.client
+
+    var selectedImageUri by mutableStateOf<Uri?>(null)
+
+
+
 
     fun registerGroup(){ // d'abord je crée le groupe, puis je récupère l'id attribuée automatiquement, puis j'ajoute dans la junc function
         var group : Group = Group(null , groupName)
