@@ -22,6 +22,12 @@ class AlarmsViewModel(
             initialValue = emptyList()
         )
 
+    fun UpdateAlarm(alarm: Alarm){
+        viewModelScope.launch {
+            alarmDao.UpdateAlarm(alarm)
+        }
+    }
+
     fun AddAlarm(hour: Int, minutes: Int,
                  enabled: Boolean,
                  vibration: Boolean,

@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projetreveil.ui.theme.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
+import com.example.projetreveil.ui.theme.screens.ModifyAlarmPage
 import com.example.projetreveil.ui.theme.screens.NewGroupScreen
 import com.example.projetreveil.ui.theme.screens.RegisterPage
 import com.example.projetreveil.ui.theme.screens.SetAlarmPage
@@ -57,9 +58,25 @@ fun MonApp(
                 name = "Set Alarm Page",
                 context = context,
                 modifier = modifier,
-                alarmsViewModel,
-                onConfirmClicked = { navController.navigate("welcome") },
-                onCancelClicked = { navController.navigate("welcome") }
+                alarmsViewModel = alarmsViewModel,
+                onConfirmClicked = { navController.popBackStack() },
+                onCancelClicked = { navController.popBackStack() }
+            )
+        }
+
+        composable("modify-alarm/{alarm-id}"){
+            backStackEntry ->
+
+            val alarmID = backStackEntry.arguments?.getInt("alarmID") ?: -1
+
+            ModifyAlarmPage(
+                name = "Modify Alarm Page",
+                context = context,
+                modifier = modifier,
+                associatedAlarmID = alarmID,
+                alarmsViewModel = alarmsViewModel,
+                onConfirmClicked = { navController.popBackStack() },
+                onCancelClicked = { navController.popBackStack() }
             )
         }
 
@@ -70,7 +87,7 @@ fun MonApp(
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings")
                 }
-                )
+            )
         }
 
         composable("createGroup"){
