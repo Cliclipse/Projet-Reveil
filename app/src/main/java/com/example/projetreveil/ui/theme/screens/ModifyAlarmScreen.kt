@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
+import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.utilities.LoadingIndicator
@@ -83,6 +84,18 @@ fun ModifyAlarmPage(name: String,
                     daily = daily.value
                 )
             )
+
+            if (alarm.enabled){
+                AlarmsUtilities().SetAlarm(
+                    context = context,
+                    alarmID = alarm.id,
+                    hour = timePickerState.hour,
+                    minutes = timePickerState.minute,
+                    enabled = true,
+                    vibration = setAlarmScreenViewModel.vibrationOption.value,
+                    daily = setAlarmScreenViewModel.dailyOption.value
+                )
+            }
 
             onConfirmClicked()
         }
