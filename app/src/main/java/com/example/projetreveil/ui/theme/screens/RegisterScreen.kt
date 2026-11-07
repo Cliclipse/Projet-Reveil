@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.HeadedTextField
 import com.example.projetreveil.ui.theme.utilities.Logo
+import com.example.projetreveil.ui.theme.viewModel.ErrorType
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
 
@@ -46,6 +47,7 @@ fun RegisterPage(
     RegisterContent(modifier = modifier,
         pseudo = registerViewModel.pseudo,
         password = registerViewModel.mdp,
+        errorType = registerViewModel.errorType,
         onRegisterUserClicked = {
             if (registerViewModel.pseudo != "" && registerViewModel.mdp != ""){
                 registerViewModel.registerUser()
@@ -70,6 +72,7 @@ fun RegisterPage(
 fun RegisterContent(modifier: Modifier = Modifier,
                     pseudo: String = "Pseudo",
                     password: String = "Password",
+                    errorType: ErrorType? = null,
                     onRegisterUserClicked: () -> Unit = {},
                     onConnectUserClicked: () -> Unit = {},
                     onPseudoTextChange: (String) -> Unit = {},
@@ -93,7 +96,20 @@ fun RegisterContent(modifier: Modifier = Modifier,
                 fontSize = 24.sp
             )
 
-            Spacer(Modifier.size(20.dp))
+            if (errorType != null){
+                Spacer(Modifier.size(10.dp))
+
+                Text(
+                    text = stringResource(R.string.error)
+                            + " "
+                            + stringResource(getLocalizedErrorId(errorType))
+                )
+
+                Spacer(Modifier.size(10.dp))
+            }
+            else{
+                Spacer(Modifier.size(20.dp))
+            }
 
             UserInfosTextFields(
                 modifier = Modifier.fillMaxWidth(),
@@ -199,4 +215,24 @@ fun ConnectionButtons(
             )
         }
     }
+}
+
+fun getLocalizedErrorId(errorType: ErrorType): Int{
+
+    return when{
+        errorType == ErrorType.INVALID_CREDENTIALS -> R.string.error_invalid_credentials
+
+        errorType == ErrorType.USER_ALREADY_EXISTS -> R.string.error_user_already_exist
+
+        errorType == ErrorType.EMAIL_NOT_CONFIRMED -> R.string.error_email_not_confirmed
+
+        errorType == ErrorType.INVALID_PASSWORD -> R.string.error_invalid_password
+
+        errorType == ErrorType.NETWORK_ERROR -> R.string.error_network
+
+        errorType == ErrorType.UNKNOWN_ERROR -> R.string.error_unknown
+
+        else -> R.string.error_unknown
+    }
+
 }
