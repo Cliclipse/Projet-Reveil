@@ -47,14 +47,15 @@ import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import io.github.jan.supabase.storage.storage
 
 @Composable
-fun SetGroupePage(onAddGroup : () ->Unit,
+fun SetGroupePage(modifier: Modifier = Modifier,
+    onAddGroup : () ->Unit,
                  onGoToMenuclicked: () -> Unit,
                  onGoToConfigureAlarmClicked: () -> Unit,
                  onGoToSettingsClicked: () -> Unit)
 {
     val viewModel: GroupeScreenViewModel = viewModel()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
