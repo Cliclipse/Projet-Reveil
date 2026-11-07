@@ -59,7 +59,12 @@ fun Logo(
     size: Float = 75f
 ){
     val imageModifier = modifier.size(size.dp).clip(CircleShape)
-    Image(painter = painterResource(R.drawable.penguin) ,"LogoPenguin" , contentScale = ContentScale.Crop,  modifier = imageModifier)
+    Image(
+        painter = painterResource(R.drawable.penguin),
+        contentDescription = "LogoPenguin",
+        contentScale = ContentScale.Crop,
+        modifier = imageModifier
+    )
 }
 
 @Preview(showBackground = true)

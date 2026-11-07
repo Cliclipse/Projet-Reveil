@@ -21,8 +21,19 @@ class RegisterScreenViewModel : ViewModel() {
     enum class AuthStateEnum { IDLE, LOADING, SUCCESS, ERROR }
 
     val repository = UsersRepository();
-    var pseudo by mutableStateOf("");
-    var mdp by mutableStateOf("");
+    var pseudo by mutableStateOf("")
+        private set
+
+    var mdp by mutableStateOf("")
+        private set
+
+    fun updatePseudo(inPseudo: String){
+        pseudo = inPseudo
+    }
+
+    fun updatePassword(inPassword: String){
+        mdp = inPassword
+    }
 
     var state by mutableStateOf(AuthStateEnum.IDLE)
 
