@@ -3,9 +3,7 @@ package com.example.projetreveil.ui.theme.screens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,16 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.utilities.HeadedTextField
 import com.example.projetreveil.ui.theme.utilities.Logo
-import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.NewGroupScreenViewModel
 
 @Composable
@@ -47,7 +42,7 @@ fun NewGroupScreen(
 
         Spacer(spacerModifier)
 
-        Logo(70f)
+        Logo(Modifier , 70f)
         Spacer(midSpacerModifier)
 
         Text(text = stringResource(R.string.new_group), color = MaterialTheme.colorScheme.onBackground, fontSize = 24.sp)

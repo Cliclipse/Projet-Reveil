@@ -1,9 +1,12 @@
 package com.example.projetreveil.ui.theme.viewModel
 
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projetreveil.data.GroupRepository
@@ -16,6 +19,8 @@ import kotlinx.coroutines.launch
 
 class GroupeScreenViewModel()  : ViewModel() {
 
+
+    var GroupIcon by mutableStateOf<ImageBitmap?>(null)
     val repository = GroupRepository();
 
     val supabase = SupabaseClient.client
@@ -45,11 +50,14 @@ class GroupeScreenViewModel()  : ViewModel() {
 
     fun ChangeGroupShown(idGroup : Long?){
         if (idGroup == groupShownId || idGroup == null) return
-        Log.e("Groupes", idGroup.toString())
         groupShownId = idGroup
         viewModelScope.launch {
-            val id = groupShownId ?: return@launch //il veut pas si je garanti pas absolument que c'est pas null
+            val id = groupShownId ?: return@launch
             groupShown = repository.get(id)
+            Log.e("AVATAR", "lien en base = ${groupShown?.GroupPictureLink}")
+
+            GroupIcon = repository.downloadGroupAvatar(groupShown?.GroupPictureLink)
+            Log.e("AVATAR", "image récupérée = ${GroupIcon != null}")
         }
     }
 }

@@ -3,7 +3,6 @@ package com.example.projetreveil.ui.theme.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,7 +21,6 @@ import com.example.projetreveil.ui.theme.utilities.HeadedTextField
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.auth.AuthState
 
 
 @Composable
@@ -44,7 +42,7 @@ fun RegisterPage(name: String, modifier: Modifier = Modifier, onConfirmClicked: 
 
         Spacer(spacerModifier)
 
-        Logo(70f)
+        Logo(Modifier, 70f)
 
         Spacer(midSpacerModifier)
 

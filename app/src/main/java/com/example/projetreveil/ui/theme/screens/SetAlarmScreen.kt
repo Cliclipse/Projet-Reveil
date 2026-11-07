@@ -159,7 +159,7 @@ fun SetAlarmContent(
     onCancelClicked: () -> Unit = {},
     onConfirmClicked: () -> Unit = {}
 ){
-    TopFlag(stringResource(R.string.perso))
+    TopFlag(modifier = Modifier , stringResource(R.string.perso))
 
     Box(modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center){

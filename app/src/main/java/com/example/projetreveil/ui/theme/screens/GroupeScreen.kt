@@ -1,12 +1,10 @@
 package com.example.projetreveil.ui.theme.screens
 
 import android.util.Log
-import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,10 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,23 +28,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.projetreveil.R
+import com.example.projetreveil.data.SupabaseClient
+import com.example.projetreveil.ui.theme.data.Objet.Group
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
-import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
+import io.github.jan.supabase.storage.storage
 
 @Composable
 fun SetGroupePage(onAddGroup : () ->Unit,
@@ -60,24 +56,31 @@ fun SetGroupePage(onAddGroup : () ->Unit,
 
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             PickGroupSpace(
-                modifier = Modifier.background(MaterialTheme.colorScheme.primary).weight(0.25f)
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .weight(0.25f)
                     .fillMaxSize(),
                 viewModel,
                 onAddGroup
             )
             GroupeSpace(
-                modifier = Modifier.background(MaterialTheme.colorScheme.background).weight(0.75f)
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .weight(0.75f)
                     .fillMaxSize(),
                 viewModel
             )
         }
         // Radial Menu bottom right
         RadialMenu(
-            modifier = Modifier.fillMaxSize().padding(34f.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(34f.dp),
             isInMenu = false,
             onGoToMenuOrGroupClicked = { onGoToMenuclicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
@@ -103,9 +106,11 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup :
     val groupesList by vm.groupes.collectAsState()
     Column(modifier = modifier){
         Spacer(modifier = Modifier.height(20.dp))
-        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = Modifier.padding(horizontal = 6.dp).fillMaxWidth()) {
-            items(groupesList ){
-                groupe -> GroupButton(vm, groupe.id )
+        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally , modifier = Modifier
+            .padding(horizontal = 6.dp)
+            .fillMaxWidth()) {
+            items(groupesList) { groupe ->
+                GroupButton(vm, groupe)
                 Spacer(modifier = Modifier.height(10.dp))
             }
             item{
@@ -119,11 +124,30 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup :
 
 @Composable
 fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
-    Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.surface).fillMaxWidth(),
+    Box(modifier = Modifier
+        .background(color = MaterialTheme.colorScheme.surface)
+        .fillMaxWidth(),
         contentAlignment = Alignment.Center) {
+
         Column(horizontalAlignment = Alignment.CenterHorizontally){
-            Spacer(modifier = Modifier.height(40.dp))
-            Logo(75f)
+            var imageModifier = Modifier.height(40.dp).size(75.dp).clip(CircleShape)
+            val icon = vm.GroupIcon
+            if (icon != null) {
+                Image(
+                    bitmap = icon,
+                    contentDescription = "Photo du groupe",
+                    contentScale = ContentScale.Crop,
+                    modifier = imageModifier
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.penguin),
+                    contentDescription = "LogoPenguin",
+                    contentScale = ContentScale.Crop,
+                    modifier = imageModifier
+                )
+            }
+
             Spacer(modifier = Modifier.height(6.dp))
             Text((vm.groupShown?.GroupName ?: stringResource(R.string.group_name)),
                 color = MaterialTheme.colorScheme.onSurface,
@@ -132,7 +156,9 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
 
             Spacer(modifier = Modifier.height(20.dp))
         }
-        IconButton(onClick = {}, modifier = Modifier.align(Alignment.TopEnd).padding(start = 6.dp , top = 6.dp) ,
+        IconButton(onClick = {}, modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(start = 6.dp, top = 6.dp) ,
             content = { Icon(Icons.Filled.MoreVert , contentDescription = "Ajouter" , tint = MaterialTheme.colorScheme.onSurfaceVariant) })
     }
 }
@@ -149,19 +175,34 @@ fun GroupChat(vm : GroupeScreenViewModel ){//Ajo uter ensuite une rélle lazy li
 }
 
 @Composable
-fun GroupButton(vm : GroupeScreenViewModel, idGroup : Long?){
-    //Temporaire
-    Box(contentAlignment = Alignment.Center, modifier = Modifier
-        .background(color = MaterialTheme.colorScheme.secondaryContainer)
-        .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = RoundedCornerShape(15.dp))
-        .size(65.dp)
-        .clip(shape = RoundedCornerShape(15.dp))){
-            Image(painter = painterResource(R.drawable.penguin) ,
-                "LogoPenguin" ,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-                    .clip(shape = RoundedCornerShape(15.dp))
-                    .clickable(){vm.ChangeGroupShown(idGroup)}
+fun GroupButton(vm: GroupeScreenViewModel, groupe: Group) {
+    val url = remember(groupe.GroupPictureLink) {
+        groupe.GroupPictureLink?.let {
+            SupabaseClient.client.storage.from("GroupPictureBucket").publicUrl(it)
+        }
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(15.dp))
+            .size(65.dp)
+            .clip(RoundedCornerShape(15.dp))
+    ) {
+        Log.d("AVATAR", "url liste = $url")
+
+        AsyncImage(
+            model = url,
+            contentDescription = "Photo du groupe",
+            placeholder = painterResource(R.drawable.penguin),
+            error = painterResource(R.drawable.penguin),
+            fallback = painterResource(R.drawable.penguin),
+            onError = { Log.e("AVATAR", "Coil erreur : ${it.result.throwable.message}") },
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { vm.ChangeGroupShown(groupe.id) }
         )
     }
 }
@@ -170,8 +211,9 @@ fun GroupButton(vm : GroupeScreenViewModel, idGroup : Long?){
 fun AddGroupButton( onAddGroup : () ->Unit){
     IconButton(
         onClick = { onAddGroup() },
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.tertiary)
-            .padding(start = 6.dp , top = 6.dp)
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.tertiary)
+            .padding(start = 6.dp, top = 6.dp)
             .size(65.dp)
             .clip(shape = RoundedCornerShape(15.dp)),
         content = {

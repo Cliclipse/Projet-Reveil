@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 data class Group(
     val id: Long? = null,
     val GroupName : String,
+    var GroupPictureLink : String? = null
 )

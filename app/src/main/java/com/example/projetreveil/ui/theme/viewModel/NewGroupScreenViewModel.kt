@@ -38,26 +38,35 @@ class NewGroupScreenViewModel(application: Application) : AndroidViewModel(appli
     var selectedImageUri by mutableStateOf<Uri?>(null)
     private val appContext: Context = getApplication<Application>().applicationContext
 
-    fun registerGroup() { // d'abord je crée le groupe, puis je récupère l'id attribuée automatiquement, puis j'ajoute dans la junc function
-        var group: Group = Group(null, groupName)
-        var idAttribuee: Long
+    fun registerGroup() {
+        val group = Group(null, groupName, null)
 
         viewModelScope.launch {
-            idAttribuee = groupRepository.addAndGetID(group)
+            try {
+                val idAttribuee = groupRepository.addAndGetID(group)
+                Log.d("AVATAR", "Groupe créé, id = $idAttribuee")
 
+                groupUsersJunctionRepository.add(
+                    GroupUsersJunction(
+                        idUser = supabase.auth.currentUserOrNull()?.id,
+                        idGroup = idAttribuee
+                    )
+                )
 
-            // Créa du groupe
-            var groupUsersJunction: GroupUsersJunction = GroupUsersJunction(
-                idUser = supabase.auth.currentUserOrNull()?.id,
-                idGroup = idAttribuee
-            )
-            groupUsersJunctionRepository.add(groupUsersJunction)
-
-            // Gestion photo de profil du groupe
-            val imageTmp = selectedImageUri
-            if (imageTmp != null) {
-                val bytes = squareBytesFromUri(appContext, imageTmp)
-                if (bytes != null) uploadGroupAvatar(idAttribuee, bytes)
+                val uri = selectedImageUri
+                Log.d("AVATAR", "uri = $uri")
+                if (uri != null) {
+                    val bytes = squareBytesFromUri(appContext, uri)
+                    Log.d("AVATAR", "bytes = ${bytes?.size}")
+                    if (bytes != null) {
+                        val path = uploadGroupAvatar(idAttribuee, bytes)
+                        Log.d("AVATAR", "Upload OK : $path")
+                        groupRepository.updatePictureLink(idAttribuee, path)
+                        Log.d("AVATAR", "Lien enregistré : $path")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("AVATAR", "Création échouée : ${e.message}", e)
             }
         }
     }
