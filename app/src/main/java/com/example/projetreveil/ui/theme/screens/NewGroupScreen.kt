@@ -56,8 +56,7 @@ fun NewGroupScreen(
                 containerColor = MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary),
             onClick = {
                 if (viewModel.groupName != ""){
-                    viewModel.registerGroup()
-                    onConfirmClicked(Unit)
+                    viewModel.registerGroup(onConfirmClicked)
                 }
             }) {
             Text(text = stringResource(R.string.confirm))

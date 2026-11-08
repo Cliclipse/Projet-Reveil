@@ -38,36 +38,29 @@ class NewGroupScreenViewModel(application: Application) : AndroidViewModel(appli
     var selectedImageUri by mutableStateOf<Uri?>(null)
     private val appContext: Context = getApplication<Application>().applicationContext
 
-    fun registerGroup() {
+    fun registerGroup(onConfirmClicked: (Unit) -> Unit) {
         val group = Group(null, groupName, null)
 
         viewModelScope.launch {
             try {
                 val idAttribuee = groupRepository.addAndGetID(group)
-                Log.d("AVATAR", "Groupe créé, id = $idAttribuee")
-
                 groupUsersJunctionRepository.add(
                     GroupUsersJunction(
                         idUser = supabase.auth.currentUserOrNull()?.id,
                         idGroup = idAttribuee
                     )
                 )
-
                 val uri = selectedImageUri
-                Log.d("AVATAR", "uri = $uri")
                 if (uri != null) {
                     val bytes = squareBytesFromUri(appContext, uri)
-                    Log.d("AVATAR", "bytes = ${bytes?.size}")
                     if (bytes != null) {
                         val path = uploadGroupAvatar(idAttribuee, bytes)
-                        Log.d("AVATAR", "Upload OK : $path")
                         groupRepository.updatePictureLink(idAttribuee, path)
-                        Log.d("AVATAR", "Lien enregistré : $path")
                     }
                 }
             } catch (e: Exception) {
-                Log.e("AVATAR", "Création échouée : ${e.message}", e)
             }
+            onConfirmClicked(Unit)
         }
     }
     

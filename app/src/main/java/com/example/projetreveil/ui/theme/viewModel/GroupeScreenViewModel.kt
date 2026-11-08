@@ -35,6 +35,10 @@ class GroupeScreenViewModel()  : ViewModel() {
     var groupes : StateFlow<List<Group>> = _groupes
 
     init{
+        loadGroups()
+}
+
+    fun loadGroups(){
         viewModelScope.launch{
             try {
                 supabase.auth.awaitInitialization()
@@ -45,8 +49,7 @@ class GroupeScreenViewModel()  : ViewModel() {
             catch (e: Exception) { Log.e("Groupes", "Chargement échoué", e) }
             Log.e("Groupes", groupes.value.size.toString())
         }
-}
-
+    }
 
     fun ChangeGroupShown(idGroup : Long?){
         if (idGroup == groupShownId || idGroup == null) return

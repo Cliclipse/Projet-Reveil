@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -53,6 +54,7 @@ fun SetGroupePage(onAddGroup : () ->Unit,
                  onGoToSettingsClicked: () -> Unit)
 {
     val viewModel: GroupeScreenViewModel = viewModel()
+    LaunchedEffect(Unit) { viewModel.loadGroups() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -132,6 +134,9 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
         Column(horizontalAlignment = Alignment.CenterHorizontally){
             var imageModifier = Modifier.height(40.dp).size(75.dp).clip(CircleShape)
             val icon = vm.GroupIcon
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             if (icon != null) {
                 Image(
                     bitmap = icon,
