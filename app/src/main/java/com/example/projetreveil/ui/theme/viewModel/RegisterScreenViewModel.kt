@@ -10,19 +10,38 @@ import com.example.projetreveil.data.SupabaseClient
 
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Users
-import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.createSupabaseClient
 import kotlinx.coroutines.launch
 import io.github.jan.supabase.auth.providers.builtin.Email
+
+
+enum class ErrorType {
+    INVALID_CREDENTIALS,
+    USER_ALREADY_EXISTS,
+    EMAIL_NOT_CONFIRMED,
+    INVALID_PASSWORD,
+    NETWORK_ERROR,
+    UNKNOWN_ERROR
+}
 
 class RegisterScreenViewModel : ViewModel() {
 
     enum class AuthStateEnum { IDLE, LOADING, SUCCESS, ERROR }
 
     val repository = UsersRepository();
-    var pseudo by mutableStateOf("");
-    var mdp by mutableStateOf("");
+    var pseudo by mutableStateOf("")
+        private set
+
+    var mdp by mutableStateOf("")
+        private set
+
+    fun updatePseudo(inPseudo: String){
+        pseudo = inPseudo
+    }
+
+    fun updatePassword(inPassword: String){
+        mdp = inPassword
+    }
 
     var state by mutableStateOf(AuthStateEnum.IDLE)
 
@@ -34,24 +53,51 @@ class RegisterScreenViewModel : ViewModel() {
     }
 
     val supabase = SupabaseClient.client
-    
+
+    var errorType by mutableStateOf<ErrorType?>(null)
+        private set
+
+    private fun getErrorType(e: Exception): ErrorType {
+        val message = e.message?.lowercase() ?: ""
+
+        return when {
+            message.contains("invalid login credentials") ->
+                ErrorType.INVALID_CREDENTIALS
+
+            message.contains("already registered") ->
+                ErrorType.USER_ALREADY_EXISTS
+
+            message.contains("email not confirmed") ->
+                ErrorType.EMAIL_NOT_CONFIRMED
+
+            message.contains("password") || message.contains("password should be at least") ->
+                ErrorType.INVALID_PASSWORD
+
+            message.contains("network") || message.contains("unable to resolve host") ->
+                ErrorType.NETWORK_ERROR
+
+            else -> ErrorType.UNKNOWN_ERROR
+        }
+    }
+
     private fun pseudoToEmail(pseudo: String) =
         "${pseudo.trim().lowercase()}@monapp.app"
 
-    //En attendant de vraiment mettre le module de register
     fun registerUser() {
 
-        if (this.state == AuthStateEnum.LOADING) return
+        if (this.state == AuthStateEnum.LOADING)
+            return
 
         viewModelScope.launch {
             try {
-                Log.i("Auth", "Inscription tentée")
+                errorType = null
+
                 //supabase.auth.signOut()
                 state = AuthStateEnum.LOADING
                 supabase.auth.signUpWith(Email) {
                     this.email = pseudoToEmail(pseudo)       //Pas moyen d'enregistrer avec un pseudo + mdp, dcp tranfo du pseudo en email factice jamais vu par l'user
                     this.password = mdp
-                    }
+                }
 
                 val userId = supabase.auth.currentUserOrNull()?.id
 
@@ -65,18 +111,22 @@ class RegisterScreenViewModel : ViewModel() {
 
                 state = AuthStateEnum.SUCCESS
             } catch (e: Exception) {
-                state = AuthStateEnum.IDLE
-                Log.e("Auth", "Inscription/Connexion échouée : ${e.message}", e)
+                state = AuthStateEnum.ERROR
+                errorType = getErrorType(e)
+                Log.e("Auth", "Inscription échouée : ${e.message}", e)
             }
         }
     }
 
 
     fun connectUser() {
-        if (this.state == AuthStateEnum.LOADING) return
+        if (this.state == AuthStateEnum.LOADING)
+            return
 
         viewModelScope.launch {
             try {
+                errorType = null
+
                 state = AuthStateEnum.LOADING
 
                 val email = pseudoToEmail(pseudo)
@@ -87,8 +137,9 @@ class RegisterScreenViewModel : ViewModel() {
                 }
                 state = AuthStateEnum.SUCCESS
             } catch (e: Exception) {
-                state = AuthStateEnum.IDLE
-                Log.e("Auth", "Inscription échouée", e)
+                state = AuthStateEnum.ERROR
+                errorType = getErrorType(e)
+                Log.e("Auth", "Connection échouée ${e.message}", e)
             }
         }
     }

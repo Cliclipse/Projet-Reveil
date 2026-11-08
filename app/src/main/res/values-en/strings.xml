@@ -20,6 +20,13 @@
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Password </string>
     <string name="connect"> Connexion </string>
+    <string name="error"> Error : </string>
+    <string name="error_invalid_credentials">Incorrect username or password</string>
+    <string name="error_user_already_exist">User already exists</string>
+    <string name="error_email_not_confirmed">Email not confirmed</string>
+    <string name="error_invalid_password">Invalid password ! Please make sure there are at least 6 characters !</string>
+    <string name="error_network">Network error</string>
+    <string name="error_unknown">Unknown error</string>
 
     <!-- SetAlarmScreen-->
     <string name="perso"> PERSO </string>

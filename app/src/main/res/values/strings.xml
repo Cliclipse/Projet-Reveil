@@ -22,6 +22,13 @@
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Mot de Passe </string>
     <string name="connect"> Connexion </string>
+    <string name="error"> Erreur : </string>
+    <string name="error_invalid_credentials"> Identifiant incorrect </string>
+    <string name="error_user_already_exist"> Utilisateur déjà existant </string>
+    <string name="error_email_not_confirmed"> EMAIL non-confirmé </string>
+    <string name="error_invalid_password"> Mot de passe invalide ! Vérifiez qu\'il y a bien 6 charactères minimum ! </string>
+    <string name="error_network"> Network </string>
+    <string name="error_unknown"> Inconnue </string>
 
     <!-- SetAlarmScreen-->
     <string name="perso"> PERSO </string>

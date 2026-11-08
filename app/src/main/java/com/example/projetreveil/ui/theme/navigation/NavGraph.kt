@@ -34,19 +34,25 @@ fun MonApp(
     NavHost(
         navController,
         startDestination = startingPage
-
     ){
         composable("register"){
-            RegisterPage(name = "Register Page", modifier = modifier,
-                onConfirmClicked = { navController.navigate("welcome"){
-                    popUpTo("register"){
-                        inclusive = true
+            RegisterPage(
+                name = "Register Page",
+                modifier = modifier,
+                onConnectionSuccessful = {
+                    navController.navigate("welcome")
+                    {
+                        popUpTo("register"){
+                            inclusive = true
+                        }
                     }
-                } })
+                }
+            )
         }
 
         composable("welcome"){
-            WelcomePage(name = "Welcome Page",
+            WelcomePage(
+                name = "Welcome Page",
                 context = context,
                 modifier = modifier,
                 alarmsViewModel = alarmsViewModel,
@@ -98,11 +104,11 @@ fun MonApp(
 
         composable("group"){
             SetGroupePage(
+                modifier = modifier,
                 onAddGroup = { navController.navigate("createGroup") },
                 onGoToMenuclicked = { navController.navigate("welcome") },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
-                onGoToSettingsClicked = { navController.navigate("settings")
-                }
+                onGoToSettingsClicked = { navController.navigate("settings") }
             )
         }
 
@@ -114,30 +120,36 @@ fun MonApp(
 
 
         composable(route = "settings"){
-            SettingsPage(name = "Settings", modifier = modifier,
+            SettingsPage(
+                name = "Settings",
+                modifier = modifier,
                 onGoBackClicked = { navController.popBackStack() },
                 settingsDataStore = dataStore
-                )
-        }
-
-        composable(route = "alarm-ringing"){
-            AlarmRingingPage(name = "Alarm Ringing",
-                modifier = modifier,
-                context = context,
-                alarmsViewModel = alarmsViewModel,
-                onSnoozeClicked = { navController.navigate("welcome"){
-                    popUpTo("alarm-ringing"){
-                        inclusive = true
-                    }
-                } },
-                onStopClicked = { navController.navigate("welcome"){
-                    popUpTo("alarm-ringing"){
-                        inclusive = true
-                    }
-                } },
-                alarmID = currentAlarmRingingID
             )
         }
 
+        composable(route = "alarm-ringing"){
+            AlarmRingingPage(
+                name = "Alarm Ringing",
+                modifier = modifier,
+                context = context,
+                alarmsViewModel = alarmsViewModel,
+                onSnoozeClicked = {
+                    navController.navigate("welcome"){
+                        popUpTo("alarm-ringing"){
+                            inclusive = true
+                        }
+                    }
+                },
+                onStopClicked = {
+                    navController.navigate("welcome"){
+                        popUpTo("alarm-ringing"){
+                            inclusive = true
+                        }
+                    }
+                },
+                alarmID = currentAlarmRingingID
+            )
+        }
     }
 }
