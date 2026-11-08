@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.projetreveil.R
-import com.example.projetreveil.ui.theme.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.datastores.DataStoreSettingsApp
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +43,8 @@ fun SettingsPage(
     name: String,
     modifier: Modifier = Modifier,
     onGoBackClicked: () -> Unit,
-    settingsDataStore: DataStoreSettingsApp)
+    settingsDataStore: DataStoreSettingsApp
+)
 {
     val nightMode by settingsDataStore.nightMode.collectAsStateWithLifecycle(initialValue = false)
 

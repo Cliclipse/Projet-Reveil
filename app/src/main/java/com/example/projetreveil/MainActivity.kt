@@ -1,7 +1,5 @@
 package com.example.projetreveil
 
-import android.app.AlarmManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,11 +17,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.room.Room
-import com.example.projetreveil.ui.theme.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.datastores.DataStoreSettingsApp
 import com.example.projetreveil.ui.theme.ProjetReveilTheme
-import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabase
 import com.example.projetreveil.ui.theme.RoomDatas.AlarmDatabaseProvider
+import com.example.projetreveil.ui.theme.datastores.DataStoreUserLogin
 import com.example.projetreveil.ui.theme.navigation.MonApp
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModelFactory
@@ -62,18 +59,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            val dataStore: DataStoreSettingsApp = DataStoreSettingsApp(LocalContext.current)
+            val settingsDataStore: DataStoreSettingsApp = DataStoreSettingsApp(LocalContext.current)
 
-            val nightMode by dataStore.nightMode.collectAsStateWithLifecycle(initialValue = false)
+            val userLoginDataStore: DataStoreUserLogin = DataStoreUserLogin(LocalContext.current)
+
+            val nightMode by settingsDataStore.nightMode.collectAsStateWithLifecycle(initialValue = false)
 
             ProjetReveilTheme(darkTheme = nightMode) {
-                Scaffold(modifier = Modifier.fillMaxSize() ,  ) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     val alarmsViewModel : AlarmsViewModel = viewModel(factory = AlarmsViewModelFactory(alarmDao))
                     MonApp(
                         modifier = Modifier.padding(innerPadding),
                         context = applicationContext,
-                        dataStore = dataStore,
+                        settingsDataStore = settingsDataStore,
+                        userLoginDataStore = userLoginDataStore,
                         alarmsViewModel = alarmsViewModel,
                         startingPage = startingPage,
                         currentAlarmRingingID = currentAlarmRingingID,

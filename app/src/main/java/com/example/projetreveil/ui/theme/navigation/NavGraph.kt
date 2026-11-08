@@ -9,7 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.projetreveil.ui.theme.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.datastores.DataStoreSettingsApp
+import com.example.projetreveil.ui.theme.datastores.DataStoreUserLogin
 import com.example.projetreveil.ui.theme.screens.AlarmRingingPage
 import com.example.projetreveil.ui.theme.screens.ModifyAlarmPage
 import com.example.projetreveil.ui.theme.screens.NewGroupScreen
@@ -24,7 +25,8 @@ import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
 fun MonApp(
     modifier: Modifier,
     context: Context,
-    dataStore: DataStoreSettingsApp,
+    settingsDataStore: DataStoreSettingsApp,
+    userLoginDataStore: DataStoreUserLogin,
     alarmsViewModel: AlarmsViewModel,
     startingPage: String,
     currentAlarmRingingID: Int
@@ -39,6 +41,7 @@ fun MonApp(
             RegisterPage(
                 name = "Register Page",
                 modifier = modifier,
+                userLoginDataStore = userLoginDataStore,
                 onConnectionSuccessful = {
                     navController.navigate("welcome")
                     {
@@ -124,7 +127,7 @@ fun MonApp(
                 name = "Settings",
                 modifier = modifier,
                 onGoBackClicked = { navController.popBackStack() },
-                settingsDataStore = dataStore
+                settingsDataStore = settingsDataStore
             )
         }
 
