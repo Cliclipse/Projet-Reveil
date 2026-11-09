@@ -14,6 +14,8 @@
     <!-- GroupeScreen-->
     <string name="group_name"> Group Name </string>
     <string name="add_group"> Add Group </string>
+    <string name="friend_not_found"> Friend not found </string>
+
 
     <!-- RegisterScreen-->
     <string name="login"> Login </string>
@@ -34,7 +36,7 @@
     <string name="vibration"> Vibration </string>
     <string name="repeat"> Repeat </string>
     <string name="daily"> Daily </string>
-    <string name="abandon"> Cancel </string>
+    <string name="cancel"> Cancel </string>
     <string name="add"> Add </string>
     <string name="add_alarm_title"> Add a new Alarm ? </string>
     <string name="add_alarm_text"> A new Alarm will be created ! </string>

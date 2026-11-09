@@ -301,7 +301,7 @@ fun BottomButtons(
             Icon(
                 modifier = Modifier.fillMaxSize(0.5f),
                 imageVector = Icons.Filled.Close,
-                contentDescription = stringResource(R.string.abandon),
+                contentDescription = stringResource(R.string.cancel),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
         }

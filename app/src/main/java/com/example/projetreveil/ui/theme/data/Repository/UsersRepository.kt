@@ -22,6 +22,13 @@ class UsersRepository {
         }
     }
 
+
+    suspend fun getUserByPseudo(pseudo : String) : Users? {
+        return supabase.from("users").select {
+            filter { eq("name", pseudo) }
+        }.decodeSingleOrNull<Users>()
+    }
+
     suspend fun getCurrentUser() : Users? {
         val userId = supabase.auth.currentUserOrNull()?.id
 
