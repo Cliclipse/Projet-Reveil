@@ -65,10 +65,13 @@ fun RegisterPage(
         return
     }
 
-    LaunchedEffect(Unit){
-        val lastUsername = userLoginDataStore.lastUsername.first()
+    val lastUsername by userLoginDataStore.lastUsername
+        .collectAsStateWithLifecycle("")
 
-        registerViewModel.updatePseudo(lastUsername)
+    LaunchedEffect(lastUsername){
+        if (lastUsername.isNotBlank()){
+            registerViewModel.updatePseudo(lastUsername)
+        }
     }
 
     val scopeContinueOffline = rememberCoroutineScope()
@@ -225,7 +228,9 @@ fun ConnectionButtons(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             Button(
