@@ -3,7 +3,9 @@ package com.example.projetreveil.ui.theme.navigation
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +22,7 @@ import com.example.projetreveil.ui.theme.screens.SetGroupePage
 import com.example.projetreveil.ui.theme.screens.SettingsPage
 import com.example.projetreveil.ui.theme.screens.WelcomePage
 import com.example.projetreveil.ui.theme.viewModel.AlarmsViewModel
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun MonApp(
@@ -32,6 +35,8 @@ fun MonApp(
     currentAlarmRingingID: Int
 ){
     val navController = rememberNavController()
+
+    val isOffline by userLoginDataStore.isOfflineMode.collectAsStateWithLifecycle(true)
 
     NavHost(
         navController,
@@ -49,6 +54,13 @@ fun MonApp(
                             inclusive = true
                         }
                     }
+                },
+                onContinueOffline = {
+                    navController.navigate("welcome"){
+                        popUpTo("register"){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -59,9 +71,22 @@ fun MonApp(
                 context = context,
                 modifier = modifier,
                 alarmsViewModel = alarmsViewModel,
-                onGoToGroupClicked = { navController.navigate("group") },
+                userLoginDataStore = userLoginDataStore,
+                onGoToGroupClicked =
+                    {
+                        if (!isOffline){
+                            navController.navigate("group")
+                        }
+                    },
                 onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
                 onGoToSettingsClicked = { navController.navigate("settings") },
+                onGoToRegisterPageClicked = {
+                    navController.navigate("register"){
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                    }
+                },
                 onModifySelectedAlarmClicked = {
                     val alarmID = it.id
                     Log.d("ALARMS", "ID to modify sent : $alarmID")
@@ -106,19 +131,37 @@ fun MonApp(
         }
 
         composable("group"){
-            SetGroupePage(
-                modifier = modifier,
-                onAddGroup = { navController.navigate("createGroup") },
-                onGoToMenuclicked = { navController.navigate("welcome") },
-                onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
-                onGoToSettingsClicked = { navController.navigate("settings") }
-            )
+            if (isOffline){
+                navController.navigate("welcome"){
+                    popUpTo("group") {
+                        inclusive = true
+                    }
+                }
+            }
+            else{
+                SetGroupePage(
+                    modifier = modifier,
+                    onAddGroup = { navController.navigate("createGroup") },
+                    onGoToMenuclicked = { navController.navigate("welcome") },
+                    onGoToConfigureAlarmClicked = { navController.navigate("set-alarm") },
+                    onGoToSettingsClicked = { navController.navigate("settings") }
+                )
+            }
         }
 
         composable("createGroup"){
-            NewGroupScreen(
-                onConfirmClicked = {navController.navigate("group") },
-            )
+            if (isOffline){
+                navController.navigate("welcome"){
+                    popUpTo("createGroup") {
+                        inclusive = true
+                    }
+                }
+            }
+            else{
+                NewGroupScreen(
+                    onConfirmClicked = {navController.navigate("group") },
+                )
+            }
         }
 
 
@@ -138,14 +181,14 @@ fun MonApp(
                 context = context,
                 alarmsViewModel = alarmsViewModel,
                 onSnoozeClicked = {
-                    navController.navigate("welcome"){
+                    navController.navigate("register"){
                         popUpTo("alarm-ringing"){
                             inclusive = true
                         }
                     }
                 },
                 onStopClicked = {
-                    navController.navigate("welcome"){
+                    navController.navigate("register"){
                         popUpTo("alarm-ringing"){
                             inclusive = true
                         }

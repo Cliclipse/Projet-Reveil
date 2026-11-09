@@ -156,6 +156,7 @@ fun RadialMenuPreviewExpended(
 fun RadialMenu(
     modifier: Modifier = Modifier,
     isInMenu: Boolean = true,
+    isOnline: Boolean = true,
     onGoToMenuOrGroupClicked: () -> Unit = {},
     onGoToConfigureAlarmClicked: () -> Unit = {},
     onGoToSettingsClicked: () -> Unit = {},
@@ -210,15 +211,21 @@ fun RadialMenu(
             )
         }
         else{
-            // Group
-            RadialButton(
-                Modifier.align(Alignment.BottomEnd),
-                icon = Icons.Default.Person,
-                size = sizeRadialBtns,
-                angle = 0f,
-                progressDist = animationDistProgressBtn1,
-                onClick = { onGoToMenuOrGroupClicked() }
-            )
+            if (isOnline){
+                // Group
+                RadialButton(
+                    Modifier.align(Alignment.BottomEnd),
+                    icon = Icons.Default.Person,
+                    size = sizeRadialBtns,
+                    angle = 0f,
+                    progressDist = animationDistProgressBtn1,
+                    onClick = {
+                        if (isOnline){
+                            onGoToMenuOrGroupClicked()
+                        }
+                    }
+                )
+            }
         }
 
 

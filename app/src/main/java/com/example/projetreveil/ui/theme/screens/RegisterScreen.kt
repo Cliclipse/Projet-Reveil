@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +34,7 @@ import com.example.projetreveil.ui.theme.viewModel.ErrorType
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel
 import com.example.projetreveil.ui.theme.viewModel.RegisterScreenViewModel.AuthStateEnum
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -40,12 +42,17 @@ fun RegisterPage(
     name: String,
     modifier: Modifier = Modifier,
     userLoginDataStore: DataStoreUserLogin,
-    onConnectionSuccessful: () -> Unit
+    onConnectionSuccessful: () -> Unit,
+    onContinueOffline: () -> Unit
 ){
     val registerViewModel : RegisterScreenViewModel = viewModel()
 
     LaunchedEffect(registerViewModel.state) {
         if (registerViewModel.state == AuthStateEnum.SUCCESS) {
+
+            userLoginDataStore.defineIsOfflineMode(
+                isOffline = false
+            )
 
             userLoginDataStore.defineLastUsername(registerViewModel.pseudo)
 
@@ -64,6 +71,8 @@ fun RegisterPage(
         registerViewModel.updatePseudo(lastUsername)
     }
 
+    val scopeContinueOffline = rememberCoroutineScope()
+
     RegisterContent(modifier = modifier,
         pseudo = registerViewModel.pseudo,
         password = registerViewModel.mdp,
@@ -76,6 +85,14 @@ fun RegisterPage(
         onConnectUserClicked = {
             if (registerViewModel.pseudo != "" && registerViewModel.mdp != ""){
                 registerViewModel.connectUser()
+            }
+        },
+        onContinueOfflineClicked = {
+            scopeContinueOffline.launch {
+                userLoginDataStore.defineIsOfflineMode(
+                    isOffline = true
+                )
+                onContinueOffline()
             }
         },
         onPseudoTextChange = {
@@ -95,6 +112,7 @@ fun RegisterContent(modifier: Modifier = Modifier,
                     errorType: ErrorType? = null,
                     onRegisterUserClicked: () -> Unit = {},
                     onConnectUserClicked: () -> Unit = {},
+                    onContinueOfflineClicked: () -> Unit = {},
                     onPseudoTextChange: (String) -> Unit = {},
                     onPasswordTextChange: (String) -> Unit = {}
 ){
@@ -146,12 +164,16 @@ fun RegisterContent(modifier: Modifier = Modifier,
             Spacer(Modifier.height(20.dp))
 
             ConnectionButtons(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .height(100.dp),
                 onConnectUserClicked = {
                     onConnectUserClicked()
                 },
                 onRegisterUserClicked = {
                     onRegisterUserClicked()
+                },
+                onContinueOfflineClicked = {
+                    onContinueOfflineClicked()
                 }
             )
         }
@@ -191,34 +213,55 @@ fun UserInfosTextFields(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 100)
 @Composable
 fun ConnectionButtons(
     modifier: Modifier = Modifier,
     onRegisterUserClicked: () -> Unit = {},
-    onConnectUserClicked: () -> Unit = {}
+    onConnectUserClicked: () -> Unit = {},
+    onContinueOfflineClicked: () -> Unit = {}
 ){
-    Row(modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ){
-        Button(
-            modifier = Modifier.height(40.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                contentColor = MaterialTheme.colorScheme.onTertiary
-            ),
-            onClick = {
-                onRegisterUserClicked()
+    Column(modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+            Button(
+                modifier = Modifier.height(40.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
+                onClick = {
+                    onRegisterUserClicked()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.login),
+                    fontSize = 16.sp
+                )
             }
-        ) {
-            Text(
-                text = stringResource(R.string.login),
-                fontSize = 16.sp
-            )
+
+            // Connect Btn
+            Button(
+                modifier = Modifier.height(40.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                ),
+                onClick = {
+                    onConnectUserClicked()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.connect),
+                    fontSize = 16.sp
+                )
+            }
         }
 
-        // Connect Btn
         Button(
             modifier = Modifier.height(40.dp),
             colors = ButtonDefaults.buttonColors(
@@ -226,11 +269,11 @@ fun ConnectionButtons(
                 contentColor = MaterialTheme.colorScheme.onTertiary
             ),
             onClick = {
-                onConnectUserClicked()
+                onContinueOfflineClicked()
             }
-        ) {
+        ){
             Text(
-                text = stringResource(R.string.connect),
+                text = stringResource(R.string.continue_offline),
                 fontSize = 16.sp
             )
         }

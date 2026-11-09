@@ -22,6 +22,7 @@
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Mot de Passe </string>
     <string name="connect"> Connexion </string>
+    <string name="continue_offline"> Continuer Hors-ligne </string>
     <string name="error"> Erreur : </string>
     <string name="error_invalid_credentials"> Identifiant incorrect </string>
     <string name="error_user_already_exist"> Utilisateur déjà existant </string>

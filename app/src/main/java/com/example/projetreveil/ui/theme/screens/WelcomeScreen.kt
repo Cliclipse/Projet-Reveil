@@ -3,6 +3,7 @@ package com.example.projetreveil.ui.theme.screens
 import android.content.Context
 import android.icu.util.Calendar
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,11 +17,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -56,6 +62,7 @@ import com.example.projetreveil.R
 import com.example.projetreveil.ui.theme.AlarmsManagement.AlarmsUtilities
 import com.example.projetreveil.ui.theme.RoomDatas.Alarm
 import com.example.projetreveil.ui.theme.data.Objet.Users
+import com.example.projetreveil.ui.theme.datastores.DataStoreUserLogin
 import com.example.projetreveil.ui.theme.utilities.ConfirmActionPopup
 import com.example.projetreveil.ui.theme.utilities.DigitalClock
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
@@ -73,18 +80,27 @@ fun WelcomePage(name: String,
                 context: Context,
                 modifier: Modifier = Modifier,
                 alarmsViewModel: AlarmsViewModel,
+                userLoginDataStore: DataStoreUserLogin,
                 onGoToConfigureAlarmClicked: () -> Unit,
                 onGoToGroupClicked: () -> Unit,
                 onGoToSettingsClicked: () -> Unit,
+                onGoToRegisterPageClicked: () -> Unit,
                 onModifySelectedAlarmClicked: (Alarm) -> Unit
 ) {
 
     val alarms by alarmsViewModel.alarms.collectAsStateWithLifecycle()
 
+    val isOffline by userLoginDataStore.isOfflineMode.collectAsStateWithLifecycle(true)
+
     val welcomeScreenViewModel: WelcomeScreenViewModel = viewModel()
 
-    LaunchedEffect(Unit){
-        welcomeScreenViewModel.loadCurrentUser()
+    LaunchedEffect(isOffline){
+        if (!isOffline){
+            welcomeScreenViewModel.loadCurrentUser()
+        }
+        else{
+            welcomeScreenViewModel.clearCurrentUser()
+        }
     }
 
     val currentUser = welcomeScreenViewModel.currentUser
@@ -92,6 +108,7 @@ fun WelcomePage(name: String,
     WelcomeContent(modifier = Modifier,
         alarms = alarms,
         currentUser = currentUser,
+        isOffline = isOffline,
         onAlarmEnabledChange = {
             newEnabledValue, alarm ->
 
@@ -112,6 +129,9 @@ fun WelcomePage(name: String,
         onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
         onGoToGroupClicked = { onGoToGroupClicked() },
         onGoToSettingsClicked = { onGoToSettingsClicked() },
+        onGoToRegisterPageClicked = {
+            onGoToRegisterPageClicked()
+        },
         onModifySelectedAlarmClicked = { onModifySelectedAlarmClicked(it) }
     )
 }
@@ -125,11 +145,13 @@ fun WelcomeContent(
         Alarm(2, 21, 25, false, false, true)
     ),
     currentUser: Users? = null,
+    isOffline: Boolean = false,
     onAlarmEnabledChange: (Boolean, Alarm) -> Unit = {_, _ -> },
     onAlarmDelete: (Alarm) -> Unit = {_ -> },
     onGoToConfigureAlarmClicked: () -> Unit = {},
     onGoToGroupClicked: () -> Unit = {},
     onGoToSettingsClicked: () -> Unit = {},
+    onGoToRegisterPageClicked: () -> Unit = {},
     onModifySelectedAlarmClicked: (Alarm) -> Unit = {}
 ){
     Box(modifier = modifier.fillMaxSize()){
@@ -137,21 +159,45 @@ fun WelcomeContent(
             // Bandeau social top
             TopFlag(text = stringResource(R.string.perso))
 
-            val userText = if (currentUser == null)
+            val userText = if (currentUser == null || isOffline){
                 stringResource(R.string.offline)
-            else (stringResource(R.string.welcome) + " " + currentUser.name)
+            }
+            else{
+                (stringResource(R.string.welcome) + " " + currentUser.name)
+            }
 
-            Text(
-                modifier = Modifier.align(Alignment.End)
-                    .fillMaxWidth(0.7f)
-                    .padding(end = 24.dp),
-                fontSize = 24.sp,
-                text = userText,
-                textAlign = TextAlign.End,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Column(modifier = Modifier.fillMaxWidth()
+                .padding(end = 24.dp),
+                horizontalAlignment = Alignment.End){
+                IconButton(
+                    modifier = Modifier.size(50.dp),
+                    onClick = {
+                        onGoToRegisterPageClicked()
+                    },
+                    shape = CircleShape,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    )
+                ){
+                    Icon(
+                        contentDescription = "Go Back to register Icon",
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    modifier = Modifier.align(Alignment.End),
+                    fontSize = 24.sp,
+                    text = userText,
+                    textAlign = TextAlign.End,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -175,6 +221,7 @@ fun WelcomeContent(
         RadialMenu(
             modifier = Modifier.fillMaxSize().padding(34f.dp),
             isInMenu = true,
+            isOnline = !isOffline,
             onGoToMenuOrGroupClicked = { onGoToGroupClicked() },
             onGoToConfigureAlarmClicked = { onGoToConfigureAlarmClicked() },
             onGoToSettingsClicked = { onGoToSettingsClicked() }

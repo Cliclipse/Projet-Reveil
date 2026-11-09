@@ -20,6 +20,7 @@
     <string name="pseudo"> Pseudo </string>
     <string name="password"> Password </string>
     <string name="connect"> Connexion </string>
+    <string name="continue_offline"> Continue Offline </string>
     <string name="error"> Error : </string>
     <string name="error_invalid_credentials">Incorrect username or password</string>
     <string name="error_user_already_exist">User already exists</string>

@@ -26,4 +26,8 @@ class WelcomeScreenViewModel: ViewModel() {
             }
         }
     }
+
+    fun clearCurrentUser(){
+        currentUser = null
+    }
 }
