@@ -133,7 +133,7 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
         contentAlignment = Alignment.Center) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally){
-            var imageModifier = Modifier.height(40.dp).size(75.dp).clip(CircleShape)
+            var imageModifier = Modifier.size(75.dp).clip(CircleShape)
             val icon = vm.GroupIcon
 
             Spacer(modifier = Modifier.height(20.dp))
