@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -51,7 +50,6 @@ import com.example.projetreveil.R
 import com.example.projetreveil.data.SupabaseClient
 import com.example.projetreveil.ui.theme.data.Objet.Group
 import com.example.projetreveil.ui.theme.data.Objet.Message
-import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
 import io.github.jan.supabase.storage.storage
@@ -160,10 +158,10 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
         contentAlignment = Alignment.Center) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally){
-            var imageModifier = Modifier
+            val imageModifier = Modifier
                 .size(75.dp)
                 .clip(CircleShape)
-            val icon = vm.GroupIcon
+            val icon = vm.groupIcon
 
             Spacer(modifier = Modifier.height(20.dp))
 
