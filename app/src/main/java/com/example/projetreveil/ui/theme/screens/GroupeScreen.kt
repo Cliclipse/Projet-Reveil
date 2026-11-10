@@ -203,7 +203,7 @@ fun GroupChat(vm : GroupeScreenViewModel, modifier : Modifier ){//Ajo uter ensui
     Spacer(modifier = Modifier.height(15.dp))
     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(horizontal = 10.dp)){
         items(vm.lastMessages){ message ->
-            IsAwokenMessage(message)
+            IsAwokenMessage(message , vm)
             Spacer(modifier = Modifier.height(15.dp))
         }
     }
@@ -302,7 +302,7 @@ fun AddFriendDialog(vm : GroupeScreenViewModel,
 
 
 @Composable
-fun IsAwokenMessage(msg : Message){
+fun IsAwokenMessage(msg : Message , vm : GroupeScreenViewModel){
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.secondary)
@@ -311,7 +311,7 @@ fun IsAwokenMessage(msg : Message){
         contentAlignment = Alignment.Center
     ) {
 
-        Text(msg.sender + "s'est réveille à" + msg.createdAt.toString())
+        Text(vm.memberNames.get(msg.sender) + " s'est réveille à " + vm.DisplayStringPotableDate(msg.createdAt))
     }
 }
 

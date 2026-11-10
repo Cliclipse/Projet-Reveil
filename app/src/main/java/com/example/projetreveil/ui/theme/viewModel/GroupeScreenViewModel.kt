@@ -22,6 +22,10 @@ import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
 class GroupeScreenViewModel()  : ViewModel() {
@@ -43,6 +47,7 @@ class GroupeScreenViewModel()  : ViewModel() {
     var groupShown by mutableStateOf<Group?>(null)
     var GroupIcon by mutableStateOf<ImageBitmap?>(null)
     var lastMessages by mutableStateOf<List<Message>>(emptyList())
+    var memberNames by mutableStateOf<Map<String, String>>(emptyMap())  //Obligé de mettre les pseudos sur un truc séparés, ils ne proviennent pas de l'objet Message
 
 
     // Variables pour le dialog d'ajout d'user
@@ -67,8 +72,6 @@ class GroupeScreenViewModel()  : ViewModel() {
                 userId = supabase.auth.currentUserOrNull()?.id
                 val id = userId ?: return@launch
                 _groupes.value = groupeRepository.getFromUserId(id)
-
-
             }
             catch (e: Exception) { Log.e("Groupes", "Chargement échoué", e) }
         }
@@ -83,6 +86,9 @@ class GroupeScreenViewModel()  : ViewModel() {
 
             GroupIcon = groupeRepository.downloadGroupAvatar(groupShown?.GroupPictureLink)
             lastMessages =  messageRepository.getLastMessages(id)
+
+            val ids = lastMessages.mapNotNull { it.sender }
+            memberNames = userRespository.getPseudos(ids)
         }
     }
 
@@ -117,4 +123,13 @@ class GroupeScreenViewModel()  : ViewModel() {
             messageRepository.add(msg)
         }
     }
+
+
+    fun DisplayStringPotableDate(time : Instant?): String {
+        if (time == null) return ""
+        val timeZoned = time.toLocalDateTime(TimeZone.currentSystemDefault())
+
+        return "%02dh %02d le %02d/%02d".format( timeZoned.hour, timeZoned.minute ,timeZoned.day, timeZoned.month.number)
+    }
+
 }

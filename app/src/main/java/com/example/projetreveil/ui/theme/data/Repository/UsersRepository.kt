@@ -28,6 +28,14 @@ class UsersRepository {
             filter { eq("name", pseudo) }
         }.decodeSingleOrNull<Users>()
     }
+    suspend fun getPseudos(ids: List<String>): Map<String, String> {
+        if (ids.isEmpty()) return emptyMap()
+        return supabase.from("users").select {
+            filter { isIn("id", ids) }
+        }.decodeList<Users>()
+            .mapNotNull { u -> u.id?.let { it to u.name } }
+            .toMap()
+    }
 
     suspend fun getCurrentUser() : Users? {
         val userId = supabase.auth.currentUserOrNull()?.id
