@@ -85,11 +85,18 @@ class GroupeScreenViewModel()  : ViewModel() {
             groupShown = groupeRepository.get(id)
 
             GroupIcon = groupeRepository.downloadGroupAvatar(groupShown?.GroupPictureLink)
-            lastMessages =  messageRepository.getLastMessages(id)
-
-            val ids = lastMessages.mapNotNull { it.sender }
-            memberNames = userRespository.getPseudos(ids)
+            getMessages(id)
         }
+
+    }
+
+
+    suspend fun getMessages(idGroup : Long?){
+        val id = groupShownId ?: return
+        lastMessages =  messageRepository.getLastMessages(id)
+
+        val ids = lastMessages.mapNotNull { it.sender }
+        memberNames = userRespository.getPseudos(ids)
     }
 
     fun OpenAddFriendDialog(){
@@ -121,6 +128,7 @@ class GroupeScreenViewModel()  : ViewModel() {
         val msg = Message(null, groupShownId , userId , null)
         viewModelScope.launch{
             messageRepository.add(msg)
+            getMessages(groupShownId)
         }
     }
 
