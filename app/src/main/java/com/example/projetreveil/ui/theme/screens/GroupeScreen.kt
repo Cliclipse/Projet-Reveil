@@ -23,6 +23,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,7 @@ import coil.compose.AsyncImage
 import com.example.projetreveil.R
 import com.example.projetreveil.data.SupabaseClient
 import com.example.projetreveil.ui.theme.data.Objet.Group
+import com.example.projetreveil.ui.theme.data.Objet.Message
 import com.example.projetreveil.ui.theme.utilities.Logo
 import com.example.projetreveil.ui.theme.utilities.RadialMenu
 import com.example.projetreveil.ui.theme.viewModel.GroupeScreenViewModel
@@ -100,15 +103,35 @@ fun SetGroupePage(modifier: Modifier = Modifier,
 
 
 
-    @Composable
+@Composable
 fun GroupeSpace(modifier: Modifier , vm : GroupeScreenViewModel ){
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            HeadOfGroupChat(vm)
-            GroupChat(vm)
+            HeadOfGroupChat(vm )
+            GroupChat(vm, Modifier.weight(1f))
+            SendChatZone(vm)
         }
     }
 }
+
+@Composable
+fun SendChatZone(vm : GroupeScreenViewModel){
+    Box(modifier = Modifier
+        .background(color = MaterialTheme.colorScheme.background)
+        .fillMaxWidth()
+        .height(90.dp), contentAlignment = Alignment.Center){
+        Button(onClick = { vm.SendAwokenMsg() }, modifier = Modifier
+            .height(50.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp) , colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary
+        )) {
+            Text(text  = stringResource(R.string.awake))
+        }
+    }
+}
+
 
 @Composable
 fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup : () ->Unit ){
@@ -129,8 +152,6 @@ fun PickGroupSpace(modifier: Modifier , vm : GroupeScreenViewModel, onAddGroup :
     }
 }
 
-
-
 @Composable
 fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
     Box(modifier = Modifier
@@ -139,7 +160,9 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
         contentAlignment = Alignment.Center) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally){
-            var imageModifier = Modifier.size(75.dp).clip(CircleShape)
+            var imageModifier = Modifier
+                .size(75.dp)
+                .clip(CircleShape)
             val icon = vm.GroupIcon
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -176,11 +199,11 @@ fun HeadOfGroupChat(vm : GroupeScreenViewModel ){
 }
 
 @Composable
-fun GroupChat(vm : GroupeScreenViewModel ){//Ajo uter ensuite une rélle lazy list avec les photos prises
+fun GroupChat(vm : GroupeScreenViewModel, modifier : Modifier ){//Ajo uter ensuite une rélle lazy list avec les photos prises
     Spacer(modifier = Modifier.height(15.dp))
-    LazyColumn(horizontalAlignment = Alignment.CenterHorizontally){
-        items(4){
-            Image(painter = painterResource(R.drawable.penguin) ,"LogoPenguin" , contentScale = ContentScale.Fit,  alignment = Alignment.Center, modifier = Modifier.padding(horizontal = 5.dp))
+    LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.padding(horizontal = 10.dp)){
+        items(vm.lastMessages){ message ->
+            IsAwokenMessage(message)
             Spacer(modifier = Modifier.height(15.dp))
         }
     }
@@ -278,7 +301,18 @@ fun AddFriendDialog(vm : GroupeScreenViewModel,
 
 
 
+@Composable
+fun IsAwokenMessage(msg : Message){
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.secondary)
+            .fillMaxWidth()
+            .padding(horizontal = 5.dp),
+        contentAlignment = Alignment.Center
+    ) {
 
-
+        Text(msg.sender + "s'est réveille à" + msg.createdAt.toString())
+    }
+}
 
 

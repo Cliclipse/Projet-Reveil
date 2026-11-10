@@ -11,35 +11,44 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projetreveil.data.GroupRepository
 import com.example.projetreveil.data.GroupUsersJunctionRepository
+import com.example.projetreveil.data.MessageRepository
 import com.example.projetreveil.data.SupabaseClient
 import com.example.projetreveil.data.UsersRepository
 import com.example.projetreveil.ui.theme.data.Objet.Group
 import com.example.projetreveil.ui.theme.data.Objet.GroupUsersJunction
+import com.example.projetreveil.ui.theme.data.Objet.Message
 import com.example.projetreveil.ui.theme.data.Objet.Users
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Instant
 
 class GroupeScreenViewModel()  : ViewModel() {
 
 
-    var GroupIcon by mutableStateOf<ImageBitmap?>(null)
 
+    // Repos
     val groupeRepository = GroupRepository();
     val userRespository = UsersRepository();
     val GroupUsersJunctionRepository = GroupUsersJunctionRepository()
+    val messageRepository = MessageRepository()
 
-
+    //Variable d'accès à la bdd. Probablement pas ouf de les avoir là, mais faudrait enregistrer l'id de l'user en local à un moment. Pour le moment ça fait alrgement le taff
     val supabase = SupabaseClient.client
     var userId by mutableStateOf<String?>(null)
 
+    //Accès au groupe actuellement shown
     var groupShownId by mutableStateOf<Long?>(null)
     var groupShown by mutableStateOf<Group?>(null)
+    var GroupIcon by mutableStateOf<ImageBitmap?>(null)
+    var lastMessages by mutableStateOf<List<Message>>(emptyList())
 
 
+    // Variables pour le dialog d'ajout d'user
     var showAddMembrerDialog by mutableStateOf(false)
     var memberNotFound by mutableStateOf(false)
+
 
 
     // Alors je crois que je suis forcé de faire un truc bizarre ainsi, pas encore tout compris au flow
@@ -58,9 +67,10 @@ class GroupeScreenViewModel()  : ViewModel() {
                 userId = supabase.auth.currentUserOrNull()?.id
                 val id = userId ?: return@launch
                 _groupes.value = groupeRepository.getFromUserId(id)
+
+
             }
             catch (e: Exception) { Log.e("Groupes", "Chargement échoué", e) }
-            Log.e("Groupes", groupes.value.size.toString())
         }
     }
 
@@ -70,10 +80,9 @@ class GroupeScreenViewModel()  : ViewModel() {
         viewModelScope.launch {
             val id = groupShownId ?: return@launch
             groupShown = groupeRepository.get(id)
-            Log.e("AVATAR", "lien en base = ${groupShown?.GroupPictureLink}")
 
             GroupIcon = groupeRepository.downloadGroupAvatar(groupShown?.GroupPictureLink)
-            Log.e("AVATAR", "image récupérée = ${GroupIcon != null}")
+            lastMessages =  messageRepository.getLastMessages(id)
         }
     }
 
@@ -94,9 +103,18 @@ class GroupeScreenViewModel()  : ViewModel() {
                 memberNotFound = true
                 return@launch
             }
-            val groupUsersJunction : GroupUsersJunction = GroupUsersJunction(friendToAdd.id, groupShownId)
+            val groupUsersJunction = GroupUsersJunction(friendToAdd.id, groupShownId)
             GroupUsersJunctionRepository.add(groupUsersJunction)
             CloseAddFriendDialog()
+        }
+    }
+
+
+
+    fun SendAwokenMsg(){
+        val msg = Message(null, groupShownId , userId , null)
+        viewModelScope.launch{
+            messageRepository.add(msg)
         }
     }
 }

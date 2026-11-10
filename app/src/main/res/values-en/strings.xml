@@ -15,7 +15,7 @@
     <string name="group_name"> Group Name </string>
     <string name="add_group"> Add Group </string>
     <string name="friend_not_found"> Friend not found </string>
-
+    <string name="awake"> Awake </string>
 
     <!-- RegisterScreen-->
     <string name="login"> Login </string>

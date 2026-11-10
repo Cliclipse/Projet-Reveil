@@ -17,6 +17,8 @@
     <string name="group_name"> Nom du Groupe </string>
     <string name="add_group"> Ajouter Groupe </string>
     <string name="friend_not_found"> Ami non trouvé </string>
+    <string name="awake"> Réveillé </string>
+
 
 
     <!-- RegisterScreen-->
